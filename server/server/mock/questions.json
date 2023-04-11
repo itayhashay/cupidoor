@@ -1,0 +1,28 @@
+{
+    "questions": [
+      {
+        "question": "Do you smoke?",
+        "options": ["yes", "no"]
+      },
+      {
+        "question": "Have pets?",
+        "options": ["yes", "no"]
+      },
+      {
+        "question": "Share apartment?",
+        "options": ["yes", "no"]
+      },
+      {
+        "question": "Stable income?",
+        "options": ["yes", "no"]
+      },
+      {
+        "question": "Is the relationship between the landlord tenant important?",
+        "options": ["yes", "no"]
+      },
+      {
+        "question": "Believe in sureties and guarantees?",
+        "options": ["yes", "no"]
+      }
+    ]
+  }

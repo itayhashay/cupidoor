@@ -1,0 +1,114 @@
+{
+  "landlords": [
+    {
+      "name": "Avi",
+      "address": "Tel Aviv, George Wise 2",
+      "rooms": 3,
+      "floor": 2,
+      "parkings": 0,
+      "price": 5000,
+      "answers": [0, 0, 0, 1, 1],
+      "priority": [5, 1, 1, 5, 1]
+    },
+    {
+      "name": "Yehuda",
+      "address": "Jerusalem, Gooday 32",
+      "rooms": 4,
+      "floor": 5,
+      "parkings": 1,
+      "price": 5400,
+      "answers": [1, 1, 0, 0, 0],
+      "priority": [5, 1, 3, 5, 1]
+    },
+    {
+      "name": "Afik",
+      "address": "Rishon, Yordei hasira 4",
+      "rooms": 4,
+      "floor": 1,
+      "parkings": 1,
+      "price": 4800,
+      "answers": [0, 1, 0, 1, 1],
+      "priority": [5, 5, 4, 2, 1]
+    },
+    {
+      "name": "Omer",
+      "address": "Maccabbim-Reut, Meshushim 666",
+      "rooms": 8,
+      "floor": 0,
+      "parkings": 3,
+      "price": 9500,
+      "answers": [0, 1, 0, 1, 1],
+      "priority": [4, 5, 3, 5, 2]
+    },
+    {
+      "name": "Itay",
+      "address": "Tivon, Pashus 99",
+      "rooms": 3,
+      "floor": 1,
+      "parkings": 1,
+      "price": 4000,
+      "answers": [1, 1, 0, 0, 1],
+      "priority": [1, 3, 4, 5, 3]
+    },
+    {
+      "name": "Amnon",
+      "address": "Hod hasharon, Tsharnichovsky 11",
+      "rooms": 4,
+      "floor": 2,
+      "parkings": 0,
+      "price": 5100,
+      "answers": [0, 1, 0, 1, 0],
+      "priority": [5, 1, 2, 1, 2]
+    },
+    {
+      "name": "Benji",
+      "address": "Neverland, Chip 55",
+      "rooms": 6,
+      "floor": 1,
+      "parkings": 3,
+      "price": 7200,
+      "answers": [0, 0, 0, 0, 1],
+      "priority": [3, 5, 2, 5, 5]
+    },
+    {
+      "name": "Dibo",
+      "address": "Eilat, Hovevei zion 34",
+      "rooms": 2,
+      "floor": 0,
+      "parkings": 1,
+      "price": 2900,
+      "answers": [0, 1, 1, 1, 1],
+      "priority": [1, 4, 1, 4, 1]
+    },
+    {
+      "name": "Lori",
+      "address": "Holon, Matityahu 12",
+      "rooms": 3,
+      "floor": 3,
+      "parkings": 0,
+      "price": 3900,
+      "answers": [1, 1, 0, 1, 1],
+      "priority": [3, 2, 5, 4, 1]
+    },
+    {
+      "name": "Chief",
+      "address": "Modiin, Lev hair 10",
+      "rooms": 4,
+      "floor": 2,
+      "parkings": 2,
+      "price": 5400,
+      "answers": [1, 1, 1, 0, 1],
+      "priority": [5, 2, 2, 3, 2]
+    },
+    {
+      "name": "Fitz",
+      "address": "Dimona, Lilach 92",
+      "rooms": 3,
+      "floor": 4,
+      "parkings": 1,
+      "price": 2800,
+      "answers": [1, 0, 0, 1, 1],
+      "priority": [2, 3, 3, 1, 4]
+    }
+  ]
+}
