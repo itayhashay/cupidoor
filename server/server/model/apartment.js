@@ -22,8 +22,16 @@ const apartmentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    roomsAmount: {
-        type: String,
+    floor: {
+        type: Numner,
+        required: true
+    },
+    parkings: {
+        type: Number,
+        required: true
+    },
+    rooms: {
+        type: Number,
         required: true
     },
     isBasement: {
