@@ -6,7 +6,7 @@ router.use('/user', require("./controller/user.controller"))
 router.use('/apartment', require("./controller/apartment.controller"))
 router.use('/question', require("./controller/question.controller"))
 router.use('/score', require("./controller/score.controller"))
-// router.use('/user-answer', require("./controller/usersAnswer.controller"))
+router.use('/user-answer', require("./controller/usersAnswer.controller"))
 
 router.post("/match", (req, res, next) => {
   const { answers, priority } = req.body;
