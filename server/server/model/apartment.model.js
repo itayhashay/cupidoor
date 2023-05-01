@@ -9,7 +9,7 @@ const apartmentSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        autopopulate: true
+        autopopulate: { select: '-password' }
     },
     address: {
         type: String,
