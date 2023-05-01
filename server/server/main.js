@@ -18,7 +18,7 @@ app.use("/", require("./router"));
 const startServer = async () => {
   try {
     console.log(chalk.yellow("\nTrying to connect to mongoDB"));
-    await mongoose.connect("mongodb+srv://admin:Password1@cluster0.101ejri.mongodb.net/cupidoor");
+    await mongoose.connect(process.env.MONGOURI);
     console.log(chalk.green("MongoDB connected successfully"));
   } catch (ex) {
     console.error(ex.message);
