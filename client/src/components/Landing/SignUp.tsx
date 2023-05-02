@@ -1,4 +1,5 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Avatar, Button, TextField, Link, Container } from "@mui/material";
 import { Grid, Box, Typography, CssBaseline } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -6,7 +7,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import "./SignUp.css";
-
+import axios from "axios";
 interface SignUpPageProps {
   onTogglePage: () => void;
 }
@@ -25,16 +26,49 @@ const schema = Yup.object().shape({
 const theme = createTheme();
 
 const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
-  const onSubmitHandler = () => {
-    // If good submit and registerd -> refer to http://localhost:3000/qustions
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [goodRegistration, setGoodRegistration] = useState<boolean>(false);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | undefined>();
+
+  const onSubmitHandler = (values: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+  }) => {
+    // axios
+    //   .post("localhost:3000/register", JSON.stringify(userToRegister))
+    //   .then((res) => {
+    //     console.log(res)
+    setGoodRegistration(true);
+    setTimeoutId(
+      setTimeout(() => {
+        navigate(location.state ? location.state.redirect : "/questions");
+      }, 1500)
+    );
+    // })
+    //   .catch((err) => console.log(err));
   };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [timeoutId]);
+
+  if (goodRegistration) {
+    return <div>Registration successful!</div>;
+  }
 
   return (
     <>
       <Formik
         validationSchema={schema}
         initialValues={{ firstName: "", lastName: "", email: "", password: "" }}
-        onSubmit={onSubmitHandler}
+        onSubmit={(event) => onSubmitHandler(event)}
       >
         {({ values, errors, touched, handleChange, handleSubmit }) => (
           <ThemeProvider theme={theme}>

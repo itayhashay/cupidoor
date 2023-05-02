@@ -1,4 +1,3 @@
-import React from "react";
 import { Avatar, Button, CssBaseline, TextField, Box } from "@mui/material";
 import { Typography, Container, Link, Grid } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -23,8 +22,16 @@ const schema = Yup.object().shape({
 const theme = createTheme();
 
 const SignInPage = ({ onTogglePage }: SignInPageProps) => {
-  const onSubmitHandler = () => {
-    // If good submition and all questions were filled -> redirect to /homepage else to /questions
+  const onSubmitHandler = (values: { email: string; password: string }) => {
+    const userData = {
+      email: values.email,
+      password: values.password,
+    };
+    // isUsersQues all good?
+    // auth.login
+    // .then(navigate(location.state ? location.state.redirect : "/homepage"))
+    // : auth.login.then(navigate(location.state ? location.state.redirect : "/questions"))
+    alert(JSON.stringify(userData));
   };
 
   return (
@@ -32,7 +39,7 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
       <Formik
         validationSchema={schema}
         initialValues={{ email: "", password: "" }}
-        onSubmit={onSubmitHandler}
+        onSubmit={(event) => onSubmitHandler(event)}
       >
         {({ values, errors, touched, handleChange, handleSubmit }) => (
           <ThemeProvider theme={theme}>
