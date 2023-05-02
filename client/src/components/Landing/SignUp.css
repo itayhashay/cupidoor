@@ -1,0 +1,10 @@
+.error {
+  color: rgb(200, 14, 14);
+  padding: 0;
+  margin: 0;
+  height: 26px;
+}
+
+.hide {
+  display: none;
+}
