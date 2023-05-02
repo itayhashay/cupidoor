@@ -1,3 +1,9 @@
+import React from "react";
+import { Avatar, Button, CssBaseline, TextField, Box } from "@mui/material";
+import { FormControlLabel, Checkbox, Link, Grid } from "@mui/material";
+import { Typography, Container } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import "./SignIn.css";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -15,6 +21,8 @@ const schema = Yup.object().shape({
     .min(8, "Password must be at least 8 characters"),
 });
 
+const theme = createTheme();
+
 const SignInPage = ({ onTogglePage }: SignInPageProps) => {
   return (
     <>
@@ -25,49 +33,85 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
           alert(JSON.stringify(values));
         }}
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-        }) => (
-          <div id="page-layout">
-            <div className="login">
-              <div className="form">
-                <form noValidate onSubmit={handleSubmit}>
-                  <span>Login</span>
-                  <input
+        {({ values, errors, touched, handleChange, handleSubmit }) => (
+          <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
+              <CssBaseline />
+              <Box
+                sx={{
+                  marginTop: 8,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                  <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                  Sign in
+                </Typography>
+                <Box
+                  component="form"
+                  onSubmit={handleSubmit}
+                  noValidate
+                  sx={{ mt: 1 }}
+                >
+                  <TextField
                     type="email"
                     name="email"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.email}
-                    placeholder="Enter email id / username"
-                    className="form-control inp_text"
                     id="email"
-                  />
-                  <p className="error">
-                    {errors.email && touched.email && errors.email}
-                  </p>
-                  <input
-                    type="password"
-                    name="password"
+                    value={values.email}
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Email Address"
+                    autoComplete="email"
+                    autoFocus
                     onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.password}
-                    placeholder="Enter password"
-                    className="form-control"
                   />
                   <p className="error">
-                    {errors.password && touched.password && errors.password}
+                    {errors.email && touched.email && errors.email}{" "}
                   </p>
-                  <button type="submit">Login</button>
-                </form>
-              </div>
-            </div>
-          </div>
+                  <TextField
+                    name="password"
+                    id="password"
+                    type="password"
+                    label="Password"
+                    value={values.password}
+                    margin="normal"
+                    required
+                    fullWidth
+                    autoComplete="current-password"
+                    onChange={handleChange}
+                  />
+                  <p className="error">
+                    {errors.password && touched.password && errors.password}{" "}
+                  </p>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Sign In
+                  </Button>
+                  <Grid container>
+                    <Grid item xs>
+                      <Link href="#" variant="body2">
+                        Forgot password?
+                      </Link>
+                    </Grid>
+                    <Grid item>
+                      <Link href="" variant="body2" onClick={onTogglePage}>
+                        {"Don't have an account? Sign Up"}
+                      </Link>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Box>
+            </Container>
+          </ThemeProvider>
         )}
       </Formik>
     </>

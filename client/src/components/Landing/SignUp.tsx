@@ -91,14 +91,6 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                   autoComplete="new-password"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
             </Grid>
             <Button
               type="submit"
@@ -108,7 +100,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent="center">
               <Grid item>
                 <Link variant="body2" onClick={onTogglePage}>
                   Already have an account? Sign in
