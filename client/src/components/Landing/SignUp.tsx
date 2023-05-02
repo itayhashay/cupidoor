@@ -15,6 +15,8 @@ interface SignUpPageProps {
 const theme = createTheme();
 
 const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
+  // If good submit and registerd -> refer to http://localhost:3000/qustions
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);

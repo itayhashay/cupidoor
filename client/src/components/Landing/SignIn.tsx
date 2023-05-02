@@ -29,6 +29,7 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
       <Formik
         validationSchema={schema}
         initialValues={{ email: "", password: "" }}
+        // If good submition and all questions were filled -> redirect to /homepage else to /questions
         onSubmit={(values) => {
           alert(JSON.stringify(values));
         }}
