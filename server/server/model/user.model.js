@@ -26,10 +26,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    salt: {
+        type: String,
+        required: true
+    },
     role: {
         type: String,
-        enum: ['tenent', 'landlord', 'admin'],
-        default: 'tenent'
+        enum: ['tenant', 'landlord', 'admin'],
+        default: 'tenant'
     },
     createdAt: {
         type: Date,
