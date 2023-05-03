@@ -1,10 +1,21 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Button, TextField, Link, Container } from "@mui/material";
-import { Grid, Box, Typography, CssBaseline } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  TextField,
+  Container,
+  MenuItem,
+  Grid,
+  Box,
+  Typography,
+  CssBaseline,
+  Select,
+  Link,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { Formik } from "formik";
+import { Field, Formik } from "formik";
 import * as Yup from "yup";
 import "./SignUp.css";
 import axios from "axios";
@@ -21,9 +32,17 @@ const schema = Yup.object().shape({
   password: Yup.string()
     .required("Password is a required field")
     .min(8, "Password must be at least 8 characters"),
+  phone: Yup.string().required("Phone number is a required field"),
+  age: Yup.string().required("Age is a required field"),
+  role: Yup.string().required("Role is a required field"),
 });
 
 const theme = createTheme();
+
+const roles = [
+  { value: "landlord", label: "Landlord" },
+  { value: "tenant", label: "Tenant" },
+];
 
 const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
   const navigate = useNavigate();
@@ -36,6 +55,9 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
     lastName: string;
     email: string;
     password: string;
+    phone: string;
+    age: string;
+    role: string;
   }) => {
     // axios
     //   .post("localhost:3000/register", JSON.stringify(userToRegister))
@@ -67,7 +89,15 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
     <>
       <Formik
         validationSchema={schema}
-        initialValues={{ firstName: "", lastName: "", email: "", password: "" }}
+        initialValues={{
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          phone: "",
+          age: "",
+          role: "",
+        }}
         onSubmit={(event) => onSubmitHandler(event)}
       >
         {({ values, errors, touched, handleChange, handleSubmit }) => (
@@ -164,6 +194,60 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                     </Grid>
                     <p className={errors?.password ? "error" : "hide"}>
                       {errors.password && touched.password && errors.password}
+                      {""}
+                    </p>
+                    <Grid item xs={12}>
+                      <TextField
+                        name="phone"
+                        id="phone"
+                        type="number"
+                        value={values.phone}
+                        required
+                        fullWidth
+                        label="Phone"
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <p className={errors?.phone ? "error" : "hide"}>
+                      {errors.phone && touched.phone && errors.phone}
+                      {""}
+                    </p>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="role"
+                        id="role"
+                        label="Role"
+                        value={values.role}
+                        onChange={handleChange}
+                        select
+                        required
+                        fullWidth
+                      >
+                        {roles.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="age"
+                        id="age"
+                        value={values.age}
+                        required
+                        fullWidth
+                        label="Age"
+                        autoComplete="Age"
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <p className={errors?.role ? "error" : "hide"}>
+                      {errors?.role && touched?.role && errors?.role}
+                      {""}
+                    </p>
+                    <p className={errors?.age ? "error" : "hide"}>
+                      {errors.age && touched.age && errors.age}
                       {""}
                     </p>
                   </Grid>
