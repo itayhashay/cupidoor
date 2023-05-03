@@ -1,7 +1,5 @@
-import React from "react";
 import { Avatar, Button, CssBaseline, TextField, Box } from "@mui/material";
-import { FormControlLabel, Checkbox, Link, Grid } from "@mui/material";
-import { Typography, Container } from "@mui/material";
+import { Typography, Container, Link, Grid } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import "./SignIn.css";
@@ -24,15 +22,24 @@ const schema = Yup.object().shape({
 const theme = createTheme();
 
 const SignInPage = ({ onTogglePage }: SignInPageProps) => {
+  const onSubmitHandler = (values: { email: string; password: string }) => {
+    const userData = {
+      email: values.email,
+      password: values.password,
+    };
+    // isUsersQues all good?
+    // auth.login
+    // .then(navigate(location.state ? location.state.redirect : "/homepage"))
+    // : auth.login.then(navigate(location.state ? location.state.redirect : "/questions"))
+    alert(JSON.stringify(userData));
+  };
+
   return (
     <>
       <Formik
         validationSchema={schema}
         initialValues={{ email: "", password: "" }}
-        // If good submition and all questions were filled -> redirect to /homepage else to /questions
-        onSubmit={(values) => {
-          alert(JSON.stringify(values));
-        }}
+        onSubmit={(event) => onSubmitHandler(event)}
       >
         {({ values, errors, touched, handleChange, handleSubmit }) => (
           <ThemeProvider theme={theme}>
@@ -71,7 +78,7 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
                     autoFocus
                     onChange={handleChange}
                   />
-                  <p className="error">
+                  <p className={errors?.email ? "error" : "hide"}>
                     {errors.email && touched.email && errors.email}{" "}
                   </p>
                   <TextField
@@ -86,7 +93,7 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
                     autoComplete="current-password"
                     onChange={handleChange}
                   />
-                  <p className="error">
+                  <p className={errors?.password ? "error" : "hide"}>
                     {errors.password && touched.password && errors.password}{" "}
                   </p>
                   <Button
