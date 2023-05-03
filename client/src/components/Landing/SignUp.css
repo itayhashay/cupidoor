@@ -1,3 +1,7 @@
+#register-wrapper {
+  border: 2px solid #0859aa;
+}
+
 .error {
   color: rgb(200, 14, 14);
   padding: 0;
