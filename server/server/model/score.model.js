@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 const scoreSchema = new mongoose.Schema({
     tenent: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        autopopulate: { select: '-password' }
     },
     apartment: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Apartment'
+        ref: 'Apartment',
+        autopopulate: true
     },
     score: {
         type: Number,
@@ -17,13 +19,8 @@ const scoreSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-});
-    
-// Middleware function to update updatedAt field on every save
-userSchema.pre('save', (next) =>{
-    this.updatedAt = new Date();
-    next();
-});
+}).plugin(require('mongoose-autopopulate'));
+
 const Score = mongoose.model('Score', scoreSchema);
 
 module.exports = Score;

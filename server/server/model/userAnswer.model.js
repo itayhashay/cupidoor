@@ -12,10 +12,6 @@ const userAnswerSchema = new mongoose.Schema({
     answer: {
         type: String,
         required: true
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
     }
 });
 

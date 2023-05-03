@@ -8,7 +8,8 @@ const apartmentSchema = new mongoose.Schema({
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        autopopulate: { select: '-password' }
     },
     address: {
         type: String,
@@ -23,7 +24,7 @@ const apartmentSchema = new mongoose.Schema({
         required: true,
     },
     floor: {
-        type: Numner,
+        type: Number,
         required: true
     },
     parkings: {
