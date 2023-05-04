@@ -1,4 +1,6 @@
 import * as Yup from "yup";
+import { styled } from "@mui/material/styles";
+import FormHelperText from "@mui/material/FormHelperText";
 
 export const schema = Yup.object().shape({
   firstName: Yup.string().required("First name is a required field"),
@@ -19,3 +21,7 @@ export const roles = [
   { value: "tenant", label: "Tenant" },
   { value: "both", label: "Both" },
 ];
+
+export const CustomHelperText = styled(FormHelperText)({
+  color: "red",
+});
