@@ -13,7 +13,7 @@ export const DividerLine = styled.hr`
 export const cardStyles = {
   maxWidth: 345,
   width: "16rem",
-  height: "30rem",
+  height: "25rem",
   margin: "20px",
   borderRadius: "8px",
   boxShadow: "rgb(0 0 0 / 35%) 0px 5px 15px",
@@ -24,6 +24,23 @@ export const cardStyles = {
   },
 };
 
+export const addressStyles = {
+  textAlign: "center",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  fontSize: "18px"
+}
+
+export const likeButtonStyles = {    
+  position: "absolute",
+  top: "10px",
+  right: "10px",
+  background: "#ffffffd1",
+  height: "40px",
+  width: "40px"
+}
+
 export const AvatarStyles = {
   margin: "auto",
   bottom: "30px",
@@ -33,12 +50,23 @@ export const AvatarStyles = {
 }
 
 export const CardContentStyles = {
-  maxHeight: "200px",
+  maxHeight: "220px",
   overflowY: "auto",
   position: "relative",
   bottom: "32px",
   margin: "8px 0",
-  padding: "0 16px",
+  padding: "0 8px",
 };
 
-export const MatchLabelStyles = {textAlign: "center", fontSize: "20px", color: "forestgreen", marginBottom: "8px", fontWeight: "bold"}
+export const MatchLabelStyles = {
+  textAlign: "center",
+  fontSize: "16px", 
+  color: "forestgreen", 
+  marginBottom: "8px", 
+  fontWeight: "bold",     
+  position: "absolute",
+  top: "20px",
+  background: "#ffffff",
+  borderRadius: "0 8px 8px 0",
+  padding:" 0 5px"
+}

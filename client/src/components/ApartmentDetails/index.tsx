@@ -38,7 +38,7 @@ const ApartmentDetails = () => {
                         <Image alt="Paella dish" src="https://www.apartments.com/images/default-source/2019-naa/parkline-apartment-in-miami-fla2dc2731-e6f2-4dca-89c5-38245ccacea1.tmb-featuredim.jpg?sfvrsn=55bc41ed_1" />
                     </ImageContainer>
                     <DryDetailsContainer>
-                        <DryDetails {...apartmentInfo}/>
+                        <DryDetails apartmentInfo={apartmentInfo}/>
                     </DryDetailsContainer>
                     <RentContainer>
                             <Typography variant="h4">

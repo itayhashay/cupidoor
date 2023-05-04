@@ -47,12 +47,16 @@ export const NumbersSection = styled.div`
   padding-bottom: 5px;
 `;
 
-export const NumbersPropery = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 15px;
-  justify-content: space-between;
+export const numbersPropertyStyles = {
+  flexDirection: "column",
+  alignItems: "center",
+  margin: "0 15px",
+  justifyContent: "center"
+}
+
+export const PropertyIcon = styled.img`
+  height: 30px;
+  width: 30px;
 `;
 
 export const RentContainer = styled.div`
