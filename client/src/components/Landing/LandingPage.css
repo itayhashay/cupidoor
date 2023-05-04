@@ -1,8 +1,9 @@
-
 #landing-layout {
   background-color: #1976d2;
-  /* height: 100vh; */
+  height: 100vh;
   padding-top: 10px;
+  display: flex;
+  justify-content: center;
   text-align: center;
   align-items: center;
 }

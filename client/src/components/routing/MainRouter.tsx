@@ -5,8 +5,8 @@ import { Container, ContentSection } from "../App/styles";
 
 const MainRouter = () => {
   return (
-    <Container>
-      <ContentSection>
+    // <Container>
+      /* <ContentSection> */
         <Routes>
           {AppRoutes.map((route) => (
             <Route
@@ -23,9 +23,7 @@ const MainRouter = () => {
             />
           ))}
         </Routes>
-      </ContentSection>
-    </Container>
-  );
-};
+    // </Container>
+)};
 
 export default MainRouter;
