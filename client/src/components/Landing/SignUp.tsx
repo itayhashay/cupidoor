@@ -4,7 +4,7 @@ import { Avatar, Button, TextField, Container, MenuItem } from "@mui/material";
 import { Grid, Box, Typography, CssBaseline, Link } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Formik } from "formik";
-import { schema, roles, CustomHelperText } from "./SignUpHelpers";
+import { schema, roles, CustomHelperText } from "./AuthHelpers";
 import "./SignUp.css";
 import axios from "axios";
 interface SignUpPageProps {
@@ -84,7 +84,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                   container
                   direction={"column"}
                   alignItems={"center"}
-                  sx={{ height: 30 }}
+                  sx={{ height: 89 }}
                 >
                   <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
                     <LockOutlinedIcon />
@@ -97,7 +97,13 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                   component="form"
                   noValidate
                   onSubmit={handleSubmit}
-                  sx={{ mt: 3, height: 550, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+                  sx={{
+                    mt: 3,
+                    height: 540,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
                 >
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
@@ -113,9 +119,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                         onChange={handleChange}
                       />
                       {errors?.firstName && (
-                        <CustomHelperText>
-                          First name is requird
-                        </CustomHelperText>
+                        <CustomHelperText>{errors.firstName}</CustomHelperText>
                       )}
                     </Grid>
                     <Grid item xs={12} sm={6}>
