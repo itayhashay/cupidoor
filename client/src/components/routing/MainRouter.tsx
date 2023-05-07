@@ -5,21 +5,25 @@ import { Container, ContentSection } from "../App/styles";
 
 const MainRouter = () => {
   return (
-    <Container>
-      <Navbar />
-      <ContentSection>
+    // <Container>
+      /* <ContentSection> */
         <Routes>
           {AppRoutes.map((route) => (
             <Route
               key={`Route - ${route.path}`}
               path={route.path}
-              element={<>{route.element}</>}
+              element={
+                <>
+                  {!/401|404|\*/.test(route.path) && route.path !== "/" && (
+                    <Navbar />
+                  )}
+                  {route.element}
+                </>
+              }
             />
           ))}
         </Routes>
-      </ContentSection>
-    </Container>
-  );
-};
+    // </Container>
+)};
 
 export default MainRouter;

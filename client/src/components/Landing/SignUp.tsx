@@ -1,47 +1,15 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  Avatar,
-  Button,
-  TextField,
-  Container,
-  MenuItem,
-  Grid,
-  Box,
-  Typography,
-  CssBaseline,
-  Link,
-} from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Avatar, Button, TextField, Container, MenuItem } from "@mui/material";
+import { Grid, Box, Typography, CssBaseline, Link } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { Field, Formik } from "formik";
-import * as Yup from "yup";
+import { Formik } from "formik";
+import { schema, roles, CustomHelperText } from "./AuthHelpers";
 import "./SignUp.css";
 import axios from "axios";
 interface SignUpPageProps {
   onTogglePage: () => void;
 }
-
-const schema = Yup.object().shape({
-  firstName: Yup.string().required("First name is a required field"),
-  lastName: Yup.string().required("Last name is a required field"),
-  email: Yup.string()
-    .required("Email is a required field")
-    .email("Invalid email format"),
-  password: Yup.string()
-    .required("Password is a required field")
-    .min(8, "Password must be at least 8 characters"),
-  phone: Yup.string().required("Phone number is a required field"),
-  age: Yup.string().required("Age is a required field"),
-  role: Yup.string().required("Role is a required field"),
-});
-
-const theme = createTheme();
-
-const roles = [
-  { value: "landlord", label: "Landlord" },
-  { value: "tenant", label: "Tenant" },
-];
 
 const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
   const navigate = useNavigate();
@@ -100,7 +68,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
         onSubmit={(event) => onSubmitHandler(event)}
       >
         {({ values, errors, touched, handleChange, handleSubmit }) => (
-          <ThemeProvider theme={theme}>
+          <div id="register-wrapper">
             <Container component="main" maxWidth="xs">
               <CssBaseline />
               <Box
@@ -111,17 +79,31 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                   alignItems: "center",
                 }}
               >
-                <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                  <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                  Sign up
-                </Typography>
+                <Grid
+                  item
+                  container
+                  direction={"column"}
+                  alignItems={"center"}
+                  sx={{ height: 89 }}
+                >
+                  <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                    <LockOutlinedIcon />
+                  </Avatar>
+                  <Typography component="h1" variant="h5">
+                    Sign up
+                  </Typography>
+                </Grid>
                 <Box
                   component="form"
                   noValidate
                   onSubmit={handleSubmit}
-                  sx={{ mt: 3 }}
+                  sx={{
+                    mt: 3,
+                    height: 540,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
                 >
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
@@ -136,6 +118,9 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                         autoFocus
                         onChange={handleChange}
                       />
+                      {errors?.firstName && (
+                        <CustomHelperText>{errors.firstName}</CustomHelperText>
+                      )}
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
@@ -148,19 +133,10 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                         autoComplete="family-name"
                         onChange={handleChange}
                       />
+                      {errors?.lastName && (
+                        <CustomHelperText>{errors.lastName}</CustomHelperText>
+                      )}
                     </Grid>
-                    <p className={errors?.firstName ? "error" : "hide"}>
-                      {errors.firstName &&
-                        touched.firstName &&
-                        errors.firstName}
-                      {""}
-                    </p>
-                    <p className={errors?.lastName ? "error" : "hide"}>
-                      {errors?.lastName &&
-                        touched?.lastName &&
-                        errors?.lastName}
-                      {""}
-                    </p>
                     <Grid item xs={12}>
                       <TextField
                         id="email"
@@ -173,11 +149,10 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                         autoComplete="email"
                         onChange={handleChange}
                       />
+                      {errors?.email && (
+                        <CustomHelperText>{errors.email}</CustomHelperText>
+                      )}
                     </Grid>
-                    <p className={errors?.email ? "error" : "hide"}>
-                      {errors.email && touched.email && errors.email}
-                      {""}
-                    </p>
                     <Grid item xs={12}>
                       <TextField
                         name="password"
@@ -190,11 +165,10 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                         autoComplete="new-password"
                         onChange={handleChange}
                       />
+                      {errors?.password && (
+                        <CustomHelperText>{errors.password}</CustomHelperText>
+                      )}
                     </Grid>
-                    <p className={errors?.password ? "error" : "hide"}>
-                      {errors.password && touched.password && errors.password}
-                      {""}
-                    </p>
                     <Grid item xs={12}>
                       <TextField
                         name="phone"
@@ -206,11 +180,10 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                         label="Phone"
                         onChange={handleChange}
                       />
+                      {errors?.phone && (
+                        <CustomHelperText>{errors.phone}</CustomHelperText>
+                      )}
                     </Grid>
-                    <p className={errors?.phone ? "error" : "hide"}>
-                      {errors.phone && touched.phone && errors.phone}
-                      {""}
-                    </p>
                     <Grid item xs={12} sm={6}>
                       <TextField
                         name="role"
@@ -228,6 +201,9 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                           </MenuItem>
                         ))}
                       </TextField>
+                      {errors?.role && (
+                        <CustomHelperText>{errors.role}</CustomHelperText>
+                      )}
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
@@ -240,35 +216,32 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                         autoComplete="Age"
                         onChange={handleChange}
                       />
+                      {errors?.age && (
+                        <CustomHelperText>{errors.age}</CustomHelperText>
+                      )}
                     </Grid>
-                    <p className={errors?.role ? "error" : "hide"}>
-                      {errors?.role && touched?.role && errors?.role}
-                      {""}
-                    </p>
-                    <p className={errors?.age ? "error" : "hide"}>
-                      {errors.age && touched.age && errors.age}
-                      {""}
-                    </p>
                   </Grid>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                  >
-                    Sign Up
-                  </Button>
-                  <Grid container justifyContent="center">
-                    <Grid item>
-                      <Link variant="body2" onClick={onTogglePage}>
-                        Already have an account? Sign in
-                      </Link>
+                  <Grid item container alignItems={"flex-end"}>
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}
+                    >
+                      Sign Up
+                    </Button>
+                    <Grid container justifyContent="center">
+                      <Grid item>
+                        <Link variant="body2" onClick={onTogglePage}>
+                          Already have an account? Sign in
+                        </Link>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Box>
               </Box>
             </Container>
-          </ThemeProvider>
+          </div>
         )}
       </Formik>
     </>
