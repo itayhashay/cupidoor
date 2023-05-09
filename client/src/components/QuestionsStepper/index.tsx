@@ -149,7 +149,7 @@ export default function QuestionsStepper({
                 Back
               </Button>
               {isLastStep ? (
-                <Link className="navbar-link" to={`houses`}>
+                <Link className="navbar-link" to={`/home`}>
                   <Button
                     variant="contained"
                     onClick={handleSubmit}
