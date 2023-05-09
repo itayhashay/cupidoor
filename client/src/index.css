@@ -17,7 +17,6 @@ code {
 }
 
 .MuiBox-root {
-  height: 9vh;
   width: 100%;
 }
 
@@ -62,4 +61,8 @@ code {
 
 a {
   text-decoration: none;
+}
+
+.css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
+  position: static !important;
 }

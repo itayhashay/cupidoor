@@ -51,7 +51,8 @@ export const numbersPropertyStyles = {
   flexDirection: "column",
   alignItems: "center",
   margin: "0 15px",
-  justifyContent: "center"
+  justifyContent: "center",
+  height: "9vh"
 }
 
 export const PropertyIcon = styled.img`
