@@ -1,10 +1,11 @@
 const bcrypt = require("bcrypt");
 const UserModel = require("../model/user.model");
 const UserService = require("../service/user.service");
+const jwt = require("jsonwebtoken");
+
 const AuthService = {
   async signUp(user) {
     try {
-
       let isExist = await UserModel.exists({ email: user.email });
       if (isExist) {
         console.log(isExist);
@@ -30,7 +31,13 @@ const AuthService = {
     if (!bcrypt.compareSync(password, user.password)) {
       throw new Error("Email or password are invalid!");
     }
-    return user;
+
+    const token = jwt.sign({ id: user._id, email: user.email }, "mySecret", {
+      expiresIn: "24h",
+    });
+
+
+    return {token};
   },
 };
 
