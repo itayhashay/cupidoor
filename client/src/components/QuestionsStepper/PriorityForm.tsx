@@ -63,7 +63,7 @@ export default function PriorityForm({activeStep, setAnswer, value} : FormProps)
         '& > legend': { mt: 2 },
       }}
     >
-        <Typography sx={{textAlign: "center", fontSize: "20px", fontWeight: "bold", color: "rgba(0, 0, 0, 0.6)"}}>{"How important is it to you?"}</Typography>
+        <Typography sx={{textAlign: "center", fontSize: "20px", fontWeight: "bold", color: "rgba(0, 0, 0, 0.6)", marginBottom: "5px"}}>{"How important is it to you?"}</Typography>
         <Box sx={{ width: "100%", display: "flex", alignItems: "center",
     justifyContent: "center" }}>
             <Typography sx={{ mr: 2 }}>{"not important"}</Typography>
