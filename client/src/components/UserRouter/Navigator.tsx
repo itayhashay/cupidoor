@@ -16,7 +16,7 @@ const Navigator = () => {
         </Link>,
         <Link to={"my-properties"}>
             <Button sx={{ color: "#757575" }}>
-            Liked Apartments
+            My Apartments
             </Button>
         </Link>    
     ]
