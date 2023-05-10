@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Avatar, Button, CssBaseline, TextField, Box } from "@mui/material";
-import { Typography, Container, Link, Grid } from "@mui/material";
+import { Typography, Container, Link, Grid, Paper } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { schema, CustomHelperText } from "./AuthHelpers";
 import { Formik } from "formik";
@@ -58,100 +58,161 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
         onSubmit={(event) => onSubmitHandler(event)}
       >
         {({ values, errors, touched, handleChange, handleSubmit }) => (
-          <div id="login-wrapper">
-            <Container component="main" maxWidth="xs">
+          <div>
+            <Container component="main" maxWidth="lg">
               <CssBaseline />
-              <Box
-                sx={{
-                  marginTop: 4,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Grid
-                  item
-                  container
-                  direction={"column"}
-                  alignItems={"center"}
-                  mb={"18px"}
-                >
-                  <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                    <LockOutlinedIcon />
-                  </Avatar>
-                  <Typography component="h1" variant="h5">
-                    Sign in
-                  </Typography>
+              <Paper elevation={3} sx={{ width: 600, height: 300 }}>
+                <Grid container>
+                  <Grid item xs={6} padding={3}>
+                    <Box component={"form"} onSubmit={handleSubmit} noValidate>
+                      <Grid container spacing={1}>
+                        <Grid item xs={12}>
+                          <TextField
+                            type="email"
+                            name="email"
+                            id="email"
+                            value={values.email}
+                            margin="normal"
+                            required
+                            fullWidth
+                            label="Email Address"
+                            autoComplete="email"
+                            autoFocus
+                            onChange={handleChange}
+                          />
+                          {errors?.email && (
+                            <CustomHelperText>{errors.email}</CustomHelperText>
+                          )}
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            name="password"
+                            id="password"
+                            type="password"
+                            label="Password"
+                            value={values.password}
+                            margin="normal"
+                            required
+                            fullWidth
+                            autoComplete="current-password"
+                            onChange={handleChange}
+                          />
+                          {errors?.password && (
+                            <CustomHelperText>
+                              {errors.password}
+                            </CustomHelperText>
+                          )}
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    sx={{
+                      backgroundImage: "url(/illustration.png)",
+                      backgroundRepeat: "no-repeat",
+                      backgroundColor: (t) =>
+                        t.palette.mode === "light"
+                          ? t.palette.grey[50]
+                          : t.palette.grey[900],
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  ></Grid>
                 </Grid>
-                <Box
-                  component="form"
-                  onSubmit={handleSubmit}
-                  noValidate
-                  sx={{
-                    mt: 1,
-                    height: 296,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Grid container spacing={2}>
-                    <TextField
-                      type="email"
-                      name="email"
-                      id="email"
-                      value={values.email}
-                      margin="normal"
-                      required
-                      fullWidth
-                      label="Email Address"
-                      autoComplete="email"
-                      autoFocus
-                      onChange={handleChange}
-                    />
-                    {errors?.email && (
-                      <CustomHelperText>{errors.email}</CustomHelperText>
-                    )}
-                    <TextField
-                      name="password"
-                      id="password"
-                      type="password"
-                      label="Password"
-                      value={values.password}
-                      margin="normal"
-                      required
-                      fullWidth
-                      autoComplete="current-password"
-                      onChange={handleChange}
-                    />
-                    {errors?.password && (
-                      <CustomHelperText>{errors.password}</CustomHelperText>
-                    )}
-                  </Grid>
-                  <Grid item container alignItems={"flex-end"}>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      sx={{ mt: 3, mb: 2 }}
+              </Paper>
+              <Paper elevation={3}>
+                <Grid container>
+                  <Grid item xs={6}>
+                    <Box
+                      component="form"
+                      onSubmit={handleSubmit}
+                      noValidate
+                      sx={{
+                        mt: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                      }}
                     >
-                      Sign In
-                    </Button>
-                    <Grid container justifyContent={"center"}>
-                      <Grid item xs>
-                        <Link href="#" variant="body2">
-                          Forgot password?
-                        </Link>
+                      <Grid container spacing={2}>
+                        <TextField
+                          type="email"
+                          name="email"
+                          id="email"
+                          value={values.email}
+                          margin="normal"
+                          required
+                          fullWidth
+                          label="Email Address"
+                          autoComplete="email"
+                          autoFocus
+                          onChange={handleChange}
+                        />
+                        {errors?.email && (
+                          <CustomHelperText>{errors.email}</CustomHelperText>
+                        )}
+                        <TextField
+                          name="password"
+                          id="password"
+                          type="password"
+                          label="Password"
+                          value={values.password}
+                          margin="normal"
+                          required
+                          fullWidth
+                          autoComplete="current-password"
+                          onChange={handleChange}
+                        />
+                        {errors?.password && (
+                          <CustomHelperText>{errors.password}</CustomHelperText>
+                        )}
                       </Grid>
-                      <Grid item>
-                        <Link href="" variant="body2" onClick={onTogglePage}>
-                          {"Don't have an account? Sign Up"}
-                        </Link>
+                      <Grid item container alignItems={"flex-end"}>
+                        <Button
+                          type="submit"
+                          fullWidth
+                          variant="contained"
+                          sx={{ mt: 3, mb: 2 }}
+                        >
+                          Sign In
+                        </Button>
+                        <Grid container justifyContent={"center"}>
+                          <Grid item xs>
+                            <Link href="#" variant="body2">
+                              Forgot password?
+                            </Link>
+                          </Grid>
+                          <Grid item>
+                            <Link
+                              href=""
+                              variant="body2"
+                              onClick={onTogglePage}
+                            >
+                              {"Don't have an account? Sign Up"}
+                            </Link>
+                          </Grid>
+                        </Grid>
                       </Grid>
-                    </Grid>
+                    </Box>
                   </Grid>
-                </Box>
-              </Box>
+                  <Grid
+                    item
+                    xs={6}
+                    sx={{
+                      backgroundImage: "url(/illustration.png)",
+                      backgroundRepeat: "no-repeat",
+                      backgroundColor: (t) =>
+                        t.palette.mode === "light"
+                          ? t.palette.grey[50]
+                          : t.palette.grey[900],
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  ></Grid>
+                </Grid>
+              </Paper>
             </Container>
           </div>
         )}
