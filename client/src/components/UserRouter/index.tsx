@@ -5,12 +5,14 @@ import { useState } from "react";
 import PersonalInfo from "./PersonalInfo";
 import MyProperties from "./MyProperties";
 import LikedApartments from "./LikedApartments";
+import Navbar from "../Navbar";
 
 const UserRouter = () => {
   const [houses, setHouses] = useState<any[]>([]);
 
   return (
     <Container>
+      <Navbar />
       <Navigator />
       <ContentSection>
         <Routes>
