@@ -1,32 +1,26 @@
 const bcrypt = require("bcrypt");
 const UserModel = require("../model/user.model");
 const UserService = require("../service/user.service");
+const jwt = require("jsonwebtoken");
+
 const AuthService = {
   async signUp(user) {
-    let isExist = await UserModel.exists({ email: user.email });
-    if (isExist) {
-      console.log(isExist);
-      throw new Error("Email already exist!");
+    try {
+      let isExist = await UserModel.exists({ email: user.email });
+      if (isExist) {
+        console.log(isExist);
+        throw new Error("Email already exist!");
+      }
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(user.password, salt);
+      user.password = hashedPassword;
+      user.salt = salt;
+      const newUser = await UserModel.create(user);
+      await newUser.save();
+      return newUser;
+    } catch (ex) {
+      throw new Error("Registration failed: " + ex.message);
     }
-    let newUser;
-    await new Promise((resolve, reject) => {
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(user.password, salt, async (err, hash) => {
-          if (err) throw err;
-          user.name = `${user.firstName} ${user.lastName}`;
-          user.firstName = user.firstName;
-          user.lastName = user.lastName;
-          user.email = user.email;
-          user.age = user.age;
-          user.role = user.role;
-          user.password = hash;
-          user.salt = salt;
-          newUser = await UserModel.create(user);
-          resolve();
-        });
-      });
-    });
-    return await newUser.save();
   },
 
   async signIn(email, password) {
@@ -37,7 +31,13 @@ const AuthService = {
     if (!bcrypt.compareSync(password, user.password)) {
       throw new Error("Email or password are invalid!");
     }
-    return user;
+
+    const token = jwt.sign({ id: user._id, email: user.email }, "mySecret", {
+      expiresIn: "24h",
+    });
+
+
+    return {token};
   },
 };
 
