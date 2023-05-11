@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import LockIcon from '@mui/icons-material/Lock';
 import {
   Avatar,
   Button,
@@ -83,6 +84,10 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
               <Paper elevation={3}>
                 <Grid container>
                   <Grid item xs={6} padding={3}>
+                    <Box display={"flex"} justifyContent={"space-between"} width={100} alignItems={"center"}>
+                      <img src="/favicon.png" width={90}></img>
+                      <Typography fontWeight={"bold"} fontFamily={"Roboto sans-serif"} fontSize={"1.3rem"}>CupiDoor</Typography>
+                    </Box>
                     <Box
                       component="form"
                       noValidate
@@ -96,9 +101,13 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                       }}
                     >
                       <Box display={"flex"} justifyContent={"center"}>
-                        <LogoImg src={Logo}></LogoImg>
-                        <Typography component="h1" variant="h5">
-                          Sign up
+                        <Typography variant="h4" fontWeight={"bold"}>
+                          Create your account
+                        </Typography>
+                      </Box>
+                      <Box display={"flex"} justifyContent={"center"}>
+                        <Typography variant="subtitle1" color={"#A9A9A9"} >
+                          Let's get started with your account
                         </Typography>
                       </Box>
 
@@ -230,14 +239,19 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                           fullWidth
                           variant="contained"
                           sx={{ mt: 3, mb: 2 }}
+                          startIcon={<LockIcon></LockIcon>}
                         >
                           Sign Up
                         </Button>
                         <Grid container justifyContent="center">
                           <Grid item>
-                            <Link variant="body2" onClick={onTogglePage}>
-                              Already have an account? Sign in
-                            </Link>
+                            <Typography variant="body2">
+                              Already have an account?
+                              <Link variant="body2" onClick={onTogglePage}>
+                                Sign in
+                              </Link>
+                            </Typography>
+
                           </Grid>
                         </Grid>
                       </Grid>
@@ -247,7 +261,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                     item
                     xs={6}
                     sx={{
-                      backgroundImage: "url(/illustration.png)",
+                      backgroundImage: "url(/signUp.jpg)",
                       backgroundRepeat: "no-repeat",
                       backgroundColor: (t) =>
                         t.palette.mode === "light"
