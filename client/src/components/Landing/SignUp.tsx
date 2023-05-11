@@ -10,7 +10,6 @@ import {
   Paper,
 } from "@mui/material";
 import { Grid, Box, Typography, CssBaseline, Link } from "@mui/material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Formik } from "formik";
 import { schema, roles, CustomHelperText } from "./AuthHelpers";
 import "./SignUp.css";
@@ -247,7 +246,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                           <Grid item>
                             <Typography variant="body2">
                               Already have an account?
-                              <Link variant="body2" onClick={onTogglePage}>
+                              <Link variant="body2" onClick={onTogglePage} sx={{cursor:"pointer",px:1}}>
                                 Sign in
                               </Link>
                             </Typography>
