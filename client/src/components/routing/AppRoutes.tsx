@@ -7,12 +7,14 @@ import QuestionsStepper from "../QuestionsStepper";
 import GenericHousesList from "../GenericHousesList";
 import ApartmentDetails from "../ApartmentDetails";
 import UserRouter from "../UserRouter";
+import Landing from "../Landing/Landing";
 
 // Will Change!!!!
 let tmpApartments: any = [];
 
 const appRoutes = [
-  { path: "/", element: <LandingPage /> },
+  { path: "/", element: <Landing /> },
+  { path: "/signIn", element: <LandingPage /> },
   { path: "/Mainfeed", element: <MainFeed /> },
   {
     path: "/questions",

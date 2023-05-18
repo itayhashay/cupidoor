@@ -35,6 +35,18 @@ const userSchema = new mongoose.Schema({
         enum: ['tenant', 'landlord', 'admin'],
         default: 'tenant'
     },
+    description: {
+        type: String,
+        required: false
+    },
+    isSmoking: {
+        type: Boolean,
+        default: false
+    },
+    hasPets: {
+        type: Boolean,
+        default: false
+    },
     createdAt: {
         type: Date,
         default: Date.now

@@ -19,10 +19,10 @@ const AnswerForm = ({ activeStep, setAnswer, value }: FormProps) => {
 
   return (
     <FormControl
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      sx={{ display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center" }}
     >
       <FormLabel
-        sx={{ fontSize: "30px", fontWeight: "bold" }}
+        sx={{ fontSize: "30px", fontWeight: "bold", padding: "0 12px" }}
         id="demo-radio-buttons-group-label"
       >
         {QUESTIONS[activeStep]}
