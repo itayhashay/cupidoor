@@ -57,13 +57,13 @@ export const BasicFilters: Filter[] = [
     component: <FloorRangeSlider />
   },
   {
-    id: 5,
+    id: 6,
     displayName: "Balcony",
     icon: BalconyIcon,
     component: <BalconyRangeSlider />
   },
   {
-    id: 5,
+    id: 7,
     displayName: "Parking Spots",
     icon: ParkingIcon,
     component: <ParkingRangeSlider />
@@ -72,31 +72,31 @@ export const BasicFilters: Filter[] = [
 
 export const LifeStyleFilters: { id: number, displayName: string, icon: string, component?: JSX.Element}[] = [
   {
-    id: 1,
+    id: 8,
     displayName: "Pets",
     icon: PetIcon,
     component: <Switch defaultChecked />
   },
   {
-    id: 2,
+    id: 9,
     displayName: "Smoke",
     icon: SmokeIcon,
     component: <Switch defaultChecked />
   },
   {
-    id: 3,
+    id: 10,
     displayName: "Roomates",
     icon: RoomatesIcon,
     component: <Switch defaultChecked />
   },
   {
-    id: 4,
+    id: 11,
     displayName: "Income",
     icon: SalaryIcon,
     component: <Switch defaultChecked />
   },
   {
-    id: 5,
+    id: 12,
     displayName: "Landlord",
     icon: RelationsIcon,
     component: <Switch defaultChecked />
