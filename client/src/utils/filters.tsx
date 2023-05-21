@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 import RoomsIcon from "../icons/aparment/rooms.png";
 import FloorIcon from "../icons/aparment/floor.png";
 import Mr2Icon from "../icons/aparment/mr.png";
@@ -14,6 +16,8 @@ import RelationsIcon from "../icons/lifeStyle/relationship.png";
 
 import { Filter } from "../types/filters";
 import * as FILTERS from "../components/Filters/constants";
+import { Apartment } from "../types/apartment";
+import { FILTERS_TO_PATH } from "../components/Filters/constants";
 
 export const BasicFilters: Filter[] = [
   {
@@ -119,4 +123,25 @@ export const queryToFilters = (queryString: string): {[x: string]: number[] | nu
   }, {});
 
   return filtersObj;
+}
+
+export const filterByUserProperties = (filters: {[x: string]: number[] | null}, apartments: Apartment[]): Apartment[] => {
+  const enabledFilters: {[x: string]: number[]} = _.flow([
+    Object.entries,
+    (arr: any[]) => arr.filter(([key, value]) => value !== null),
+    Object.fromEntries
+  ])(filters);
+
+  for (const filterName in enabledFilters) {
+    const filterKey: string = FILTERS_TO_PATH[filterName];    
+    apartments = apartments.filter((apartment: Apartment) => {
+      const apartmentValue: number = parseInt(apartment[filterKey as keyof typeof apartment] as string)
+      const bottomValue: number = enabledFilters[filterName][0];
+      const topValue: number = enabledFilters[filterName][1];
+      
+      return apartmentValue >= bottomValue && apartmentValue <= topValue;
+    })
+  }
+
+  return apartments;
 }

@@ -51,7 +51,7 @@ const HouseCard = ({ houseData }: { houseData: Apartment }) => {
           <DryDetails apartmentInfo={houseData} isBasicData={true}/>
           <Box sx={{margin: "8px 0", height: "fit-content"}}>
             <Typography sx={{ fontWeight: '400', fontSize: '20px', textAlign: 'center'}}>
-            ₪ {houseData.paymentsCond.rent}
+            ₪ {houseData.rent}
             </Typography>
           </Box>
         </CardContent>

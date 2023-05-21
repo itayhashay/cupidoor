@@ -7,7 +7,7 @@ import Sidebar from "../Sidebar";
 import Box from "@mui/material/Box";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DEFAULT_FILTERS } from "../Filters/constants";
-import { BasicFilters, filtersToUrl, queryToFilters } from "../../utils/filters";
+import { BasicFilters, filterByUserProperties, filtersToUrl, queryToFilters } from "../../utils/filters";
 import { Chip, Stack } from "@mui/material";
 import { Filter } from "../../types/filters";
 
@@ -40,6 +40,8 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
   useEffect(() => {
     const amountOfFilters: number = getAmountOfFilters();
     setFiltersAmount(amountOfFilters);
+    const filteredApartments: Apartment[] = filterByUserProperties(filters, HOUSES);
+    setHousess(filteredApartments);
   }, [filters])
 
   useEffect(() => {
@@ -49,14 +51,14 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
     }
   }, [apartments]);
 
-  const applyFilters = (newFilters: {[x: string]: number[] | null}) => {
+  const updateUrl = (newFilters: {[x: string]: number[] | null}) => {
     const url = filtersToUrl(newFilters);
     navigate(url);
   }
 
   const handleDeleteFilter = (filterKey: string) => () => {
     const newFilters: {[x: string]: number[] | null} = { ...filters, [filterKey]: null};
-    applyFilters(newFilters);
+    updateUrl(newFilters);
   };
 
 
@@ -73,7 +75,7 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
 
     return(
       <Stack direction="row" spacing={1}>
-        {filterLabels.map((filter) => <Chip label={filter.label} onDelete={handleDeleteFilter(filter.id)} sx={{fontWeight: 400 ,fontSize: "14px"}}/>)}
+        {filterLabels.map((filter, index) => <Chip key={index} label={filter.label} onDelete={handleDeleteFilter(filter.id)} sx={{fontWeight: 400 ,fontSize: "14px"}}/>)}
       </Stack>);
   }
 
@@ -82,7 +84,7 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <Box sx={{display: "flex", flexDirection: "row"}}>
+        <Box sx={{display: "flex", flexDirection: "row", height: "calc(100% - 9vh)"}}>
           <Sidebar />
           <Box>
             <Box sx={{position: "sticky",
@@ -105,7 +107,7 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
                                         width: "100%" }}>
               {houses.map((house, index) => {
                 return (
-                  <div key={index}>
+                  <div key={house.id}>
                     <HouseCard houseData={house}/>
                   </div>
                 );

@@ -8,9 +8,9 @@ const MainRouter = () => {
     // <Container>
       /* <ContentSection> */
         <Routes>
-          {AppRoutes.map((route) => (
+          {AppRoutes.map((route, index) => (
             <Route
-              key={`Route - ${route.path}`}
+              key={index}
               path={route.path}
               element={
                 <>

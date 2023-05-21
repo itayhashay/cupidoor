@@ -79,3 +79,12 @@ export const SQUARE_METER_PROPS: SliderProps = {
 
 }
 
+export const FILTERS_TO_PATH = {
+    [FILTERS_NAMES.MATCH_PRECENT]: "match",
+    [FILTERS_NAMES.PRICE]: "rent",
+    [FILTERS_NAMES.ROOMS]: "rooms",
+    [FILTERS_NAMES.SQUARE_METER]: "squareMeter",
+    [FILTERS_NAMES.FLOOR]: "floor",
+    [FILTERS_NAMES.BALCONY]: "balcony",
+    [FILTERS_NAMES.PARKING]: "parkings",
+  };

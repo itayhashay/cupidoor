@@ -72,8 +72,8 @@ const Sidebar = () => {
 
   const renderBasicFilters = (basicFilters: Filter[]) => {
     return <>
-            {basicFilters.map((item: Filter) => (
-              <Accordion key={item.id} expanded={expanded === `panel${item.id}`} onChange={handleChange(`panel${item.id}`)} sx={{ margin: "0px !important" }}>
+            {basicFilters.map((item: Filter, index: number) => (
+              <Accordion key={index} expanded={expanded === `panel${item.id}`} onChange={handleChange(`panel${item.id}`)} sx={{ margin: "0px !important" }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                 >
