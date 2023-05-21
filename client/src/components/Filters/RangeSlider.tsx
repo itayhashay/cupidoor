@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-import { SyntheticEvent, useMemo, useState } from 'react';
+import { SyntheticEvent, useEffect, useMemo, useState } from 'react';
 import { SliderProps } from '../../types/filters';
 
 const RangeSlider = ({
@@ -9,7 +9,8 @@ const RangeSlider = ({
     minValue,
     maxValue,
     step,
-    commitFilter
+    commitFilter,
+    filterValue
 }: SliderProps) => {
     const [value, setValue] = useState<number[]>([minValue, maxValue]);
     const marks = useMemo(()=>{
@@ -24,6 +25,10 @@ const RangeSlider = ({
             },
           ]
     }, [maxValue, minValue]);
+
+    useEffect(()=>{
+      setValue(filterValue !== undefined ? filterValue : [minValue, maxValue])
+    }, [filterValue])
 
     const conmmitChange = (event: Event | SyntheticEvent<Element, Event>, newValue: number | number[]) => {
         if(Array.isArray(newValue) && newValue.length === 2 && commitFilter) {
@@ -54,7 +59,10 @@ const RangeSlider = ({
         setValue([value[0], Math.max(newValue[1], value[0] + minDistance)]);
       }
     };
-          
+    console.log(filterName);
+    console.log(value);
+    console.log("-----------------");
+
     return (
     <Box>
       <Slider

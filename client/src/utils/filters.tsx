@@ -113,8 +113,7 @@ export const queryToFilters = (queryString: string): {[x: string]: number[] | nu
   const filtersObj = params.reduce((filtersObj: {[x: string]: number[] | null}, currentValue: string) => {
     const filterParts = currentValue.split("=");
     const filterValuesStr = filterParts[1].split(",");
-    const filterValues = filterValuesStr.map(value =>  parseInt(value));
-    
+    const filterValues = filterValuesStr.map(value =>  parseInt(value));    
     filtersObj[filterParts[0]] = filterValues;
     return filtersObj;
   }, {});

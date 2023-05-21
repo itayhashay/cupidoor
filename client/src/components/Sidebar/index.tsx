@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import TuneIcon from '@mui/icons-material/Tune';
 import { Drawer, DrawerHeader } from "./styles";
-import { BasicFilters, LifeStyleFilters, filtersToUrl } from "../../utils/filters";
+import { BasicFilters, LifeStyleFilters, filtersToUrl, queryToFilters } from "../../utils/filters";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -14,13 +14,24 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { DEFAULT_FILTERS } from "../Filters/constants";
 import { Filter } from "../../types/filters";
 import RangeSlider from "../Filters/RangeSlider";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
   const [expanded, setExpanded] = useState<string | false>(false);
   const [filters, setFilters] = useState<{[x: string]: number[] | null}>(DEFAULT_FILTERS);
   const navigate = useNavigate();
+  const location = useLocation()
+
+  useEffect(() => {
+    const queryString = window.location.search;
+    if(!queryString) {
+      setFilters(DEFAULT_FILTERS);
+      return;
+    }
+    const enabledFilters: {[x: string]: number[] | null} = queryToFilters(queryString);
+    setFilters({ ...enabledFilters});
+  }, [location])
 
   const commitFilter = (filterName: string, newValue: number[]) => {
     setFilters({
@@ -54,9 +65,14 @@ const Sidebar = () => {
     </>
   }
 
-  const renderBasicFilters = (filters: Filter[]) => {
+  const getFilterValue = (item: Filter): number[] | undefined => {
+    const value = filters[item.props.filterName];
+    return value !== null ? value : undefined;
+  }
+
+  const renderBasicFilters = (basicFilters: Filter[]) => {
     return <>
-            {filters.map((item) => (
+            {basicFilters.map((item: Filter) => (
               <Accordion key={item.id} expanded={expanded === `panel${item.id}`} onChange={handleChange(`panel${item.id}`)} sx={{ margin: "0px !important" }}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
@@ -67,7 +83,7 @@ const Sidebar = () => {
                 </AccordionSummary>
                 <AccordionDetails sx={{padding: '0'}}>
                 <Box sx={{ padding: "0 5px", margin: 'auto', width: '85%'}} >
-                      <RangeSlider {...item.props} commitFilter={commitFilter}/>
+                      <RangeSlider {...item.props} filterValue={getFilterValue(item)} commitFilter={commitFilter}/>
                       </Box>
                   </AccordionDetails>
                 </Accordion>
@@ -98,7 +114,14 @@ const Sidebar = () => {
             {renderLifeStyleFilters(LifeStyleFilters)}
           </Grid> */}
         </List>
-        <Box sx={{ display: "flex", justifyContent: "center", position: "absolute", bottom: "20px", visibility: open ? "visible" : "hidden"}}>
+        <Box sx={{ display: "flex", flexDirection: "column" , alignItems:"center", justifyContent: "center", position: "absolute", bottom: "20px", visibility: open ? "visible" : "hidden"}}>
+        <Link className="navbar-link" to={`/home`}>
+        <Button
+          color="primary"
+          size="small"
+          variant="text"
+        >Reset Filters</Button>
+          </Link>
           <Button onClick={applyFilters} variant="contained" color="primary" sx={{ width: '80%' }}>
             Apply Filters
           </Button>
