@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Container, EnabledFilters } from "./styles";
 import HouseCard from "../HouseCard";
 import Spinner from "../Spinner";
 import { Apartment } from "../../types/apartment";
@@ -15,6 +14,7 @@ import { Filter } from "../../types/filters";
 const GenericHousesList = ({ apartments } : {apartments: any}) => {
   const [houses, setHousess] = useState<Apartment[]>(HOUSES);
   const [isLoading, setIsLoading] = useState(true);
+  const [filtersAmount, setFiltersAmount] = useState<number>(0);
   const [filters, setFilters] = useState<{[x: string]: number[] | null}>(DEFAULT_FILTERS);
   const location = useLocation()
   const navigate = useNavigate();
@@ -31,8 +31,15 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
     setFilters(newFilters);
   }, [location])
 
+  const getAmountOfFilters = (): number => {
+    const filtersValues: (number[] | null)[] = Object.values(filters);
+    const enabledFiltersValues = filtersValues.filter((filter: number[] | null) => filter !== null);
+    return enabledFiltersValues.length;
+  }
+
   useEffect(() => {
-    
+    const amountOfFilters: number = getAmountOfFilters();
+    setFiltersAmount(amountOfFilters);
   }, [filters])
 
   useEffect(() => {
@@ -51,6 +58,7 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
     const newFilters: {[x: string]: number[] | null} = { ...filters, [filterKey]: null};
     applyFilters(newFilters);
   };
+
 
   const renderFilters = () => {
     const filterLabels = [];
@@ -77,10 +85,24 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
         <Box sx={{display: "flex", flexDirection: "row"}}>
           <Sidebar />
           <Box>
-            <EnabledFilters >
+            <Box sx={{position: "sticky",
+                      width: "100%",
+                      background: "#ffffff",
+                      zIndex: "1",
+                      borderBottom: "1px solid lightgrey",
+                      height: "7vh",
+                      padding: "5px 10px",
+                      display: filtersAmount === 0 ? "none" : "flex",
+                      alignItems: "center"}}>
               {renderFilters()}
-            </EnabledFilters>
-            <Container className="apis-container">
+            </Box>
+            <Box className="apis-container" sx={{display: "flex",
+                                        justifyContent: "center",
+                                        flexWrap: "wrap",
+                                        maxHeight: filtersAmount === 0 ? "91vh" : "84vh",
+                                        overflow: "auto",
+                                        position: "relative",
+                                        width: "100%" }}>
               {houses.map((house, index) => {
                 return (
                   <div key={index}>
@@ -88,7 +110,7 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
                   </div>
                 );
               })}
-          </Container>
+          </Box>
           </Box>
         </Box>
       )}

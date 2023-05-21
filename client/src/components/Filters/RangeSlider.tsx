@@ -59,9 +59,6 @@ const RangeSlider = ({
         setValue([value[0], Math.max(newValue[1], value[0] + minDistance)]);
       }
     };
-    console.log(filterName);
-    console.log(value);
-    console.log("-----------------");
 
     return (
     <Box>
