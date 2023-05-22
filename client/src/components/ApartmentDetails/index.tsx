@@ -42,7 +42,7 @@ const ApartmentDetails = () => {
                     </DryDetailsContainer>
                     <RentContainer>
                             <Typography variant="h4">
-                                {`${apartmentInfo.paymentsCond.rent}₪`}
+                                {`${apartmentInfo.rent}₪`}
                             </Typography>
                             <Typography variant="subtitle1">
                                 {"Last updated: Today"}

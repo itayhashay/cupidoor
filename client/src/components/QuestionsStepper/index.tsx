@@ -115,8 +115,8 @@ export default function QuestionsStepper({
             activeStep={activeStep}
             connector={<ColorlibConnector />}
           >
-            {QUESTIONS.map((label) => (
-              <Step key={label}>
+            {QUESTIONS.map((label, index) => (
+              <Step key={index}>
                 <StepLabel StepIconComponent={ColorlibStepIcon}></StepLabel>
               </Step>
             ))}

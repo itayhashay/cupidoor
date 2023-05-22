@@ -14,5 +14,6 @@ export type Apartment = {
     match: number;
     parkings: number;
     rooms: number;
+    rent: number;
     paymentsCond: PaymentsCond
 }

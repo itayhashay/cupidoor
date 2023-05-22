@@ -25,7 +25,9 @@ export const Navbar = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <LogoImg src={Logo} alt="logo" />
+          <Link to={`/home`}>
+            <LogoImg src={Logo} alt="logo" />
+          </Link>
           <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
             Cupidoor
           </Typography>

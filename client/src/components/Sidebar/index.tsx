@@ -1,23 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import TuneIcon from '@mui/icons-material/Tune';
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import { Drawer, DrawerHeader, FilterIcon } from "./styles";
-import { BasicFilters, Filter, LifeStyleFilters } from "../../utils/filters";
-import { Box, Tooltip, Typography } from "@mui/material";
+import { Drawer, DrawerHeader } from "./styles";
+import { BasicFilters, LifeStyleFilters, filtersToUrl, queryToFilters } from "../../utils/filters";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { DEFAULT_FILTERS } from "../Filters/constants";
+import { Filter } from "../../types/filters";
+import RangeSlider from "../Filters/RangeSlider";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
   const [expanded, setExpanded] = useState<string | false>(false);
+  const [filters, setFilters] = useState<{[x: string]: number[] | null}>(DEFAULT_FILTERS);
+  const navigate = useNavigate();
+  const location = useLocation()
+
+  useEffect(() => {
+    const queryString = window.location.search;
+    if(!queryString) {
+      setFilters(DEFAULT_FILTERS);
+      return;
+    }
+    const enabledFilters: {[x: string]: number[] | null} = queryToFilters(queryString);
+    setFilters({ ...enabledFilters});
+  }, [location])
+
+  const commitFilter = (filterName: string, newValue: number[]) => {
+    setFilters({
+      ...filters,
+      [filterName]: newValue,
+    });
+  }
+
+  const applyFilters = () => {
+    const url = filtersToUrl(filters);
+    navigate(url);
+  }
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -28,44 +54,48 @@ const Sidebar = () => {
     setOpen(!open);
   };
 
-  const renderFilters = (filters: Filter[]) => {
+  const renderLifeStyleFilters = (filters: Filter[]) => {
     return <>
-            {filters.map((item) => (
-              <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
-                  <Box
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: "initial",
-                      display: "flex",
-                      px: 2.5,
-                      alignItems: "center"
-                    }}
-                  >
-                    <Tooltip title={item.displayName} enterDelay={500} leaveDelay={100}>
-                      <ListItemIcon
-                        sx={{
-                          minWidth: 0,
-                          mr: open ? 3 : "auto",
-                        }}
-                      >
-                        <FilterIcon src={item.icon} />
-                      </ListItemIcon>
-                    </Tooltip>
-                    <Box sx={{ padding: "0 5px", display: "flex", justifyContent: 'center'}} >
-                    {item.component}
-                    </Box>
-
-                  </Box>
-                  <Divider sx={{margin: "0 auto 8px auto", width: "90%"}}/>
-              </ListItem>
+            {filters.map((item, index) => (
+              <Grid item xs={2} sm={4} md={4} key={index} flexDirection="row" alignItems="center" display="flex" justifyContent="space-between">
+                <Typography variant="body1">{item.displayName}</Typography>
+                <RangeSlider {...item.props} commitFilter={commitFilter}/>
+              </Grid>
             ))}
     </>
   }
 
+  const getFilterValue = (item: Filter): number[] | undefined => {
+    const value = filters[item.props.filterName];
+    return value !== null ? value : undefined;
+  }
+
+  const renderBasicFilters = (basicFilters: Filter[]) => {
+    return <>
+            {basicFilters.map((item: Filter, index: number) => (
+              <Accordion key={index} expanded={expanded === `panel${item.id}`} onChange={handleChange(`panel${item.id}`)} sx={{ margin: "0px !important" }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                >
+                  <Typography variant="body1" sx={{ width: '33%', flexShrink: 0 }}>
+                    {item.displayName}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails sx={{padding: '0'}}>
+                <Box sx={{ padding: "0 5px", margin: 'auto', width: '85%'}} >
+                      <RangeSlider {...item.props} filterValue={getFilterValue(item)} commitFilter={commitFilter}/>
+                      </Box>
+                  </AccordionDetails>
+                </Accordion>
+            ))}
+    </>
+  }
+
+  // TODO: How to display life style filters?
   return (
     <>
       <CssBaseline />
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={open} sx={{maxHeight: '91vh', overflow: 'auto', position: 'relative'}}>
         <DrawerHeader sx={{direction: "rtl",
                           display: "flex",
                           justifyContent: "space-between",
@@ -78,30 +108,24 @@ const Sidebar = () => {
             Filters
           </Typography>
         </DrawerHeader>
-        <List sx={{ visibility: open ? "visible" : "hidden" }}>
-        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')} sx={{ margin: "0px !important" }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-        >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>
-            Basic Filters
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails sx={{padding: '0'}}>
-          {renderFilters(BasicFilters)}
-        </AccordionDetails>
-        </Accordion>
-        <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')} sx={{ margin: "0px !important" }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-        >
-          <Typography sx={{ width: '33%', flexShrink: 0 }}>Life Style Filters</Typography>
-        </AccordionSummary>
-        <AccordionDetails sx={{padding: '0'}}>
-        {renderFilters(LifeStyleFilters)}
-        </AccordionDetails>
-      </Accordion>
+        <List sx={{ display: open ? "block" : "none", borderTop: '1px solid lightgrey', paddingTop: 0, marginTop: '8px' }}>
+          {renderBasicFilters(BasicFilters)}
+          {/* <Grid container spacing={{ xs: 3, md: 2 }} columns={{ xs: 2, sm: 3, md: 8 }} justifyContent="center" padding="0 16px" marginTop="5px">
+            {renderLifeStyleFilters(LifeStyleFilters)}
+          </Grid> */}
         </List>
+        <Box sx={{ display: "flex", flexDirection: "column" , alignItems:"center", justifyContent: "center", position: "absolute", bottom: "20px", visibility: open ? "visible" : "hidden"}}>
+        <Link className="navbar-link" to={`/home`}>
+        <Button
+          color="primary"
+          size="small"
+          variant="text"
+        >Reset Filters</Button>
+          </Link>
+          <Button onClick={applyFilters} variant="contained" color="primary" sx={{ width: '80%' }}>
+            Apply Filters
+          </Button>
+        </Box>
       </Drawer>
     </>
   );
