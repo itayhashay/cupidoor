@@ -88,7 +88,7 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
       ) : (
         <Box sx={{display: "flex", flexDirection: "row", height: "calc(100% - 9vh)"}}>
           {isPageHome && <Sidebar />}
-          <Box sx={{width: isPageHome ? "calc(100% - 250px)" : "100%"}}>
+          <Box sx={{width: "100%"}}>
             <Box sx={{position: "sticky",
                       width: "100%",
                       background: "#ffffff",
