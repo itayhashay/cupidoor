@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -12,9 +12,16 @@ import { Link } from "react-router-dom";
 import DryDetails from "../ApartmentDetails/DryDetails";
 import { Box, Fab } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { precentToColor } from "../../utils/colors";
 
 const HouseCard = ({ houseData }: { houseData: Apartment }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [matchColor, setMatchColor] = useState<string>("");
+
+  useEffect(() => {
+    const color: string = precentToColor(houseData.match);
+    setMatchColor(color);
+  }, [houseData]);
 
   return (
     <Link to={`/apartment/${houseData.id}`}>
@@ -39,7 +46,7 @@ const HouseCard = ({ houseData }: { houseData: Apartment }) => {
           <FavoriteIcon />
         </Fab>
         <Typography
-          sx={MatchLabelStyles}
+          sx={{...MatchLabelStyles, color: matchColor }}
         >{`${houseData.match}% Match`}</Typography>
         <CardContent
           sx={CardContentStyles}

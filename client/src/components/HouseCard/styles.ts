@@ -61,7 +61,6 @@ export const CardContentStyles = {
 export const MatchLabelStyles = {
   textAlign: "center",
   fontSize: "16px", 
-  color: "forestgreen", 
   marginBottom: "8px", 
   fontWeight: "bold",     
   position: "absolute",
