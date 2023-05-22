@@ -14,12 +14,14 @@ import { Filter } from "../../types/filters";
 const GenericHousesList = ({ apartments } : {apartments: any}) => {
   const [houses, setHousess] = useState<Apartment[]>(HOUSES);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPageHome, setIsHomePage] = useState(false);
   const [filtersAmount, setFiltersAmount] = useState<number>(0);
   const [filters, setFilters] = useState<{[x: string]: number[] | null}>(DEFAULT_FILTERS);
   const location = useLocation()
   const navigate = useNavigate();
 
   useEffect(() => {
+    setIsHomePage(window.location.pathname === "/home");
     const queryString = window.location.search;
     if(!queryString) {
       setFilters(DEFAULT_FILTERS);
@@ -85,23 +87,25 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
         <Spinner />
       ) : (
         <Box sx={{display: "flex", flexDirection: "row", height: "calc(100% - 9vh)"}}>
-          <Sidebar />
-          <Box>
+          {isPageHome && <Sidebar />}
+          <Box sx={{width: isPageHome ? "calc(100% - 250px)" : "100%"}}>
             <Box sx={{position: "sticky",
                       width: "100%",
                       background: "#ffffff",
                       zIndex: "1",
                       borderBottom: "1px solid lightgrey",
-                      height: "7vh",
+                      height: "8vh",
                       padding: "5px 10px",
-                      display: filtersAmount === 0 ? "none" : "flex",
-                      alignItems: "center"}}>
+                      display: isPageHome && filtersAmount > 0 ? "flex" : "none",
+                      alignItems: "center",
+                      maxWidth: "calc(100vw - 250px)",
+                      overflowX: "auto"}}>
               {renderFilters()}
             </Box>
             <Box className="apis-container" sx={{display: "flex",
                                         justifyContent: "center",
                                         flexWrap: "wrap",
-                                        maxHeight: filtersAmount === 0 ? "91vh" : "84vh",
+                                        maxHeight: filtersAmount === 0 ? "91vh" : "83vh",
                                         overflow: "auto",
                                         position: "relative",
                                         width: "100%" }}>
