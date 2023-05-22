@@ -25,3 +25,10 @@ export const roles = [
 export const CustomHelperText = styled(FormHelperText)({
   color: "red",
 });
+
+export const loginScheme = Yup.object().shape({
+  email: Yup.string()
+    .required("Email is a required field")
+    .email("Invalid email format"),
+  password: Yup.string().required("Password is a required field"),
+});

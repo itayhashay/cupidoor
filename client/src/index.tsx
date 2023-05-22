@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./components/App";
 import MainRouter from "./components/routing/MainRouter";
+import { AuthContextProvider } from "./context/AuthContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -11,9 +12,11 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <Router>
-      {/* <App /> */}
-      <MainRouter />
-    </Router>
+    <AuthContextProvider>
+      <Router>
+        {/* <App /> */}
+        <MainRouter />
+      </Router>
+    </AuthContextProvider>
   </React.StrictMode>
 );

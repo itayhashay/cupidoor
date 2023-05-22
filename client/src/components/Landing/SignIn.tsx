@@ -3,11 +3,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Avatar, Button, CssBaseline, TextField, Box } from "@mui/material";
 import { Typography, Container, Link, Grid, Paper } from "@mui/material";
-import LockIcon from '@mui/icons-material/Lock';
-import { schema, CustomHelperText } from "./AuthHelpers";
+import LockIcon from "@mui/icons-material/Lock";
+import { loginScheme, CustomHelperText } from "./AuthHelpers";
 import { Formik } from "formik";
 import "./SignIn.css";
-
+import { AuthContextType, useAuth } from "../../context/AuthContext";
 
 interface SignInPageProps {
   onTogglePage: () => void;
@@ -21,7 +21,12 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
     NodeJS.Timeout | undefined
   >();
 
-  const onSubmitHandler = (values: { email: string; password: string }) => {
+  const { signInUser } = useAuth() as AuthContextType;
+
+  const onSubmitHandler = async (values: {
+    email: string;
+    password: string;
+  }) => {
     const userData = {
       email: values.email,
       password: values.password,
@@ -30,13 +35,21 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
     // auth.login
     // .then(navigate(location.state ? location.state.redirect : "/home"))
     // : auth.login.then(navigate(location.state ? location.state.redirect : "/questions"))
+    const response: any = await signInUser(userData.email, userData.password);
+    if (response.success) {
+      alert("success");
+    } else {
+      alert(response.data);
+    }
+
     alert(JSON.stringify(userData));
-    setIsGoodLogin(true);
-    setLoginTimeoutId(
-      setTimeout(() => {
-        navigate(location.state ? location.state.redirect : "/home");
-      }, 1500)
-    );
+
+    // setIsGoodLogin(true);
+    // setLoginTimeoutId(
+    //   setTimeout(() => {
+    //     navigate(location.state ? location.state.redirect : "/home");
+    //   }, 1500)
+    // );
   };
 
   useEffect(() => {
@@ -54,9 +67,12 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
   return (
     <>
       <Formik
-        validationSchema={schema}
+        validationSchema={loginScheme}
         initialValues={{ email: "", password: "" }}
-        onSubmit={(event) => onSubmitHandler(event)}
+        onSubmit={(event) => {
+          debugger;
+          onSubmitHandler(event);
+        }}
       >
         {({ values, errors, touched, handleChange, handleSubmit }) => (
           <Container component="main" maxWidth="lg">
@@ -64,12 +80,22 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
             <Paper elevation={3} sx={{ width: 1152, height: 704 }}>
               <Grid container height={"100%"}>
                 <Grid item xs={6} padding={3}>
-
                   <Grid container>
                     <Grid item xs={12}>
-                      <Box display={"flex"} justifyContent={"space-between"} width={100} alignItems={"center"}>
+                      <Box
+                        display={"flex"}
+                        justifyContent={"space-between"}
+                        width={100}
+                        alignItems={"center"}
+                      >
                         <img src="/favicon.png" width={90}></img>
-                        <Typography fontWeight={"bold"} fontFamily={"Roboto sans-serif"} fontSize={"1.3rem"}>CupiDoor</Typography>
+                        <Typography
+                          fontWeight={"bold"}
+                          fontFamily={"Roboto sans-serif"}
+                          fontSize={"1.3rem"}
+                        >
+                          CupiDoor
+                        </Typography>
                       </Box>
                     </Grid>
                     <Grid item xs={12}>
@@ -79,14 +105,14 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
                         </Typography>
                       </Box>
                       <Box display={"flex"} justifyContent={"center"}>
-                        <Typography variant="subtitle1" color={"#A9A9A9"} >
+                        <Typography variant="subtitle1" color={"#A9A9A9"}>
                           Let's Find Your Next Tenant Or Apartment
                         </Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={12} >
-
-                      <Box component={"form"}
+                    <Grid item xs={12}>
+                      <Box
+                        component={"form"}
                         noValidate
                         onSubmit={handleSubmit}
                       >
@@ -134,19 +160,24 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
                       >
                         Sign In
                       </Button>
-
                     </Grid>
 
                     <Grid item xs={12}>
-
-                      <Box display={"flex"} justifyContent={"space-between"} paddingX={3}>
+                      <Box
+                        display={"flex"}
+                        justifyContent={"space-between"}
+                        paddingX={3}
+                      >
                         <Link href="#" variant="body2">
                           Forgot password?
                         </Link>
                         <Typography variant="body2">
                           Don't have an account?
-                          <Link variant="body2" sx={{ px: 1,cursor:"pointer" }}
-                            onClick={onTogglePage}>
+                          <Link
+                            variant="body2"
+                            sx={{ px: 1, cursor: "pointer" }}
+                            onClick={onTogglePage}
+                          >
                             Sign Up
                           </Link>
                         </Typography>

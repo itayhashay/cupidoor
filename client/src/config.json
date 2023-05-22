@@ -1,8 +1,10 @@
 {
   "api": {
     "baseUrl": "http://localhost:2308",
-      "routes": {
-        "match": "/match"
-      }
+    "routes": {
+      "match": "/match",
+      "signIn": "/signIn",
+      "signUp": "/signUp"
+    }
   }
 }
