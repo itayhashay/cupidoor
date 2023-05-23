@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -7,7 +7,6 @@ import Typography from "@mui/material/Typography";
 import { DividerLine, cardStyles, AvatarStyles, CardContentStyles, MatchLabelStyles, addressStyles, likeButtonStyles } from "./styles";
 import Skeleton from "@mui/material/Skeleton";
 import { Apartment } from "../../types/apartment";
-import UserImg from "../../icons/user.jpeg"
 import { Link } from "react-router-dom";
 import DryDetails from "../ApartmentDetails/DryDetails";
 import { Box, Fab } from "@mui/material";
@@ -23,6 +22,10 @@ const HouseCard = ({ houseData }: { houseData: Apartment }) => {
     const color: string = precentToColor(houseData.match);
     setMatchColor(color);
   }, [houseData]);
+
+  const handleClickFavorite = (event: Event | SyntheticEvent<Element, Event>) => {
+    
+  }
 
   return (
     <Link to={`/apartment/${houseData.id}`}>
@@ -43,7 +46,7 @@ const HouseCard = ({ houseData }: { houseData: Apartment }) => {
           />
         )}
         <Avatar alt="" src={PROFILE_PICTURES[houseData.id-1]} sx={AvatarStyles}/>
-        <Fab sx={likeButtonStyles}>
+        <Fab sx={likeButtonStyles} onClick={handleClickFavorite}>
           <FavoriteIcon />
         </Fab>
         <Typography

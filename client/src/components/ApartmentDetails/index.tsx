@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Apartment } from "../../types/apartment";
-import { HOUSES, HOUSE_INIT } from "../../utils/mock";
+import { HOUSES, HOUSES_IMAGES, HOUSE_INIT } from "../../utils/mock";
 import DryDetails from "./DryDetails";
 import { Container, ElementsLineOne, RentContainer, Image, ImageContainer, DryDetailsContainer, Frame, ElementsLineTwo, SubFrame } from "./styles";
 import PaymentCalculator from "./PaymentCalculator";
@@ -35,7 +35,7 @@ const ApartmentDetails = () => {
             <Frame>
                 <ElementsLineOne>
                     <ImageContainer>
-                        <Image alt="Paella dish" src="https://www.apartments.com/images/default-source/2019-naa/parkline-apartment-in-miami-fla2dc2731-e6f2-4dca-89c5-38245ccacea1.tmb-featuredim.jpg?sfvrsn=55bc41ed_1" />
+                        <Image alt="Paella dish" src={HOUSES_IMAGES[apartmentInfo.id-1]} />
                     </ImageContainer>
                     <DryDetailsContainer>
                         <DryDetails apartmentInfo={apartmentInfo}/>
@@ -57,7 +57,7 @@ const ApartmentDetails = () => {
                         </SubFrame>
                         <SubFrame>
                             <Typography variant="h6">Meet the landlord</Typography>
-                            <LandlordSection {...apartmentInfo.landlord}/>
+                            <LandlordSection landlord={apartmentInfo.landlord} apartmentId={apartmentInfo.id}/>
                         </SubFrame>
                     </Box>
                     <Box sx={{ width: "50%", height: 'auto'}}>
