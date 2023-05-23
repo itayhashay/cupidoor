@@ -1,21 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import LockIcon from "@mui/icons-material/Lock";
-import {
-  Avatar,
-  Button,
-  TextField,
-  Container,
-  MenuItem,
-  Paper,
-} from "@mui/material";
+import { Button, TextField, Container, MenuItem, Paper } from "@mui/material";
 import { Grid, Box, Typography, CssBaseline, Link } from "@mui/material";
 import { Formik } from "formik";
 import { schema, roles, CustomHelperText } from "./AuthHelpers";
 import "./SignUp.css";
-import axios, { AxiosResponse } from "axios";
-import Logo from "../../icons/logo.png";
-import { LogoImg } from "../Navbar/styles";
 import { AuthContextType, useAuth } from "../../context/AuthContext";
 import { UserTypes } from "../../types/user";
 interface SignUpPageProps {
@@ -51,18 +41,14 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
     });
     if (response.success) {
       setGoodRegistration(true);
-      alert("Success");
-      // setTimeoutId(
-      //   setTimeout(() => {
-      //     navigate(location.state ? location.state.redirect : "/questions");
-      //   }, 1500)
-      // );
+      setTimeoutId(
+        setTimeout(() => {
+          navigate(location.state ? location.state.redirect : "/questions");
+        }, 1500)
+      );
     } else {
       alert(response.error);
     }
-
-    // })
-    //   .catch((err) => console.log(err));
   };
 
   useEffect(() => {

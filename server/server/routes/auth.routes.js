@@ -5,10 +5,7 @@ const { CREATED, OK, NOT_FOUND, NO_CONTENT, INTERNAL_SERVER_ERROR } = require('h
 const { validateUserSignUp } = require('../validator/auth.validator');
 
 
-
-
 router.post('/signUp',[validateUserSignUp], AuthController.signUp);
 router.post('/signIn', AuthController.signIn);
-
 
 module.exports = router
