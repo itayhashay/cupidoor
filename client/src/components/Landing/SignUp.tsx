@@ -51,12 +51,11 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
     });
     if (response.success) {
       setGoodRegistration(true);
-      alert("Success");
-      // setTimeoutId(
-      //   setTimeout(() => {
-      //     navigate(location.state ? location.state.redirect : "/questions");
-      //   }, 1500)
-      // );
+      setTimeoutId(
+        setTimeout(() => {
+          navigate(location.state ? location.state.redirect : "/questions");
+        }, 1500)
+      );
     } else {
       alert(response.error);
     }
