@@ -7,7 +7,7 @@ body("password").trim().escape().not().isEmpty().withMessage("Password field can
 body('firstName').trim().escape().not().isEmpty().withMessage('First name cannot be empty!'),
 body('lastName').trim().escape().not().isEmpty().withMessage('Last name cannot be empty'),
 body('age').trim().escape().not().isEmpty().withMessage('Age cannot be empty'),
-body('phoneNumber').trim().escape().not().isEmpty().withMessage('Phone number cannot be empty'),
+body('phone').trim().escape().not().isEmpty().withMessage('Phone number cannot be empty'),
 (req, res, next) => {
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
@@ -46,7 +46,7 @@ body("password").trim().escape().not().isEmpty().withMessage("Password field can
 const normalizeUserSignUp = [body('email').isEmail().normalizeEmail(),
 body('firstName').trim().not().isEmpty().escape(),
 body('lastName').trim().not().isEmpty().escape(),
-body('phoneNumber').trim().not().isEmpty().escape()]
+body('phone').trim().not().isEmpty().escape()]
 
 
 const normalizeUserSignIn = [body('email').isEmail().normalizeEmail()]

@@ -15,6 +15,9 @@ export const LANDLORD_MOCK: User = {
     isLandlord: true,
     email: "Avi@gmail.com",
     password: "Password1",
+    age:"27",
+    role:"both",
+    phone:"0525915998",
     dateOfBirth: new Date()
 }
 
@@ -28,6 +31,9 @@ export const TANENT_MOCK: User = {
     isLandlord: false,
     email: "Moshe@gmail.com",
     password: "Password1",
+    age:"27",
+    role:"tenant",
+    phone:"0525915998",
     dateOfBirth: new Date()
 }
 
@@ -102,6 +108,9 @@ export const USER_INIT: User = {
     isLandlord: false,
     email: "",
     password: "",
+    age:"",
+    role:"tenant",
+    phone:"",
     dateOfBirth: new Date()
 };
 

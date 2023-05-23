@@ -24,6 +24,7 @@ const AuthService = {
   },
 
   async signIn(email, password) {
+    console.log(email,password);
     const user = await UserService.getUserByEmail(email);
     if (!user) {
       throw new Error("Email or password are invalid!");
