@@ -22,8 +22,17 @@ const AuthController = {
   async signIn(req, res, next) {
     const { email, password } = req.body;
     try {
-        const response = await AuthService.signIn(email, password);
-      res.status(OK).json(response.accessToken);
+      const { accessToken, refreshToken } = await AuthService.signIn(
+        email,
+        password
+      );
+      res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+      res.status(OK).json(accessToken);
     } catch (ex) {
       res.status(INTERNAL_SERVER_ERROR).json({ error: ex.message });
     }
