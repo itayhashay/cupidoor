@@ -10,7 +10,8 @@ const AuthService = {
       if (isExist) {
         console.log(isExist);
         throw new Error("Email already exist!");
-      }const bcrypt = require("bcrypt");
+      }
+      const bcrypt = require("bcrypt");
       const UserModel = require("../model/user.model");
       const UserService = require("../service/user.service");
       const jwt = require("jsonwebtoken");
@@ -146,7 +147,7 @@ const AuthService = {
   },
 
   async signIn(email, password) {
-    const user = await UserService.getUserByEmail(email);
+    let user = await UserService.getUserByEmail(email);
     console.log(user);
     if (!user) {
       throw new Error("Email or password are invalid!");
@@ -173,7 +174,20 @@ const AuthService = {
       await user.save();
     }
 
-    return { accessToken, refreshToken };
+    user = {
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      age: user.age,
+      phone: user.phone,
+      role: user.role,
+      description: user.description,
+      isSmoking: user.isSmoking,
+      hasPets: user.hasPets,
+      create: user.createdAt,
+    };
+
+    return { accessToken, refreshToken, user };
   },
   async signOut(refreshToken) {
     const user = await UserModel.findOne({ refreshToken }).exec();
