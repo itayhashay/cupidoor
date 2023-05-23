@@ -24,7 +24,7 @@ const AuthService = {
   },
 
   async signIn(email, password) {
-    console.log(email,password);
+    console.log(email, password);
     const user = await UserService.getUserByEmail(email);
     if (!user) {
       throw new Error("Email or password are invalid!");
@@ -33,13 +33,85 @@ const AuthService = {
       throw new Error("Email or password are invalid!");
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email }, "mySecret", {
-      expiresIn: "24h",
-    });
+    const accessToken = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.REFRESH_TOKEN,
+      {
+        expiresIn: process.env.TOKEN_EXPIRATION,
+      }
+    );
 
+    const refreshToken = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.REFRESH_TOKEN_SECRET
+    );
 
-    return {token};
+    if (!user.refreshToken) {
+      user.refreshToken.push(refreshToken);
+      await user.save();
+    }
+
+    return { token: accessToken, refreshToken };
+  },
+  async signOut(refreshToken) {
+    const user = await UserModel.findOne({ refreshToken }).exec();
+    if (!user) {
+      return true;
+    }
+    user.refreshToken = user.refreshToken.filter(
+      (token) => token != refreshToken
+    );
+    await user.save();
+    return true;
+  },
+  async handleRefreshToken(refreshToken) {
+    jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET,
+      async (err, decoded) => {
+        const foundUser = await UserModel.findOne({ refreshToken }).exec();
+
+        //If we didn't find the user, the token might be hacked.
+        if (!foundUser) {
+          await _resetRefreshToken(decoded.email);
+          throw new Error("Unauthorized");
+        } else {
+          const newRefreshTokenArray = foundUser.refreshToken.filter(
+            (token) => token !== refreshToken
+          );
+
+          if (err) {
+            foundUser.refreshToken = [...newRefreshTokenArray];
+            await foundUser.save();
+            throw new Error("Unauthorized!");
+          }
+
+          const accessToken = jwt.sign(
+            { id: foundUser._id, email: foundUser.email },
+            process.env.TOKEN_SECRET,
+            { expiresIn: process.env.TOKEN_EXPIRATION }
+          );
+
+          const newRefreshToken = jwt.sign(
+            { id: foundUser._id, email: foundUser.email },
+            process.env.REFRESH_TOKEN_SECRET
+          );
+
+          foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
+          await foundUser.save();
+          return { newRefreshToken, accessToken };
+        }
+      }
+    );
   },
 };
+
+async function _resetRefreshToken(userEmail) {
+  const hackedUser = await UserModel.findOne({
+    email: decoded.email,
+  }).exec();
+  hackedUser.refreshToken = [];
+  return await hackedUser.save();
+}
 
 module.exports = AuthService;

@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["tenant", "landlord","both", "admin"],
+    enum: ["tenant", "landlord", "both", "admin"],
     default: "tenant",
   },
   description: {
@@ -51,6 +51,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  refreshToken: [String],
 });
 
 userSchema.virtual("name").get(function () {
