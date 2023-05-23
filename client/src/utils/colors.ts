@@ -3,7 +3,8 @@ const COLORS = {
     ORANGE: "rgb(255, 140, 0)", // 25 - 49
     YELLOW: "rgb(246, 190, 0)", // 50 - 69
     LIME: "rgb(183, 217, 18)", // 70 - 84
-    GREEN: "rgb(55, 214, 8)" // 85 - 100
+    GREEN: "rgb(55, 214, 8)", // 85 - 99
+    BLUE: "rgb(33, 145, 255)" // 100
 }
 
 type RangeToColor = { range: number[]; color: string; };
@@ -26,10 +27,13 @@ const PRECENT_TO_COLOR: RangeToColor[] = [
         color: COLORS.LIME
     },
     {
-        range: [85, 100],
+        range: [85, 99],
         color: COLORS.GREEN
     },
-
+    {
+        range: [100, 100],
+        color: COLORS.BLUE
+    }
 ]
 
 

@@ -67,5 +67,5 @@ export const MatchLabelStyles = {
   top: "20px",
   background: "#ffffff",
   borderRadius: "0 8px 8px 0",
-  padding:" 0 5px"
+  padding:"1px 8px"
 }
