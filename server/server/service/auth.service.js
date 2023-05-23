@@ -35,7 +35,7 @@ const AuthService = {
 
     const accessToken = jwt.sign(
       { id: user._id, email: user.email },
-      process.env.REFRESH_TOKEN,
+      process.env.TOKEN_SECRET,
       {
         expiresIn: process.env.TOKEN_EXPIRATION,
       }
@@ -51,7 +51,7 @@ const AuthService = {
       await user.save();
     }
 
-    return { token: accessToken, refreshToken };
+    return { accessToken, refreshToken };
   },
   async signOut(refreshToken) {
     const user = await UserModel.findOne({ refreshToken }).exec();

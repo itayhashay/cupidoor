@@ -6,8 +6,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const cookieParaser = require("cookie-parser");
 
 const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, "./.env") });
-process.env.rootDir = __dirname;
+require('dotenv').config();
 
 const PORT = process.env.PORT || 2308;
 const app = express();
