@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import DryDetails from "../ApartmentDetails/DryDetails";
 import { Box, Fab } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { precentToColor } from "../../utils/colors";
 import { HOUSES_IMAGES, PROFILE_PICTURES } from "../../utils/mock";
 
@@ -47,11 +48,11 @@ const HouseCard = ({ houseData }: { houseData: Apartment }) => {
         )}
         <Avatar alt="" src={PROFILE_PICTURES[houseData.id-1]} sx={AvatarStyles}/>
         <Fab sx={likeButtonStyles} onClick={handleClickFavorite}>
-          <FavoriteIcon />
+          {true ? <FavoriteBorderOutlinedIcon /> :<FavoriteIcon />}
         </Fab>
         <Typography
           sx={{...MatchLabelStyles, color: matchColor }}
-        >{`${houseData.match}% Match`}</Typography>
+        >{`${houseData.match}% ${houseData.match === 100 ? 'Perfect' : ''} Match${houseData.match === 100 ? '!' : ''}`}</Typography>
         <CardContent
           sx={CardContentStyles}
         >
