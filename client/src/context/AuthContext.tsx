@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, FunctionComponent } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  FunctionComponent,
+  Dispatch,
+} from "react";
 import { User } from "../types/user";
 import { signIn, signUp } from "../utils/api";
 import { AxiosError, AxiosResponse } from "axios";
@@ -8,12 +14,21 @@ type Props = { children: React.ReactNode };
 
 export type AuthContextType = {
   user: User | null;
-  authTokens: object | null;
+  accessToken: string | null;
+  setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   signInUser: (email: string, password: string) => void;
   signUpUser: (user: User) => void;
 };
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  accessToken: null,
+  setAccessToken: () => {},
+  setUser: () => {},
+  signInUser: () => {},
+  signUpUser: () => {},
+});
 
 export default AuthContext;
 
@@ -23,7 +38,7 @@ export function useAuth() {
 
 export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [authTokens, setAuthTokens] = useState(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
   const signInUser = async (email: string, password: string) => {
     const response: AxiosResponse = await signIn(email, password);
@@ -46,9 +61,15 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
     return cupidError;
   };
 
-  const contextData = {
+  // const refreshUserToken = async ()=>{
+  //   const response:AxiosResponse | AxiosError = await refreshToken()
+  // };
+
+  const contextData: AuthContextType = {
     user,
-    authTokens,
+    accessToken: accessToken,
+    setAccessToken: setAccessToken,
+    setUser: setUser,
     signInUser: signInUser,
     signUpUser: signUpUser,
   };

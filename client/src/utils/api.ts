@@ -24,16 +24,15 @@ export const signIn = async (email: string, password: string) => {
 };
 
 export const signUp = async (user: User) => {
-  try{
-    const response:AxiosResponse = await axios.post(
+  try {
+    const response: AxiosResponse = await axios.post(
       `${config.api.baseUrl}${config.api.routes.signUp}`,
       user
     );
     return response;
-  }catch(ex:AxiosError | any){
+  } catch (ex: AxiosError | any) {
     alert(ex);
     console.log(ex);
     return ex;
   }
-  
 };
