@@ -30,14 +30,13 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
       email: values.email,
       password: values.password,
     };
-    // (navigate(location.state ? location.state.redirect : "/home"))
-    // : auth.login.then(navigate(location.state ? location.state.redirect : "/questions"))
     const response: any = await signInUser(userData.email, userData.password);
+    console.log(response);
     if (response.success) {
       setIsGoodLogin(true);
       setLoginTimeoutId(
         setTimeout(() => {
-          navigate(location.state ? location.state.redirect : "/home");
+          navigate(location.state ? location.state.redirect : "/questions"); // isAllAnswered ? redirect /home
         }, 1500)
       );
     } else {
