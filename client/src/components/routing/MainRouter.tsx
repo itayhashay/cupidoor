@@ -5,25 +5,23 @@ import { Container, ContentSection } from "../App/styles";
 
 const MainRouter = () => {
   return (
-    // <Container>
-      /* <ContentSection> */
-        <Routes>
-          {AppRoutes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              element={
-                <>
-                  {!/401|404|\*/.test(route.path) && route.path !== "/" && (
-                    <Navbar />
-                  )}
-                  {route.element}
-                </>
-              }
-            />
-          ))}
-        </Routes>
-    // </Container>
-)};
+    <Routes>
+      {AppRoutes.map((route, index) => (
+        <Route
+          key={index}
+          path={route.path}
+          element={
+            <>
+              {!/401|404|\*/.test(route.path) &&
+                route.path !== "/" &&
+                route.path !== "/signIn" && <Navbar />}
+              {route.element}
+            </>
+          }
+        />
+      ))}
+    </Routes>
+  );
+};
 
 export default MainRouter;

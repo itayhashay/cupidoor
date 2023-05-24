@@ -14,7 +14,6 @@ root.render(
   <React.StrictMode>
     <AuthContextProvider>
       <Router>
-        {/* <App /> */}
         <MainRouter />
       </Router>
     </AuthContextProvider>
