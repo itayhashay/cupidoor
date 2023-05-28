@@ -13,9 +13,10 @@ import { Box, Fab } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { precentToColor } from "../../utils/colors";
-import { HOUSES_IMAGES, PROFILE_PICTURES } from "../../utils/mock";
+import { HOUSES_IMAGES, PROFILE_PICTURES, TANENT_MOCK } from "../../utils/mock";
+import LikedUsers from "../ApartmentDetails/LikedUsers";
 
-const HouseCard = ({ houseData }: { houseData: Apartment }) => {
+const HouseCard = ({ houseData, isMyProperties }: { houseData: Apartment, isMyProperties: boolean }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [matchColor, setMatchColor] = useState<string>("");
 
@@ -47,24 +48,28 @@ const HouseCard = ({ houseData }: { houseData: Apartment }) => {
           />
         )}
         <Avatar alt="" src={PROFILE_PICTURES[houseData.id-1]} sx={AvatarStyles}/>
-        <Fab sx={likeButtonStyles} onClick={handleClickFavorite}>
+        {!isMyProperties && <Fab sx={likeButtonStyles} onClick={handleClickFavorite}>
           {true ? <FavoriteBorderOutlinedIcon /> :<FavoriteIcon />}
-        </Fab>
-        <Typography
+        </Fab>}
+        {!isMyProperties ? <Typography
           sx={{...MatchLabelStyles, color: matchColor }}
-        >{`${houseData.match}% ${houseData.match === 100 ? 'Perfect' : ''} Match${houseData.match === 100 ? '!' : ''}`}</Typography>
+        >{`${houseData.match}% ${houseData.match === 100 ? 'Perfect' : ''} Match${houseData.match === 100 ? '!' : ''}`}</Typography> :         
+        <Typography sx={{...MatchLabelStyles, color: "rgba(0, 0, 0, 0.6)" }} display="flex" flexDirection="row" justifyContent="center" alignItems="center">
+            <FavoriteIcon sx={{margin: "0 5px", color: "red"}}/>
+            <Typography margin={"0 5px"} >15</Typography>
+        </Typography>}
         <CardContent
           sx={CardContentStyles}
         >
           <Typography sx={addressStyles} color="text.secondary" title="hey">
             {houseData.address}
           </Typography>
-          <DividerLine />
-          <DryDetails apartmentInfo={houseData} isBasicData={true}/>
+          {!isMyProperties && <DryDetails apartmentInfo={houseData} isBasicData={true}/> }
           <Box sx={{margin: "8px 0", height: "fit-content"}}>
+          {isMyProperties ? <LikedUsers users={[TANENT_MOCK, TANENT_MOCK, TANENT_MOCK]} /> :
             <Typography sx={{ fontWeight: '400', fontSize: '20px', textAlign: 'center'}}>
             ₪ {houseData.rent}
-            </Typography>
+            </Typography>}
           </Box>
         </CardContent>
       </Card>

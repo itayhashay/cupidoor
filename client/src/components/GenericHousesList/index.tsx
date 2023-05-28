@@ -11,10 +11,11 @@ import { BasicFilters, filterByUserProperties, filtersToUrl, queryToFilters } fr
 import { Chip, Stack } from "@mui/material";
 import { Filter } from "../../types/filters";
 
-const GenericHousesList = ({ apartments } : {apartments: any}) => {
-  const [houses, setHousess] = useState<Apartment[]>(HOUSES);
+const GenericHousesList = ({ apartments } : {apartments: Apartment[]}) => {
+  const [houses, setHousess] = useState<Apartment[]>(apartments);
   const [isLoading, setIsLoading] = useState(true);
   const [isPageHome, setIsHomePage] = useState(false);
+  const [isMyProperties, setIsMyProperties] = useState(false);
   const [filtersAmount, setFiltersAmount] = useState<number>(0);
   const [filters, setFilters] = useState<{[x: string]: number[] | null}>(DEFAULT_FILTERS);
   const location = useLocation()
@@ -22,6 +23,7 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
 
   useEffect(() => {
     setIsHomePage(window.location.pathname === "/home");
+    setIsMyProperties(window.location.pathname === "/user/my-properties");
     const queryString = window.location.search;
     if(!queryString) {
       setFilters(DEFAULT_FILTERS);
@@ -42,13 +44,13 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
   useEffect(() => {
     const amountOfFilters: number = getAmountOfFilters();
     setFiltersAmount(amountOfFilters);
-    const filteredApartments: Apartment[] = filterByUserProperties(filters, HOUSES);
+    const filteredApartments: Apartment[] = filterByUserProperties(filters, apartments);
     setHousess(filteredApartments);
   }, [filters])
 
   useEffect(() => {
     if(apartments) {
-      // setHousess(apartments);
+      setHousess(apartments)
       setIsLoading(false);  
     }
   }, [apartments]);
@@ -112,7 +114,7 @@ const GenericHousesList = ({ apartments } : {apartments: any}) => {
               {houses.map((house, index) => {
                 return (
                   <div key={house.id}>
-                    <HouseCard houseData={house}/>
+                    <HouseCard houseData={house} isMyProperties={isMyProperties}/>
                   </div>
                 );
               })}

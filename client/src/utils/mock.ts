@@ -250,4 +250,33 @@ export const PROFILE_PICTURES: string[] = [
     "https://images.unsplash.com/photo-1524250502761-1ac6f2e30d43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wyMDUzMDJ8MHwxfHNlYXJjaHwzOHx8UGVvcGxlfGVufDF8fHx8MTY4NDc4NjIyOXww&ixlib=rb-4.0.3&q=80&w=200",
     "https://images.unsplash.com/photo-1484353371297-d8cfd2895020?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wyMDUzMDJ8MHwxfHNlYXJjaHwzOXx8UGVvcGxlfGVufDF8fHx8MTY4NDc4NjIyOXww&ixlib=rb-4.0.3&q=80&w=200",
     "https://images.unsplash.com/photo-1492446845049-9c50cc313f00?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wyMDUzMDJ8MHwxfHNlYXJjaHw0MHx8UGVvcGxlfGVufDF8fHx8MTY4NDc4NjIyOXww&ixlib=rb-4.0.3&q=80&w=200",
+];
+
+export const LANDLORD_PROPERTIES: Apartment[] = [
+    {id: 1, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Tel Aviv, George Wise 2' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 2, squareMeter: 60, balcony: 1, parkings: 0, match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
+    {id: 2, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Jerusalem, Gooday 32' , propertyCond: PROPERTY_CONDITIONS.NEW_FROM_A_CONTRACTOR ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 5, squareMeter: 60, balcony: 1, parkings: 1, match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
+    {id: 3, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Rishon, Yordei hasira 4' , propertyCond: PROPERTY_CONDITIONS.RENOVATED ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 1, squareMeter: 60, balcony: 1, parkings: 1, match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
 ]
+
+export const LIKED_APARTMENTS: Apartment[] = [
+    {id: 4, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Maccabbim-Reut, Meshushim 666' , propertyCond: PROPERTY_CONDITIONS.RENOVATION_IS_NEEDED ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 0, squareMeter: 60, balcony: 1, parkings: 3, match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
+    {id: 5, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Tivon, Pashus 99' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 1, squareMeter: 60, balcony: 1, parkings: 1,match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
+    {id: 6, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Hod hasharon, Tsharnichovsky 11' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 2, squareMeter: 60, balcony: 1, parkings: 0, match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
+    {id: 7, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Neverland, Chip 55' , propertyCond: PROPERTY_CONDITIONS.RENOVATED ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 1, squareMeter: 60, balcony: 1, parkings: 3, match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
+    {id: 8, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Eilat, Hovevei zion 34' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 0, squareMeter: 60, balcony: 1, parkings: 1,match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
+    {id: 9, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Holon, Matityahu 12' , propertyCond: PROPERTY_CONDITIONS.NEW_FROM_A_CONTRACTOR ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 3, squareMeter: 60, balcony: 1, parkings: 0, match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
+    {id: 10, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Modiin, Lev hair 10' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 2, squareMeter: 60, balcony: 1, parkings: 2, match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
+]    
+
+export const USER_NAMES: string[] = [
+    "Pedro Keller",
+    "Gwen Maxwell",
+    "Haris Pratt",
+    "Bertha Townsend",
+    "Kimberley Mcdonald",
+    "Alana Spencer",
+    "Sebastian Woodward",
+    "Taya Dale",
+    "Kyan Frye",
+    "Gabriela Lloyd"
+  ];

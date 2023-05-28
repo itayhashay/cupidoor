@@ -8,6 +8,7 @@ import GenericHousesList from "../GenericHousesList";
 import ApartmentDetails from "../ApartmentDetails";
 import UserRouter from "../UserRouter";
 import Landing from "../Landing/Landing";
+import { HOUSES } from "../../utils/mock";
 
 // Will Change!!!!
 let tmpApartments: any = [];
@@ -22,7 +23,7 @@ const appRoutes = [
   },
   {
     path: "/home",
-    element: <GenericHousesList apartments={tmpApartments} />,
+    element: <GenericHousesList apartments={HOUSES} />,
   },
   {
     path: "/apartment/:id",
