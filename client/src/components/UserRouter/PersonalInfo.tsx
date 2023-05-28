@@ -1,4 +1,4 @@
-import { Autocomplete, Button, TextField, MenuItem } from "@mui/material";
+import { Autocomplete, Button, TextField, MenuItem, Typography, Box } from "@mui/material";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import {
   PersonalInfoContainer,
@@ -6,71 +6,100 @@ import {
   FullNameFields,
   ProfilePicture,
   ProfilePictureContainer,
+  Frame,
+  Col,
+  LinksDividerLine,
+  LinkIcon
 } from "./styles";
 import { JOB_TITLES } from "../../utils/jobTitles";
 import BirthdayPicker from "./UserForm/BirthdayPicker";
 import UserImg from "../../icons/user.jpeg";
 import { useState } from "react";
+import { User, UserLink } from "../../types/user";
+import { PROFILE_PICTURES } from "../../utils/mock";
+import { randomNumber } from "../../utils/random";
+import { DividerLine } from "../Navbar/styles";
+import { LINK_TO_ICON, USER_INFO_FIELDS, UserField } from "../../utils/user";
+import BalconyIcon from "../../icons/links/linkedin.png";
+import ProfileStepper from "./ProfileStepper";
 
-const PersonalInfo = () => {
+const PersonalInfo = ({user} : {user: User}) => {
   const [role, setRole] = useState("Tenant");
 
   const handleRoleChange = (event: SelectChangeEvent) => {
     setRole(event.target.value as string);
   };
 
+  const openLink = (url: string) => {
+    window.open(url, "_blank");
+  }
+
+  const renderInfoLine = (fieldName: string, value: string, index: number) => {
+    return (          
+    <>
+      <Box display="flex" flexDirection="row">
+        <Typography width="30%" color="#757575" fontWeight={700} fontSize="16px">
+          {fieldName}
+        </Typography>
+        <Typography width="70%" color="#757575" fontWeight={400} fontSize="16px">
+          {value}
+        </Typography>
+      </Box>
+      {index + 1 !== USER_INFO_FIELDS.length && <DividerLine />}
+    </>)
+  }
+
+  const renderLinkLine = (userLink: UserLink, index: number) => {
+    return (          
+    <>
+          <Box sx={{
+            "&:hover": {
+              cursor: "pointer",
+              background: "#efefef"
+            }
+          }} onClick={() => openLink(userLink.link)} display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" padding="1rem" width="auto">
+            <LinkIcon src={LINK_TO_ICON[userLink.name]} />
+            <Typography>{userLink.value}</Typography>
+          </Box>
+          {index + 1 !== user.linkes?.length && <LinksDividerLine />}
+    </>)
+  }
+
   return (
     <PersonalInfoContainer>
-      <ProfilePictureContainer>
-        <ProfilePicture alt="" src={UserImg} />
-        <Button color="inherit" component="label">
-          Change Photo
-          <input hidden accept="image/*" multiple type="file" />
-        </Button>
-      </ProfilePictureContainer>
-      <UserForm>
-        <FullNameFields>
-          <TextField
-            sx={{ margin: "8px 0", width: "48%" }}
-            label="First Name"
-            variant="outlined"
-          />
-          <TextField
-            sx={{ margin: "8px 0", width: "48%" }}
-            label="Last Name"
-            variant="outlined"
-          />
-        </FullNameFields>
-        <TextField
-          sx={{ width: "100%", margin: "8px 0" }}
-          label="Email"
-          variant="outlined"
-        />
-        <TextField sx={{ margin: "8px 0" }} label="Age" variant="outlined" />
-        <TextField sx={{ margin: "8px 0" }} label="Phone" variant="outlined" />
-        <Select
-          labelId="personal-role"
-          id="personal-role"
-          value={role}
-          label="Role"
-          onChange={handleRoleChange}
-          placeholder={role}
-        >
-          <MenuItem value={"Tenant"}>Tenant</MenuItem>
-          <MenuItem value={"Landlord"}>Landlord</MenuItem>
-          <MenuItem value={"Both"}>Both</MenuItem>
-        </Select>
-        <Autocomplete
-          disablePortal
-          options={JOB_TITLES}
-          sx={{ width: "100%", margin: "8px 0" }}
-          renderInput={(params) => (
-            <TextField {...params} label="Job Title (Optional)" />
-          )}
-        />
-        <BirthdayPicker />
-        <Button variant="contained">Save Changes</Button>
-      </UserForm>
+      <Col>
+        <Frame>
+          <ProfilePictureContainer>
+            <ProfilePicture alt="" src={PROFILE_PICTURES[randomNumber(0, 20)]} />
+            <Typography variant="h5" width="100%" color="#4f4f4f" textAlign="center" >
+              {`${user.firstName} ${user.lastName}`}
+            </Typography>
+            <Typography variant="body1" width="100%" color="#757575" textAlign="center" fontWeight={400} margin="10px 0">
+              {user.jobTitle}
+            </Typography>
+            <Button color="primary" variant="outlined" component="label">
+              Change Photo
+              <input hidden accept="image/*" multiple type="file" />
+            </Button>
+          </ProfilePictureContainer>
+        </Frame>
+        <Frame>
+          {user.linkes?.map((link: UserLink, index: number) => renderLinkLine(link, index))}
+        </Frame>
+      </Col>
+      <Col>
+        <Frame>
+          <Box display="flex" flexDirection="column" width="70vh" padding="0 35px" margin="25px 0">
+            {USER_INFO_FIELDS.map((field: UserField, index: number) => renderInfoLine(field.fieldName, user[field.fieldValue], index))}
+          </Box>
+        </Frame>
+        <Frame>
+          <Box display="flex" flexDirection="column" width="70vh" padding="0 35px" margin="25px 0">
+            Complete Profile
+            <ProfileStepper user={user}/>
+          </Box>
+        </Frame>
+      </Col>
     </PersonalInfoContainer>
   );
 };

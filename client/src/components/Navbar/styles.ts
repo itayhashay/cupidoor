@@ -6,11 +6,12 @@ export const UserSection = styled.div`
   align-items: center;
 `;
 export const DividerLine = styled.hr`
-  height: 15px;
-  width: 1px;
-  background: white;
+  height: 1px;
+  width: 100%;
+  background: #d3d3d3;
   border: none;
   border-radius: 15px;
+  margin: 15px 0;
 `;
 
 export const LogoImg = styled.img`

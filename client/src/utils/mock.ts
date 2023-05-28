@@ -1,7 +1,7 @@
 import { Apartment } from "../types/apartment";
 import { randomDate, randomNumber, randomPaymentCond } from "./random";
 import { PROPERTY_CONDITIONS } from "./properyConditions";
-import { User } from "../types/user";
+import { LINKS_NAMES, User } from "../types/user";
 
 const DESC_MOCK: string = `This apartment is great, has nice view, and tenants \nWe love animals, Sports and having fun on Fridays. \nLooking for someone like me`
 
@@ -15,10 +15,11 @@ export const LANDLORD_MOCK: User = {
     isLandlord: true,
     email: "Avi@gmail.com",
     password: "Password1",
-    age:"27",
-    role:"both",
-    phone:"0525915998",
-    dateOfBirth: new Date()
+    age: "27",
+    role: "both",
+    phone: "0525915998",
+    dateOfBirth: new Date(),
+    isFilledAllQ: false
 }
 
 export const TANENT_MOCK: User = {
@@ -31,10 +32,39 @@ export const TANENT_MOCK: User = {
     isLandlord: false,
     email: "Moshe@gmail.com",
     password: "Password1",
-    age:"27",
-    role:"tenant",
-    phone:"0525915998",
-    dateOfBirth: new Date()
+    age: "27",
+    jobTitle: "Full Stack Developer",
+    role: "tenant",
+    phone: "0525915998",
+    dateOfBirth: new Date(),
+    linkes: [
+        {
+            name: LINKS_NAMES.LINKEDIN,
+            value: "moshe-levi",
+            link: "https://www.linkedin.com/in/matan-amzaleg-058050252/"
+        },
+        {
+            name: LINKS_NAMES.INSTAGRAM,
+            value: "@MosheLevi",
+            link: "https://www.instagram.com/"
+        },
+        {
+            name: LINKS_NAMES.FACEBOOK,
+            value: "Moshe Levi",
+            link: "https://www.facebook.com/people/%D7%A0%D7%98%D7%9C%D7%99-%D7%9C%D7%99%D7%90%D7%95%D7%9F/100002037339530/?comment_id=Y29tbWVudDo1MjgzNjY5MjM5NDgxOTRfNTI4NzUzNjg3MjQyODUx"
+        },
+        {
+            name: LINKS_NAMES.TIKTOK,
+            value: "@MosheLevi",
+            link: "https://www.tiktok.com/music/Originalton-7235275824898181915"
+        },
+        {
+            name: LINKS_NAMES.TWITTER,
+            value: "moshe-levi",
+            link: "https://twitter.com/rothmar"
+        }
+    ],
+    isFilledAllQ: false
 }
 
 export const HOUSES: Apartment[] = [
@@ -108,10 +138,11 @@ export const USER_INIT: User = {
     isLandlord: false,
     email: "",
     password: "",
-    age:"",
-    role:"tenant",
-    phone:"",
-    dateOfBirth: new Date()
+    age: "",
+    role: "tenant",
+    phone: "",
+    dateOfBirth: new Date(),
+    isFilledAllQ: false
 };
 
 export const HOUSE_INIT: Apartment = {

@@ -38,6 +38,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
       phone,
       age,
       role: userRole,
+      isFilledAllQ: false
     });
     if (response.success) {
       setGoodRegistration(true);
