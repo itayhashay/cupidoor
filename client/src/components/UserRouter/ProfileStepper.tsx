@@ -2,12 +2,12 @@ import Stack from "@mui/material/Stack";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import Box from "@mui/material/Box/Box";
-import Button from "@mui/material/Button/Button";
 import { useMemo } from "react";
-import { LinearProgress, LinearProgressProps, Typography } from "@mui/material";
+import { LinearProgress, LinearProgressProps, Tooltip, Typography } from "@mui/material";
 import { StepIcon, StepIconConnector } from "./styles";
 import { PROFILE_STEPS } from "./constants";
 import { User } from "../../types/user";
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
     return (
@@ -22,6 +22,12 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
         </Box>
       </Box>
     );
+  }
+
+  const renderInfoTooltip = (title: string) => {
+    return (<Tooltip title={<span style={{ fontSize: "13px" }}>{title}</span>} sx={{ fontSize: "16px" }}>
+        <HelpOutlineOutlinedIcon fontSize="small" color="action" sx={{"&:hover" :{ cursor: "pointer"}}}/>
+    </Tooltip>)
   }
   
 const ProfileStepper = ({user} : {user: User}) => {
@@ -45,9 +51,9 @@ const ProfileStepper = ({user} : {user: User}) => {
                     alignItems: "center",
                     height: "100%",
     justifyContent: "space-between"}}>
-                    <StepIcon src={step.icon}/>
-                    <Typography variant="body1" textAlign="center" margin="10px 0" fontSize="14px">{step.name}</Typography>
-                    {step.validCheck() ? <Typography color="green">Done</Typography> : <Button variant="contained" size="small">Add</Button>}
+                    <StepIcon src={step.icon} style={{ opacity: step.validCheck() ? 1 : 0.3}}/>
+                    <Typography variant="body1" textAlign="center" margin="10px 0" fontSize="14px" fontWeight={500}>{step.name}</Typography>
+                    {renderInfoTooltip(step.description)}
                 </Step>
                 ))}
             </Stepper>
