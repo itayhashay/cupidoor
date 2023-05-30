@@ -1,8 +1,8 @@
 import { Alert, Snackbar } from "@mui/material";
-import useSnackBar from "../../hooks/useSnackBar";
+import { useSnackbar } from "../../context/SnackbarContext";
 
 const SnackbarCupid = () => {
-  const [snackBarState, setSnackBarState] = useSnackBar();
+  const { snackBarState, setSnackBarState } = useSnackbar();
   return (
     <Snackbar
       open={snackBarState.show}

@@ -6,6 +6,7 @@ import App from "./components/App";
 import MainRouter from "./components/routing/MainRouter";
 import { AuthContextProvider } from "./context/AuthContext";
 import SnackbarCupid from "./components/Snackbar";
+import { SnackbarContextProvider } from "./context/SnackbarContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -14,10 +15,12 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <Router>
-        <MainRouter />
-      </Router>
-      <SnackbarCupid></SnackbarCupid>
+      <SnackbarContextProvider>
+        <Router>
+          <MainRouter />
+        </Router>
+        <SnackbarCupid></SnackbarCupid>
+      </SnackbarContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
 );
