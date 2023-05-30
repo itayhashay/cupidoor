@@ -5,6 +5,7 @@ import "./index.css";
 import App from "./components/App";
 import MainRouter from "./components/routing/MainRouter";
 import { AuthContextProvider } from "./context/AuthContext";
+import SnackbarCupid from "./components/Snackbar";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -16,6 +17,7 @@ root.render(
       <Router>
         <MainRouter />
       </Router>
+      <SnackbarCupid></SnackbarCupid>
     </AuthContextProvider>
   </React.StrictMode>
 );
