@@ -11,7 +11,7 @@ const useSnackBar = () => {
   const [snackBarState, _setSnackBarState] = useState<SnackBarState>({
     message: "",
     severity: "info",
-    show: true,
+    show: false,
   });
 
   const setSnackBarState = (state: SnackBarState) => {
