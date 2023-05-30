@@ -7,7 +7,7 @@ import SignUpPage from "./SignUp";
 const theme = createTheme();
 
 const LandingPage = () => {
-  const [isUserRegisterd, setIsUserRegistered] = useState<boolean>(false);
+  const [isUserRegisterd, setIsUserRegistered] = useState<boolean>(true);
   const togglePage = (): void => {
     setIsUserRegistered((prevIsUserRegisterd) => !prevIsUserRegisterd);
   };

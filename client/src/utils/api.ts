@@ -12,6 +12,15 @@ export const getTenantMatches = async (data: MatchData) => {
   return response.data;
 };
 
+export const setUserAnswers = async (data: MatchData) => {
+  const response = await axios.post(
+    `${config.api.baseUrl}${config.api.routes.userAnswer}`,
+    data
+  );
+
+  return response.data;
+};
+
 export const signIn = async (email: string, password: string) => {
   const response = await axios.post(
     `${config.api.baseUrl}${config.api.routes.signIn}`,

@@ -9,9 +9,12 @@ import Navbar from "../Navbar";
 import GenericHousesList from "../GenericHousesList";
 import { USER_ROUTES } from "./constants";
 import { LANDLORD_PROPERTIES, LIKED_APARTMENTS, TANENT_MOCK } from "../../utils/mock";
+import { useAuth } from "../../context/AuthContext";
+import { User } from "../../types/user";
 
 const UserRouter = () => {
   const [houses, setHouses] = useState<any[]>([]);
+  const {user,setUser} = useAuth();
 
   return (
     <Container>
@@ -19,7 +22,7 @@ const UserRouter = () => {
       <Navigator />
       <ContentSection>
         <Routes>
-            <Route path={`/${USER_ROUTES.PERSONAL_INFO}`} element={<PersonalInfo user={TANENT_MOCK}/>}></Route>
+            <Route path={`/${USER_ROUTES.PERSONAL_INFO}`} element={<PersonalInfo user={user as User}/>}></Route>
             <Route path={`/${USER_ROUTES.LIKED_APARTMENTS}`} element={<GenericHousesList apartments={LIKED_APARTMENTS}/>}></Route>
             <Route path={`/${USER_ROUTES.MY_PROPERTIES}`} element={<GenericHousesList apartments={LANDLORD_PROPERTIES}/>}></Route>
         </Routes>

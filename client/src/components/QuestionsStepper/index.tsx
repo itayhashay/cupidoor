@@ -24,7 +24,7 @@ import {
 import { useState } from "react";
 import AnswerForm from "./AnswerForm";
 import PriorityForm from "./PriorityForm";
-import { getTenantMatches } from "../../utils/api";
+import { getTenantMatches, setUserAnswers } from "../../utils/api";
 import { Card, Divider } from "@mui/material";
 
 function ColorlibStepIcon(props: StepIconProps) {
@@ -88,6 +88,8 @@ export default function QuestionsStepper({
       answers,
       priority,
     });
+
+    const submitResponse = await setUserAnswers({answers,priority});
 
     const res = await getTenantMatches({
       answers,
