@@ -7,6 +7,7 @@ import { loginScheme, CustomHelperText } from "./AuthHelpers";
 import { Formik } from "formik";
 import "./SignIn.css";
 import { AuthContextType, useAuth } from "../../context/AuthContext";
+import { useSnackbar } from "../../context/SnackbarContext";
 
 interface SignInPageProps {
   onTogglePage: () => void;
@@ -19,7 +20,7 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
   const [loginTimeoutId, setLoginTimeoutId] = useState<
     NodeJS.Timeout | undefined
   >();
-
+  const { snackBarState, setSnackBarState } = useSnackbar();
   const { signInUser } = useAuth() as AuthContextType;
 
   const onSubmitHandler = async (values: {
@@ -33,7 +34,11 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
     const response: any = await signInUser(userData.email, userData.password);
     console.log(response);
     if (response.success) {
-      setIsGoodLogin(true);
+      setSnackBarState({
+        severity: "success",
+        message: "Welcome Back!",
+        show: true,
+      });
       setLoginTimeoutId(
         setTimeout(() => {
           navigate(location.state ? location.state.redirect : "/questions"); // isAllAnswered ? redirect /home
