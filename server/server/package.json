@@ -21,7 +21,8 @@
     "jsonwebtoken": "^9.0.0",
     "mongodb": "^5.2.0",
     "mongoose-autopopulate": "^1.0.0",
-    "passport": "^0.6.0"
+    "passport": "^0.6.0",
+    "socket.io": "^4.6.1"
   },
   "devDependencies": {
     "dotenv": "^16.0.3",
