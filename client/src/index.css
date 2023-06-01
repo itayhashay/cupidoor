@@ -68,3 +68,7 @@ a {
 .css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
   position: static !important;
 }
+
+.apartment-gallery .image-gallery-slide img {
+  object-fit: cover;
+}

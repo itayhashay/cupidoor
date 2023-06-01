@@ -2,11 +2,12 @@ import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Apartment } from "../../types/apartment";
-import { HOUSES, HOUSES_IMAGES, HOUSE_INIT } from "../../utils/mock";
+import { HOUSES, HOUSE_INIT } from "../../utils/mock";
 import DryDetails from "./DryDetails";
-import { Container, ElementsLineOne, RentContainer, Image, ImageContainer, DryDetailsContainer, Frame, ElementsLineTwo, SubFrame } from "./styles";
+import { Container, ElementsLineOne, ImageContainer, DryDetailsContainer, Frame, ElementsLineTwo, SubFrame } from "./styles";
 import PaymentCalculator from "./PaymentCalculator";
 import LandlordSection from "./LandlordSection";
+import ImagesGallery from "./ImagesGallery";
 
 
 const ApartmentDetails = () => {
@@ -34,23 +35,19 @@ const ApartmentDetails = () => {
             </Typography>
             <Frame>
                 <ElementsLineOne>
-                    <ImageContainer>
-                        <Image alt="Paella dish" src={HOUSES_IMAGES[apartmentInfo.id-1]} />
+                    <ImageContainer className="apartment-gallery">
+                        <ImagesGallery />
                     </ImageContainer>
                     <DryDetailsContainer>
                         <DryDetails apartmentInfo={apartmentInfo}/>
                     </DryDetailsContainer>
-                    <RentContainer>
-                            <Typography variant="h4">
-                                {`${apartmentInfo.rent}₪`}
-                            </Typography>
-                            <Typography variant="subtitle1">
-                                {"Last updated: Today"}
-                            </Typography>
-                        </RentContainer>
+                    <Box sx={{ width: "33%", height: 'auto', margin: "15px 15px 90px"}}>
+                            <Typography variant="h6">Payments calculator</Typography>
+                            <PaymentCalculator {...apartmentInfo.paymentsCond}/>
+                    </Box>
                 </ElementsLineOne>
                 <ElementsLineTwo>
-                    <Box sx={{ width: "50%", height: 'auto', display: "flex", flexDirection: "column"}}>
+                    <Box sx={{ width: "100%", height: 'auto', display: "flex", flexDirection: "row"}}>
                         <SubFrame>
                             <Typography variant="h6">Description</Typography>
                             <Typography variant="subtitle1">{apartmentInfo.description}</Typography>
@@ -58,12 +55,6 @@ const ApartmentDetails = () => {
                         <SubFrame>
                             <Typography variant="h6">Meet the landlord</Typography>
                             <LandlordSection landlord={apartmentInfo.landlord} apartmentId={apartmentInfo.id}/>
-                        </SubFrame>
-                    </Box>
-                    <Box sx={{ width: "50%", height: 'auto'}}>
-                        <SubFrame>
-                            <Typography variant="h6">Payments calculator</Typography>
-                            <PaymentCalculator {...apartmentInfo.paymentsCond}/>
                         </SubFrame>
                     </Box>
                 </ElementsLineTwo>

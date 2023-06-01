@@ -3,7 +3,9 @@ import styled from "styled-components";
 export const Container = styled.div`
   height: 100%;
   background-color: white;
-  margin: 15px;
+  padding: 15px;
+  max-height: 86vh;
+  overflow: auto;
 `;
 
 export const Frame = styled.div`
@@ -18,26 +20,22 @@ export const Frame = styled.div`
 export const ElementsLineOne = styled.div`
   display: flex;
   flex-direction: row;
-  height: 33%;
+  justify-content: space-between;
 `;
 
 export const DryDetailsContainer = styled.div`
     display: flex;
     flex-direction: column;
-    margin: 0 25px;
+    margin: 15px 15px 80px;
+    width: 33%;
     align-items: flex-start;
-    justify-content: space-around;
+    justify-content: space-between;
 `;
 
 export const ImageContainer = styled.div`
-  margin: 15px;
-  display: flex;
-  justify-content: flex-start;
-`;
-
-export const Image = styled.img`
-  width: -webkit-fill-available;
-  border-radius: 8px;
+  margin: 15px 15px 0px;
+  width: 33%;
+  height: fit-content;
 `;
 
 export const NumbersSection = styled.div`
@@ -60,14 +58,6 @@ export const PropertyIcon = styled.img`
   width: 30px;
 `;
 
-export const RentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: -webkit-fill-available;
-`;
-
 // Line 2
 
 export const ElementsLineTwo = styled.div`
@@ -79,9 +69,9 @@ export const ElementsLineTwo = styled.div`
 export const SubFrame = styled.div`
   border: 1px solid lightgray;
   border-radius: 8px;
-  margin: 15px;
   padding: 10px 15px;
-  height: -webkit-fill-available;
+  margin: 15px;
+  height: fit-content;
 `;
 
 export const AvatarConatiner = styled.div`
