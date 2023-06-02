@@ -1,4 +1,3 @@
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -6,13 +5,11 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { DividerLine, LogoImg, UserSection } from "./styles";
 import Logo from "../../icons/logo.png";
-import { User } from "../../types/user";
-import { LANDLORD_MOCK, USER_INIT } from "../../utils/mock";
-import { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
 import UserImg from "../../icons/user.jpeg";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { USER_ROUTES } from "../UserRouter/constants";
 
 export const Navbar = () => {
   const { user, setUser } = useAuth();
@@ -21,7 +18,7 @@ export const Navbar = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Link to={`/home`}>
+          <Link to={`/home/${USER_ROUTES.ALL_APARTMENTS}`}>
             <LogoImg src={Logo} alt="logo" />
           </Link>
           <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>

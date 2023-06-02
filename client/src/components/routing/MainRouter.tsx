@@ -12,9 +12,6 @@ const MainRouter = () => {
           path={route.path}
           element={
             <>
-              {!/401|404|\*/.test(route.path) &&
-                route.path !== "/" &&
-                route.path !== "/signIn" && <Navbar />}
               {route.element}
             </>
           }
@@ -23,5 +20,9 @@ const MainRouter = () => {
     </Routes>
   );
 };
+
+// {!/401|404|\*/.test(route.path) &&
+// route.path !== "/" &&
+// route.path !== "/signIn" && <Navbar />}
 
 export default MainRouter;

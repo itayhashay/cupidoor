@@ -18,13 +18,12 @@ const UserRouter = () => {
 
   return (
     <Container>
-      <Navbar />
       <Navigator />
       <ContentSection>
         <Routes>
             <Route path={`/${USER_ROUTES.PERSONAL_INFO}`} element={<PersonalInfo user={user as User}/>}></Route>
             <Route path={`/${USER_ROUTES.LIKED_APARTMENTS}`} element={<GenericHousesList apartments={LIKED_APARTMENTS}/>}></Route>
-            <Route path={`/${USER_ROUTES.MY_PROPERTIES}`} element={<GenericHousesList apartments={LANDLORD_PROPERTIES}/>}></Route>
+            <Route path={`/${USER_ROUTES.MY_PROPERTIES}`} element={<MyProperties />}></Route>
         </Routes>
       </ContentSection>
     </Container>

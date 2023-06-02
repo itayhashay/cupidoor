@@ -7,6 +7,7 @@ import MainRouter from "./components/routing/MainRouter";
 import { AuthContextProvider } from "./context/AuthContext";
 import SnackbarCupid from "./components/Snackbar";
 import { SnackbarContextProvider } from "./context/SnackbarContext";
+import Navbar from "./components/Navbar";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -17,7 +18,7 @@ root.render(
     <AuthContextProvider>
       <SnackbarContextProvider>
         <Router>
-          <MainRouter />
+        <App />
         </Router>
         <SnackbarCupid></SnackbarCupid>
       </SnackbarContextProvider>

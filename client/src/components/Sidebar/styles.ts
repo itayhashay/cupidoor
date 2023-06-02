@@ -9,7 +9,7 @@ export const FilterIcon = styled.img`
 
 export const MenuItemIcon = materialStyle("img")(() => ({}));
 
-const drawerWidth = 250;
+const drawerWidth = 270;
 
 const openedMixin = (theme: any) => ({
   width: drawerWidth,

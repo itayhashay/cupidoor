@@ -7,11 +7,18 @@ import { User } from "../../types/user";
 export const USER_ROUTES = {
     PERSONAL_INFO: "personal-info",
     LIKED_APARTMENTS: "liked-apartments",
-    MY_PROPERTIES: "my-properties"
+    MY_PROPERTIES: "my-properties",
+    ALL_APARTMENTS: "all-apartments"
 }
 
 export const USER_ROUTES_DEFAULT_STATE = {
     [USER_ROUTES.PERSONAL_INFO]: false,
+    [USER_ROUTES.LIKED_APARTMENTS]: false,
+    [USER_ROUTES.MY_PROPERTIES]: false
+}
+
+export const ROUTES_DEFAULT_STATE = {
+    [USER_ROUTES.ALL_APARTMENTS]: false,
     [USER_ROUTES.LIKED_APARTMENTS]: false,
     [USER_ROUTES.MY_PROPERTIES]: false
 }

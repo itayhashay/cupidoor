@@ -4,7 +4,7 @@ import ProtectedRoute from "./ProtectedRoute.js";
 import UnAuthorizedPage from "../401/401";
 import MainFeed from "../MainFeed";
 import QuestionsStepper from "../QuestionsStepper";
-import GenericHousesList from "../GenericHousesList";
+import HomeRouter from "../HomeRouter";
 import ApartmentDetails from "../ApartmentDetails";
 import UserRouter from "../UserRouter";
 import Landing from "../Landing/Landing";
@@ -22,8 +22,8 @@ const appRoutes = [
     element: <QuestionsStepper displayHouses={tmpApartments} />,
   },
   {
-    path: "/home",
-    element: <GenericHousesList apartments={HOUSES} />,
+    path: "/home/*",
+    element: <HomeRouter apartments={[]} />,
   },
   {
     path: "/apartment/:id",

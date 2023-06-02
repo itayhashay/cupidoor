@@ -13,6 +13,7 @@ export const ContentSection = styled.div`
   overflow-y: auto;
   display: flex;
   flex-direction: row;
+  height: inherit;
 `;
 
 export const NavContainer = styled.div`

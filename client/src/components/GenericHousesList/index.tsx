@@ -100,7 +100,7 @@ const GenericHousesList = ({ apartments } : {apartments: Apartment[]}) => {
                       padding: "5px 10px",
                       display: isPageHome && filtersAmount > 0 ? "flex" : "none",
                       alignItems: "center",
-                      maxWidth: "calc(100vw - 250px)",
+                      maxWidth: "calc(100vw - 270px)",
                       overflowX: "auto"}}>
               {renderFilters()}
             </Box>

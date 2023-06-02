@@ -3,10 +3,11 @@ import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import TuneIcon from '@mui/icons-material/Tune';
 import { Drawer, DrawerHeader } from "./styles";
-import { BasicFilters, LifeStyleFilters, filtersToUrl, queryToFilters } from "../../utils/filters";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { BasicFilters, LifeStyleFilters, UserMenuItems, filtersToUrl, queryToFilters } from "../../utils/filters";
+import { Box, Button, Divider, Grid, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -15,6 +16,7 @@ import { DEFAULT_FILTERS } from "../Filters/constants";
 import { Filter } from "../../types/filters";
 import RangeSlider from "../Filters/RangeSlider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ROUTES_DEFAULT_STATE, USER_ROUTES, USER_ROUTES_DEFAULT_STATE } from "../UserRouter/constants";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
@@ -22,6 +24,15 @@ const Sidebar = () => {
   const [filters, setFilters] = useState<{[x: string]: number[] | null}>(DEFAULT_FILTERS);
   const navigate = useNavigate();
   const location = useLocation()
+  const [navStates, setNavStates] = useState<{[x: string]: boolean;}>(ROUTES_DEFAULT_STATE);
+
+  useEffect(() => {
+      const currentUrl: string| undefined = Object.keys(navStates).find(url => location.pathname.includes(url));
+      currentUrl && setNavStates({
+          ...ROUTES_DEFAULT_STATE,
+          [currentUrl]: true
+      })
+  }, [location])
 
   useEffect(() => {
     const queryString = window.location.search;
@@ -73,20 +84,9 @@ const Sidebar = () => {
   const renderBasicFilters = (basicFilters: Filter[]) => {
     return <>
             {basicFilters.map((item: Filter, index: number) => (
-              <Accordion key={index} expanded={expanded === `panel${item.id}`} onChange={handleChange(`panel${item.id}`)} sx={{ margin: "0px !important" }}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                >
-                  <Typography variant="body1" sx={{ width: '33%', flexShrink: 0 }}>
-                    {item.displayName}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails sx={{padding: '0'}}>
-                <Box sx={{ padding: "0 5px", margin: 'auto', width: '85%'}} >
-                      <RangeSlider {...item.props} filterValue={getFilterValue(item)} commitFilter={commitFilter}/>
-                      </Box>
-                  </AccordionDetails>
-                </Accordion>
+              <Box sx={{ padding: "3px 10px", margin: '0', width: '100%', display: "flex", flexDirection:"row"}} >
+                <RangeSlider {...item.props} icon={item.icon} filterValue={getFilterValue(item)} commitFilter={commitFilter}/>
+              </Box>
             ))}
     </>
   }
@@ -102,30 +102,78 @@ const Sidebar = () => {
                           alignItems: "center",
                           height: "auto"}}>
           <IconButton onClick={ToogleDrawer}>
-            {!open ? <TuneIcon /> : <ChevronLeftIcon />}
+            {!open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
           <Typography variant="h5" sx={{ marginLeft: "5px", visibility: open ? "visible" : "hidden", fontWeight: "500"}}>
-            Filters
+            Menu
           </Typography>
         </DrawerHeader>
-        <List sx={{ display: open ? "block" : "none", borderTop: '1px solid lightgrey', paddingTop: 0, marginTop: '8px' }}>
-          {renderBasicFilters(BasicFilters)}
-          {/* <Grid container spacing={{ xs: 3, md: 2 }} columns={{ xs: 2, sm: 3, md: 8 }} justifyContent="center" padding="0 16px" marginTop="5px">
-            {renderLifeStyleFilters(LifeStyleFilters)}
-          </Grid> */}
+        <List>
+          {UserMenuItems.map((item) => (
+            <ListItem key={item.id} disablePadding sx={{ display: "block" }}>
+              <Link className="sidebar-link" to={`${item.urlName}`}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: "space-between",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                      height: "30px", width: "30px"
+                    }}
+                  >
+                    {navStates[item.urlName] ? item.selectedIcon : item.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.displayName}
+                    sx={{ opacity: open ? 1 : 0, color: "#4d4d4d" }}
+                  />
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          ))}
         </List>
-        <Box sx={{ display: "flex", flexDirection: "column" , alignItems:"center", justifyContent: "center", position: "absolute", bottom: "20px", visibility: open ? "visible" : "hidden"}}>
-        <Link className="navbar-link" to={`/home`}>
-        <Button
-          color="primary"
-          size="small"
-          variant="text"
-        >Reset Filters</Button>
-          </Link>
-          <Button onClick={applyFilters} variant="contained" color="primary" sx={{ width: '80%' }}>
-            Apply Filters
-          </Button>
-        </Box>
+        {
+          navStates[USER_ROUTES.ALL_APARTMENTS] && (
+            <>
+              <Divider />
+              <DrawerHeader sx={{direction: "rtl",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          height: "auto"}}>
+                    <IconButton onClick={ToogleDrawer} disabled={open}>
+                      <TuneIcon />
+                    </IconButton>
+                    <Typography variant="h5" sx={{ marginLeft: "5px", visibility: open ? "visible" : "hidden", fontWeight: "500"}}>
+                      Filters
+                    </Typography>
+              </DrawerHeader>
+              <List sx={{ display: open ? "block" : "none", borderTop: '1px solid lightgrey', paddingTop: "8px", marginTop: '8px' }}>
+                {renderBasicFilters(BasicFilters)}
+              </List>
+              <Box sx={{ display: "flex", flexDirection: "column" , alignItems:"center", justifyContent: "center", position: "absolute", bottom: "20px", visibility: open ? "visible" : "hidden"}}>
+                <Link className="navbar-link" to={`/home/${USER_ROUTES.ALL_APARTMENTS}`}>
+                  <Button
+                    color="primary"
+                    size="small"
+                    variant="text"
+                  >
+                    Reset Filters
+                  </Button>
+                </Link>
+                <Button onClick={applyFilters} variant="contained" color="primary" sx={{ width: '80%' }}>
+                  Apply Filters
+                </Button>
+              </Box>
+            </>
+          )
+        }
       </Drawer>
     </>
   );

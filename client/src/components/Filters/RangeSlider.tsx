@@ -1,7 +1,9 @@
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-import { SyntheticEvent, useEffect, useMemo, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { SliderProps } from '../../types/filters';
+import { Grid, Typography } from '@mui/material';
+import { VolumeUp } from '@mui/icons-material';
 
 const RangeSlider = ({
     filterName,
@@ -10,21 +12,10 @@ const RangeSlider = ({
     maxValue,
     step,
     commitFilter,
-    filterValue
+    filterValue,
+    icon
 }: SliderProps) => {
     const [value, setValue] = useState<number[]>([minValue, maxValue]);
-    const marks = useMemo(()=>{
-        return [
-            {
-              value: minValue,
-              label: minValue,
-            },
-            {
-              value: maxValue,
-              label: maxValue,
-            },
-          ]
-    }, [maxValue, minValue]);
 
     useEffect(()=>{
       setValue(filterValue !== undefined ? filterValue : [minValue, maxValue])
@@ -62,17 +53,35 @@ const RangeSlider = ({
 
     return (
     <Box>
-      <Slider
-        value={value}
-        onChange={handleChange}
-        onChangeCommitted={conmmitChange}
-        valueLabelDisplay="auto"
-        disableSwap
-        step={step}
-        min={minValue}
-        max={maxValue}
-        marks={marks}
-      />
+      <Grid container spacing={2} alignItems="center">
+        <Grid item>
+        {icon ? <img alt="" src={icon} style={{ height: "20px", width: "20px" }}/> : <VolumeUp /> }
+        </Grid>
+        <Grid item xs>
+          <Slider
+          size="small"
+          value={value}
+          onChange={handleChange}
+          onChangeCommitted={conmmitChange}
+          valueLabelDisplay="auto"
+          disableSwap
+          step={step}
+          min={minValue}
+          max={maxValue}
+        />
+        </Grid>
+        <Grid item sx={{ width: "85px"}} display="flex" justifyContent="space-between">
+          <Typography>
+            {value[0]}
+          </Typography>
+          <Typography>
+            -
+          </Typography>
+          <Typography>
+            {value[1]}
+          </Typography>
+        </Grid>
+      </Grid>
     </Box>
   );
 }

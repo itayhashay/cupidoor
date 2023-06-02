@@ -9,5 +9,6 @@ export type Filter = {
     maxValue: number,
     step: number,
     commitFilter?: Function,
-    filterValue?: number[] | undefined
+    filterValue?: number[] | undefined,
+    icon?: string
   };
