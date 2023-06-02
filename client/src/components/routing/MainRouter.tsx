@@ -1,21 +1,12 @@
 import { Route, Routes } from "react-router";
 import AppRoutes from "./AppRoutes";
-import Navbar from "../Navbar";
-import { Container, ContentSection } from "../App/styles";
+// import Navbar from "../Navbar";
 
 const MainRouter = () => {
   return (
     <Routes>
       {AppRoutes.map((route, index) => (
-        <Route
-          key={index}
-          path={route.path}
-          element={
-            <>
-              {route.element}
-            </>
-          }
-        />
+        <Route key={index} path={route.path} element={<>{route.element}</>} />
       ))}
     </Routes>
   );

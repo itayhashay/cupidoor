@@ -1,11 +1,7 @@
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import { AppBar, Box, Toolbar, Button } from "@mui/material";
+import { Avatar, Typography } from "@mui/material";
 import { DividerLine, LogoImg, UserSection } from "./styles";
 import Logo from "../../icons/logo.png";
-import { Avatar } from "@mui/material";
 import UserImg from "../../icons/user.jpeg";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";

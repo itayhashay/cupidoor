@@ -10,7 +10,7 @@ const App = () => {
     <Container>
       <Navbar />
       <ContentSection>
-          <MainRouter />
+        <MainRouter />
       </ContentSection>
     </Container>
   );
