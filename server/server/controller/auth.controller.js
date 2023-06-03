@@ -22,7 +22,7 @@ const AuthController = {
   async signIn(req, res, next) {
     const { email, password } = req.body;
     try {
-      const { accessToken, refreshToken,user } = await AuthService.signIn(
+      const { accessToken, refreshToken, user } = await AuthService.signIn(
         email,
         password
       );
@@ -32,7 +32,7 @@ const AuthController = {
         sameSite: "None",
         maxAge: 24 * 60 * 60 * 1000,
       });
-      res.status(OK).json({accessToken,user});
+      res.status(OK).json({ accessToken, user });
     } catch (ex) {
       res.status(INTERNAL_SERVER_ERROR).json({ error: ex.message });
     }
