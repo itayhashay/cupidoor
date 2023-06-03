@@ -9,7 +9,7 @@ export const Container = styled.div`
 `;
 
 export const ContentSection = styled.div`
-  max-height: calc(100% - 14vh);
+  max-height: calc(100% - 7vh);
   overflow-y: auto;
   display: flex;
   flex-direction: row;

@@ -18,7 +18,7 @@ root.render(
         <Router>
           <App />
         </Router>
-        <SnackbarCupid></SnackbarCupid>
+        <SnackbarCupid />
       </SnackbarContextProvider>
     </AuthContextProvider>
   </React.StrictMode>

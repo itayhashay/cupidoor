@@ -1,5 +1,5 @@
-import { Autocomplete, Button, TextField, MenuItem, Typography, Box } from "@mui/material";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { Button, Typography, Box } from "@mui/material";
+import { SelectChangeEvent } from "@mui/material/Select";
 import {
   PersonalInfoContainer,
   ProfilePicture,
@@ -7,7 +7,7 @@ import {
   Frame,
   Col,
   LinksDividerLine,
-  LinkIcon
+  LinkIcon,
 } from "./styles";
 import { useState } from "react";
 import { User, UserLink } from "../../types/user";
@@ -18,7 +18,7 @@ import { LINK_TO_ICON, USER_INFO_FIELDS, UserField } from "../../utils/user";
 import ProfileStepper from "./ProfileStepper";
 import { QUESTIONS } from "../QuestionsStepper/constant";
 
-const PersonalInfo = ({user} : {user: User}) => {
+const PersonalInfo = ({ user }: { user: User }) => {
   const [role, setRole] = useState("Tenant");
 
   const handleRoleChange = (event: SelectChangeEvent) => {
@@ -27,69 +27,127 @@ const PersonalInfo = ({user} : {user: User}) => {
 
   const openLink = (url: string) => {
     window.open(url, "_blank");
-  }
+  };
 
   const renderInfoLine = (fieldName: string, value: string, index: number) => {
-    return (          
-    <>
-      <Box display="flex" flexDirection="row">
-        <Typography width="30%" color="#757575" fontWeight={700} fontSize="16px">
-          {fieldName}
-        </Typography>
-        <Typography width="70%" color="#757575" fontWeight={400} fontSize="16px">
-          {value}
-        </Typography>
-      </Box>
-      {index + 1 !== USER_INFO_FIELDS.length && <DividerLine />}
-    </>)
-  }
+    return (
+      <>
+        <Box display="flex" flexDirection="row">
+          <Typography
+            width="30%"
+            color="#757575"
+            fontWeight={700}
+            fontSize="16px"
+          >
+            {fieldName}
+          </Typography>
+          <Typography
+            width="70%"
+            color="#757575"
+            fontWeight={400}
+            fontSize="16px"
+          >
+            {value}
+          </Typography>
+        </Box>
+        {index + 1 !== USER_INFO_FIELDS.length && <DividerLine />}
+      </>
+    );
+  };
 
-  const renderQuestionLine = (question: string, answer: string, index: number) => {
-    return (          
-    <>
-      <Box display="flex" flexDirection="column">
-        <Typography width="100%" color="#757575" fontWeight={700} fontSize="16px">
-          {question}
-        </Typography>
-        <Typography  color="#757575" fontWeight={400} fontSize="16px" marginTop="5px">
-          {answer}
-        </Typography>
-      </Box>
-      {index + 1 !== USER_INFO_FIELDS.length && <DividerLine />}
-    </>)
-  }
-
+  const renderQuestionLine = (
+    question: string,
+    answer: string,
+    index: number
+  ) => {
+    return (
+      <>
+        <Box display="flex" flexDirection="column">
+          <Typography
+            width="100%"
+            color="#757575"
+            fontWeight={700}
+            fontSize="16px"
+          >
+            {question}
+          </Typography>
+          <Typography
+            color="#757575"
+            fontWeight={400}
+            fontSize="16px"
+            marginTop="5px"
+          >
+            {answer}
+          </Typography>
+        </Box>
+        {index + 1 !== USER_INFO_FIELDS.length && <DividerLine />}
+      </>
+    );
+  };
 
   const renderLinkLine = (userLink: UserLink, index: number) => {
-    return (          
-    <>
-          <Box sx={{
+    return (
+      <>
+        <Box
+          sx={{
             "&:hover": {
               cursor: "pointer",
-              background: "#efefef"
-            }
-          }} onClick={() => openLink(userLink.link)} display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" padding="1rem" width="auto">
-            <LinkIcon src={LINK_TO_ICON[userLink.name]} />
-            <Typography>{userLink.value}</Typography>
-          </Box>
-          {index + 1 !== user.linkes?.length && <LinksDividerLine />}
-    </>)
-  }
+              background: "#efefef",
+            },
+          }}
+          onClick={() => openLink(userLink.link)}
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
+          padding="1rem"
+          width="auto"
+        >
+          <LinkIcon src={LINK_TO_ICON[userLink.name]} />
+          <Typography>{userLink.value}</Typography>
+        </Box>
+        {index + 1 !== user.linkes?.length && <LinksDividerLine />}
+      </>
+    );
+  };
 
   return (
     <PersonalInfoContainer>
       <Col>
         <Frame>
           <ProfilePictureContainer>
-            <ProfilePicture alt="" src={PROFILE_PICTURES[randomNumber(0, 20)]} />
-            <Typography variant="h5" width="100%" color="#4f4f4f" textAlign="center" >
+            <ProfilePicture
+              alt=""
+              src={PROFILE_PICTURES[randomNumber(0, 20)]}
+            />
+            <Typography
+              variant="h5"
+              width="100%"
+              color="#4f4f4f"
+              textAlign="center"
+            >
               {`${user.firstName} ${user.lastName}`}
             </Typography>
-            <Typography variant="body1" width="100%" color="#757575" textAlign="center" fontWeight={400} margin="5px 0">
+            <Typography
+              variant="body1"
+              width="100%"
+              color="#757575"
+              textAlign="center"
+              fontWeight={400}
+              margin="5px 0"
+            >
               {user.jobTitle}
             </Typography>
             <LinksDividerLine />
-            <Typography variant="body1" width="100%" color="#757575" textAlign="center" fontSize="14px" fontWeight={500} margin="10px 0">
+            <Typography
+              variant="body1"
+              width="100%"
+              color="#757575"
+              textAlign="center"
+              fontSize="14px"
+              fontWeight={500}
+              margin="10px 0"
+            >
               {user.familiarity}
             </Typography>
             <Box display="flex" justifyContent="center" marginTop="15px">
@@ -101,24 +159,50 @@ const PersonalInfo = ({user} : {user: User}) => {
           </ProfilePictureContainer>
         </Frame>
         <Frame>
-          {user.linkes?.map((link: UserLink, index: number) => renderLinkLine(link, index))}
+          {user.linkes?.map((link: UserLink, index: number) =>
+            renderLinkLine(link, index)
+          )}
         </Frame>
       </Col>
       <Col>
         <Frame>
-          <Box display="flex" flexDirection="column" width="70vh" padding="0 35px" margin="25px 0">
-            <Typography variant="h6" fontWeight={300}>Complete Your Profile</Typography>
-            <ProfileStepper user={user}/>
+          <Box
+            display="flex"
+            flexDirection="column"
+            width="70vh"
+            padding="0 35px"
+            margin="25px 0"
+          >
+            <Typography variant="h6" fontWeight={300}>
+              Complete Your Profile
+            </Typography>
+            <ProfileStepper user={user} />
           </Box>
         </Frame>
         <Frame>
-          <Box display="flex" flexDirection="column" width="70vh" padding="0 35px" margin="25px 0">
-            {USER_INFO_FIELDS.map((field: UserField, index: number) => renderInfoLine(field.fieldName, user[field.fieldValue], index))}
+          <Box
+            display="flex"
+            flexDirection="column"
+            width="70vh"
+            padding="0 35px"
+            margin="25px 0"
+          >
+            {USER_INFO_FIELDS.map((field: UserField, index: number) =>
+              renderInfoLine(field.fieldName, user[field.fieldValue], index)
+            )}
           </Box>
         </Frame>
         <Frame>
-          <Box display="flex" flexDirection="column" width="70vh" padding="0 35px" margin="25px 0">
-            {QUESTIONS.map((question: string, index: number) => renderQuestionLine(question, "Yes", index))}
+          <Box
+            display="flex"
+            flexDirection="column"
+            width="70vh"
+            padding="0 35px"
+            margin="25px 0"
+          >
+            {QUESTIONS.map((question: string, index: number) =>
+              renderQuestionLine(question, "Yes", index)
+            )}
           </Box>
         </Frame>
       </Col>
