@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  FunctionComponent,
-  Dispatch,
-} from "react";
+import { createContext, useContext, useState, FunctionComponent } from "react";
 import { User } from "../types/user";
 import { signIn, signUp } from "../utils/api";
 import { AxiosError, AxiosResponse } from "axios";
@@ -43,7 +37,7 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   const signInUser = async (email: string, password: string) => {
     const response: AxiosResponse = await signIn(email, password);
     if (response.status == 200) {
-      const {user}: User = response.data;
+      const { user }: User = response.data;
       setUser(user);
       return { success: true };
     }

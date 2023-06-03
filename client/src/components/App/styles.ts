@@ -8,5 +8,5 @@ export const Container = styled.div`
 export const ContentSection = styled.div`
   height: calc(100% - 9vh);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 `;

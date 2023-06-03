@@ -1,3 +1,4 @@
+import { makeStyles } from "@mui/styles";
 import { AppBar, Box, Toolbar, Button } from "@mui/material";
 import { Avatar, Typography } from "@mui/material";
 import { DividerLine, LogoImg, UserSection } from "./styles";
@@ -7,8 +8,24 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { USER_ROUTES } from "../UserRouter/constants";
 
+const useStyles = makeStyles({
+  linkStyle: {
+    display: "flex",
+    alignItems: "center",
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+    border: 0,
+    borderRadius: 3,
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    color: "white",
+    height: 35,
+    padding: "0 30px",
+    textAlign: "center",
+  },
+});
+
 export const Navbar = () => {
   const { user, setUser } = useAuth();
+  const classes = useStyles();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -33,9 +50,11 @@ export const Navbar = () => {
               </>
             ) : (
               <>
-                <Button color="inherit">Log in</Button>
-                <DividerLine />
-                <Button color="inherit">Sign up</Button>
+                <Button>
+                  <Link to={"/signIn"} className={classes.linkStyle}>
+                    Sign In
+                  </Link>
+                </Button>
               </>
             )}
           </UserSection>
