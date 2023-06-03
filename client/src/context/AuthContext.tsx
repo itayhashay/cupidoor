@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, FunctionComponent } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  FunctionComponent,
+  useEffect,
+} from "react";
 import { User } from "../types/user";
 import { signIn, signUp } from "../utils/api";
 import { AxiosError, AxiosResponse } from "axios";
@@ -34,8 +40,24 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
+  // Games yet not finished - storing the user in local storage, adv will be the cookie
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
+
   const signInUser = async (email: string, password: string) => {
     const response: AxiosResponse = await signIn(email, password);
+    let resData = response.data;
+    console.log(`Where the access token:`, resData);
+    let accessToken = resData.accessToken;
+
     if (response.status == 200) {
       const { user }: User = response.data;
       setUser(user);
