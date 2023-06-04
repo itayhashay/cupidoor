@@ -1,4 +1,5 @@
 const User = require('../model/user.model');
+const storage = require('../service/firebase-storage.service')
 
 const createUser = async (userData) => {
   try {
@@ -65,9 +66,25 @@ const updateUser = async (id, userData) => {
 
 const deleteUser = async (id) => {
   try {
-    return await await User.findByIdAndDelete(id);
+    return await User.findByIdAndDelete(id);
   } catch (err) {
     throw new Error('Error deleting user: ' + err.message);
+  }
+}
+
+const getUserPhoto = async (id) => {
+  try {
+    return { avatar: await storage.downloadProfilePhoto(id) };
+  } catch (err) {
+    throw new Error('Error getting user photo: ' + err.message);
+  }
+}
+
+const uploadUserPhoto = async (id, base64Photo) => {
+  try {
+    return { avatar: await storage.uploadProfilePhoto(id, base64Photo) };
+  } catch (err) {
+    throw new Error('Error getting user photo: ' + err.message);
   }
 }
 
@@ -77,5 +94,7 @@ module.exports = {
   getUser,
   getUserByEmail,
   updateUser,
-  deleteUser
+  deleteUser,
+  getUserPhoto,
+  uploadUserPhoto
 };

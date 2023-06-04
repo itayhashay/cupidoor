@@ -12,6 +12,19 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post('/avatar/:id', async (req, res) => {
+  try {
+    const avatar = await userService.uploadUserPhoto(req.params.id, req.body.avatar);
+    if (!avatar) {
+      res.status(NOT_FOUND).send();
+    } else {
+      res.status(OK).json(avatar);
+    }
+  } catch (err) {
+    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+  }
+})
+
 router.get('/', async (req, res) => {
   try {
     const users = await userService.getUsers();
@@ -20,6 +33,19 @@ router.get('/', async (req, res) => {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
   }
 });
+
+router.get('/avatar/:id', async (req, res) => {
+  try {
+    const avatar = await userService.getUserPhoto(req.params.id);
+    if (!avatar) {
+      res.status(NOT_FOUND).send();
+    } else {
+      res.status(OK).json(avatar);
+    }
+  } catch (err) {
+    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+  }
+})
 
 router.get('/:id', async (req, res) => {
   try {
@@ -33,6 +59,7 @@ router.get('/:id', async (req, res) => {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
   }
 });
+
 
 router.put('/:id', async (req, res) => {
   try {
@@ -51,5 +78,6 @@ router.delete('/:id', async (req, res) => {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
   }
 });
+
 
 module.exports = router;
