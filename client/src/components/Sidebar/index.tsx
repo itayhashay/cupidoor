@@ -140,7 +140,7 @@ const Sidebar = () => {
         </List>
         {
           navStates[USER_ROUTES.ALL_APARTMENTS] && (
-            <>
+            <Box>
               <Divider />
               <DrawerHeader sx={{direction: "rtl",
                           display: "flex",
@@ -157,7 +157,7 @@ const Sidebar = () => {
               <List sx={{ display: open ? "block" : "none", borderTop: '1px solid lightgrey', paddingTop: "8px", marginTop: '8px' }}>
                 {renderBasicFilters(BasicFilters)}
               </List>
-              <Box sx={{ display: "flex", flexDirection: "column" , alignItems:"center", justifyContent: "center", position: "absolute", bottom: "20px", visibility: open ? "visible" : "hidden"}}>
+              <Box sx={{ display: "flex", flexDirection: "column" , alignItems:"center", justifyContent: "center", visibility: open ? "visible" : "hidden"}}>
                 <Link className="navbar-link" to={`/home/${USER_ROUTES.ALL_APARTMENTS}`}>
                   <Button
                     color="primary"
@@ -171,7 +171,7 @@ const Sidebar = () => {
                   Apply Filters
                 </Button>
               </Box>
-            </>
+            </Box>
           )
         }
       </Drawer>
