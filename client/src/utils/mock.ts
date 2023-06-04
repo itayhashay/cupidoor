@@ -284,9 +284,6 @@ export const PROFILE_PICTURES: string[] = [
 ];
 
 export const LANDLORD_PROPERTIES: Apartment[] = [
-    {id: 1, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Tel Aviv, George Wise 2' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 2, squareMeter: 60, balcony: 1, parkings: 0, match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
-    {id: 2, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Jerusalem, Gooday 32' , propertyCond: PROPERTY_CONDITIONS.NEW_FROM_A_CONTRACTOR ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 5, squareMeter: 60, balcony: 1, parkings: 1, match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
-    {id: 3, landlord: LANDLORD_MOCK, description: DESC_MOCK, address: 'Rishon, Yordei hasira 4' , propertyCond: PROPERTY_CONDITIONS.RENOVATED ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 1, squareMeter: 60, balcony: 1, parkings: 1, match: randomNumber(0, 100), rooms: 3, rent: randomNumber(3000, 9000), paymentsCond: randomPaymentCond()},
 ]
 
 export const LIKED_APARTMENTS: Apartment[] = [
