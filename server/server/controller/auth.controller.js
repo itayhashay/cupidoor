@@ -27,7 +27,6 @@ const AuthController = {
       );
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
-        sameSite: "None",
         maxAge: 24 * 60 * 60 * 1000,
       });
       res.status(OK).json({ accessToken, user });
@@ -54,14 +53,13 @@ const AuthController = {
     const refreshToken = cookies.jwt;
 
     try {
-      const { newRefreshToken, accessToken } =
+      const { newRefreshToken, accessToken, user } =
         await AuthService.handleRefreshToken(refreshToken);
       res.cookie("jwt", newRefreshToken, {
         httpOnly: true,
-        sameSite: "None",
         maxAge: 24 * 60 * 60 * 100,
       });
-      return res.json({ accessToken });
+      return res.json({ user, accessToken });
     } catch (ex) {
       res.status(401).json({ success: false, error: ex.message });
       next(ex);

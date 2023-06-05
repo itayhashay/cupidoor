@@ -8,7 +8,6 @@ const AuthService = {
     try {
       let isExist = await UserModel.exists({ email: user.email });
       if (isExist) {
-        console.log(isExist);
         throw new Error("Email already exist!");
       }
       const salt = await bcrypt.genSalt(10);
@@ -25,10 +24,8 @@ const AuthService = {
 
   async signIn(email, password, cookies) {
     let user = await UserService.getUserByEmail(email);
-    if (!user) {
-      throw new Error("Email or password are invalid!");
-    }
-    if (!bcrypt.compareSync(password, user.password)) {
+
+    if (!user || !bcrypt.compareSync(password, user?.password)) {
       throw new Error("Email or password are invalid!");
     }
 
@@ -64,7 +61,12 @@ const AuthService = {
     user.refreshToken = [...newRefreshTokenArray, refreshToken];
     const result = await user.save();
 
-    const { password: userPass, salt, refreshToken: rt, ...rest } = user;
+    const {
+      password: userPass,
+      salt,
+      refreshToken: rt,
+      ...rest
+    } = user.toJSON();
 
     user = { ...rest };
 
@@ -116,7 +118,11 @@ const AuthService = {
 
           foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
           await foundUser.save();
-          return { newRefreshToken, accessToken };
+          const user = await UserModel.findOne(
+            { _id: foundUser._id },
+            { password: 0, refreshToken: 0, salt: 0 }
+          ).exec();
+          return { user, newRefreshToken, accessToken };
         }
       }
     );

@@ -22,11 +22,12 @@ export const setUserAnswers = async (data: MatchData) => {
 };
 
 export const signIn = async (email: string, password: string) => {
-  const response = await axios.post(
+  const response = await axios(
     `${config.api.baseUrl}${config.api.routes.signIn}`,
     {
-      email,
-      password,
+      data: { email, password },
+      method:"POST",
+      withCredentials: true,
     }
   );
   return response;

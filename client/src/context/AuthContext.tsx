@@ -15,19 +15,23 @@ type Props = { children: React.ReactNode };
 export type AuthContextType = {
   user: User | null;
   accessToken: string | null;
+  isAuthLoading: boolean;
   setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   signInUser: (email: string, password: string) => void;
   signUpUser: (user: User) => void;
+  signOutUser: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   accessToken: null,
+  isAuthLoading: true,
   setAccessToken: () => {},
   setUser: () => {},
   signInUser: () => {},
   signUpUser: () => {},
+  signOutUser: () => {},
 });
 
 export default AuthContext;
@@ -39,6 +43,7 @@ export function useAuth() {
 export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   // Games yet not finished - storing the user in local storage, adv will be the cookie
   useEffect(() => {
@@ -46,6 +51,7 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    setIsAuthLoading(false);
   }, []);
 
   useEffect(() => {
@@ -90,17 +96,22 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
     return cupidError;
   };
 
-  // const refreshUserToken = async ()=>{
-  //   const response:AxiosResponse | AxiosError = await refreshToken()
-  // };
+  const signOutUser = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
+    setUser(null);
+    setAccessToken(null);
+  };
 
   const contextData: AuthContextType = {
     user,
     accessToken: accessToken,
+    isAuthLoading: isAuthLoading,
     setAccessToken: setAccessToken,
     setUser: setUser,
     signInUser: signInUser,
     signUpUser: signUpUser,
+    signOutUser: signOutUser,
   };
 
   return (
