@@ -39,11 +39,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  isSmoking: {
-    type: Boolean,
-    default: false,
-  },
-  hasPets: {
+  answerdQuestions: {
     type: Boolean,
     default: false,
   },
