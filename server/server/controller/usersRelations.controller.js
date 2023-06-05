@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const usersRelationsService = require('../service/userRelations.service');
+const usersRelationsService = require('../service/usersRelations.service');
 const { CREATED, OK, NO_CONTENT, INTERNAL_SERVER_ERROR } = require('http-status-codes');
 
 // Get all likes of tenent
