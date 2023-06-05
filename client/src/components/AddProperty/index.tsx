@@ -2,6 +2,8 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useEffect, useState } from 'react';
 import AddPropertyStepper from './AddPropertyStepper';
+import { IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -33,7 +35,12 @@ const AddProperty = ({ isOpen, onClose } : { isOpen: boolean, onClose: Function 
         open={open}
         onClose={handleClose}
       >
+
         <Box sx={style}>
+        <IconButton sx={{position: "absolute", top: "1rem", left: "1rem", zIndex: 1}} onClick={handleClose}>
+          <CloseIcon />
+        </IconButton>
+
           <AddPropertyStepper />
         </Box>
       </Modal>
