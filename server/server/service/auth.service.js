@@ -8,7 +8,6 @@ const AuthService = {
     try {
       let isExist = await UserModel.exists({ email: user.email });
       if (isExist) {
-        console.log(isExist);
         throw new Error("Email already exist!");
       }
       const salt = await bcrypt.genSalt(10);
@@ -23,13 +22,10 @@ const AuthService = {
     }
   },
 
-  async signIn(email, password) {
+  async signIn(email, password, cookies) {
     let user = await UserService.getUserByEmail(email);
-    console.log(user);
-    if (!user) {
-      throw new Error("Email or password are invalid!");
-    }
-    if (!bcrypt.compareSync(password, user.password)) {
+
+    if (!user || !bcrypt.compareSync(password, user?.password)) {
       throw new Error("Email or password are invalid!");
     }
 
@@ -46,23 +42,33 @@ const AuthService = {
       process.env.REFRESH_TOKEN_SECRET
     );
 
-    if (!user.refreshToken) {
-      user.refreshToken.push(refreshToken);
-      await user.save();
+    let newRefreshTokenArray = user.refreshToken;
+
+    if (cookies?.jwt) {
+      const cookieRefreshToken = cookies.jwt;
+      const foundToken = await UserModel.findOne({
+        refreshToken: cookieRefreshToken,
+      }).exec();
+      if (!foundToken) {
+        newRefreshTokenArray = [];
+      } else {
+        newRefreshTokenArray = newRefreshTokenArray.filter(
+          (token) => token != cookieRefreshToken
+        );
+      }
     }
 
-    user = {
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      age: user.age,
-      phone: user.phone,
-      role: user.role,
-      description: user.description,
-      isSmoking: user.isSmoking,
-      hasPets: user.hasPets,
-      create: user.createdAt,
-    };
+    user.refreshToken = [...newRefreshTokenArray, refreshToken];
+    const result = await user.save();
+
+    const {
+      password: userPass,
+      salt,
+      refreshToken: rt,
+      ...rest
+    } = user.toJSON();
+
+    user = { ...rest };
 
     return { accessToken, refreshToken, user };
   },
@@ -78,7 +84,7 @@ const AuthService = {
     return true;
   },
   async handleRefreshToken(refreshToken) {
-    jwt.verify(
+    return await jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET,
       async (err, decoded) => {
@@ -112,7 +118,11 @@ const AuthService = {
 
           foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
           await foundUser.save();
-          return { newRefreshToken, accessToken };
+          const user = await UserModel.findOne(
+            { _id: foundUser._id },
+            { password: 0, refreshToken: 0, salt: 0 }
+          ).exec();
+          return { user, newRefreshToken, accessToken };
         }
       }
     );
@@ -121,7 +131,7 @@ const AuthService = {
 
 async function _resetRefreshToken(userEmail) {
   const hackedUser = await UserModel.findOne({
-    email: decoded.email,
+    email: userEmail,
   }).exec();
   hackedUser.refreshToken = [];
   return await hackedUser.save();

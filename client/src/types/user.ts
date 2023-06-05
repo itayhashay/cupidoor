@@ -3,23 +3,24 @@ export enum LINKS_NAMES {
   INSTAGRAM = "Instagram",
   TWITTER = "Twitter",
   LINKEDIN = "LinkedIn",
-  TIKTOK = "Tiktok"
+  TIKTOK = "Tiktok",
 }
 
 export type UserLink = {
-  name: LINKS_NAMES,
-  value: string,
-  link: string
-}
+  name: LINKS_NAMES;
+  value: string;
+  link: string;
+};
 
 export type UserTypes = "tenant" | "landlord" | "both";
 export type User = {
-  [key: string]: any,
-  id?: number;
+  [key: string]: any;
+  _id?: string;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
+  avatar?: string;
   phone: string;
   age: string;
   dateOfBirth?: Date;

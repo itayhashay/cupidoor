@@ -39,23 +39,11 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
         message: "Welcome Back!",
         show: true,
       });
-      setLoginTimeoutId(
-        setTimeout(() => {
-          navigate(location.state ? location.state.redirect : "/questions"); // isAllAnswered ? redirect /home
-        }, 1500)
-      );
+      navigate(location.state ? location.state.redirect : "/questions"); // isAllAnswered ? redirect /home
     } else {
       alert(response.data);
     }
   };
-
-  useEffect(() => {
-    return () => {
-      if (loginTimeoutId) {
-        clearTimeout(loginTimeoutId);
-      }
-    };
-  }, [loginTimeoutId]);
 
   if (isGoodLogin) {
     return <div>Logged good! redirecting you...</div>;

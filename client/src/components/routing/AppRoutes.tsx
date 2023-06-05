@@ -1,6 +1,6 @@
 import LandingPage from "../Landing/LandingPage";
 import NotFoundPage from "../404/404";
-import ProtectedRoute from "./ProtectedRoute.js";
+import ProtectedRoute from "./ProtectedRoute";
 import UnAuthorizedPage from "../401/401";
 import MainFeed from "../MainFeed";
 import QuestionsStepper from "../QuestionsStepper";
@@ -19,19 +19,35 @@ const appRoutes = [
   { path: "/Mainfeed", element: <MainFeed /> },
   {
     path: "/questions",
-    element: <QuestionsStepper displayHouses={tmpApartments} />,
+    element: (
+      <ProtectedRoute>
+        <QuestionsStepper displayHouses={tmpApartments} />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/home/*",
-    element: <HomeRouter apartments={[]} />,
+    element: (
+      <ProtectedRoute>
+        <HomeRouter apartments={[]} />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/apartment/:id",
-    element: <ApartmentDetails />,
+    element: (
+      <ProtectedRoute>
+        <ApartmentDetails />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/user/*",
-    element: <UserRouter />,
+    element: (
+      <ProtectedRoute>
+        <UserRouter />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/401",

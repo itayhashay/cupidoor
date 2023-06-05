@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  avatar: {
+    type: String,
+  },
   age: {
     type: Number,
     required: true,

@@ -6,33 +6,42 @@ const createUser = async (userData) => {
     const user = new User(userData);
     return await user.save();
   } catch (err) {
-    throw new Error('Error creating user: ' + err.message);
+    throw new Error("Error creating user: " + err.message);
   }
-}
+};
 
 const getUsers = async () => {
   try {
     return await User.find();
   } catch (err) {
-    throw new Error('Error getting users: ' + err.message);
+    throw new Error("Error getting users: " + err.message);
   }
-}
+};
 
 const getUser = async (id) => {
   try {
     return await User.findById(id);
   } catch (err) {
-    throw new Error('Error getting user: ' + err.message);
+    throw new Error("Error getting user: " + err.message);
   }
-}
+};
+
+const getUsersForChat = async (id) => {
+  try {
+    const users = await User.findById(id, ["_id", "name", "avatar"]).exec();
+    return users;
+  } catch (err) {
+    throw new Error("Error getting user: " + err.message);
+  }
+};
 
 const getUserByEmail = async (email) => {
   try {
     return await User.findOne({ email: email });
   } catch (err) {
-    throw new Error('Error getting user: ' + err.message);
+    throw new Error("Error getting user: " + err.message);
   }
-}
+};
 
 const updateUser = async (id, userData) => {
   try {
@@ -60,17 +69,17 @@ const updateUser = async (id, userData) => {
     }
     return await user.save();
   } catch (err) {
-    throw new Error('Error updating user: ' + err.message);
+    throw new Error("Error updating user: " + err.message);
   }
-}
+};
 
 const deleteUser = async (id) => {
   try {
     return await User.findByIdAndDelete(id);
   } catch (err) {
-    throw new Error('Error deleting user: ' + err.message);
+    throw new Error("Error deleting user: " + err.message);
   }
-}
+};
 
 const getUserPhoto = async (id) => {
   try {
@@ -96,5 +105,6 @@ module.exports = {
   updateUser,
   deleteUser,
   getUserPhoto,
-  uploadUserPhoto
+  uploadUserPhoto,
+  getUsersForChat
 };
