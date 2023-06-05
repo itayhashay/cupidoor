@@ -72,3 +72,7 @@ a {
 .apartment-gallery .image-gallery-slide img {
   object-fit: cover;
 }
+
+.MuiToggleButtonGroup-grouped {
+  width: 2.3rem;
+}

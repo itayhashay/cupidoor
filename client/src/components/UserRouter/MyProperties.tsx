@@ -2,7 +2,7 @@ import { Box, Button, Fab, Typography } from "@mui/material";
 import { LANDLORD_PROPERTIES } from "../../utils/mock";
 import GenericHousesList from "../GenericHousesList";
 import AddHomeOutlinedIcon from '@mui/icons-material/AddHomeOutlined';
-import AddProperty from "./AddProperty";
+import AddProperty from "../AddProperty";
 import { useState } from "react";
 
 const MyProperties = () => {
