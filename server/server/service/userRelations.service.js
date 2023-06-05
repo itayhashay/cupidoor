@@ -32,7 +32,6 @@ const getMatchesByApartmentId = async (tenentId) => {
     }
 }
 
-
 const likeApartment = async (tenentId, apartmentId) => {
     try {
         const relation = await UsersRelations.findOne({ apartment: apartmentId, tenent: tenentId });
@@ -70,7 +69,6 @@ const declineTenet = async (tenentId, apartmentId) => {
         throw new Error('Error decline tenent: ' + err.message);
     }
 }
-
 
 module.exports = {
     getLikesByTenentId,
