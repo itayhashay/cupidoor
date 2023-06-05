@@ -3,6 +3,7 @@ import { Button, Box, Stepper, Step, StepLabel } from '@mui/material';
 import AddressForm from "./AddressForm";
 import AboutForm from './AboutForm';
 import PaymentsForm from './PaymentsForm';
+import UploadsForm from './UploadsForm';
 
 const AddPropertyStepper = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -26,7 +27,7 @@ const AddPropertyStepper = () => {
   },{
     index: 4,
     label: "Photos and Videos",
-    component: <AddressForm />
+    component: <UploadsForm />
   }];
 
   const handleNext = () => {
