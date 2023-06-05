@@ -53,10 +53,11 @@ const AuthController = {
 
   async refreshToken(req, res, next) {
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.status(401);
+    if (!cookies?.jwt) return res.status(401).send();
     const refreshToken = cookies.jwt;
 
     try {
+
       const { newRefreshToken, accessToken } =
         await AuthService.handleRefreshToken(refreshToken);
       res.cookie("jwt", newRefreshToken, {

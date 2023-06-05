@@ -25,7 +25,6 @@ const AuthService = {
 
   async signIn(email, password) {
     let user = await UserService.getUserByEmail(email);
-    console.log(user);
     if (!user) {
       throw new Error("Email or password are invalid!");
     }
@@ -52,9 +51,11 @@ const AuthService = {
     }
 
     user = {
+      _id: user._id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      avatar: user.avatar,
       age: user.age,
       phone: user.phone,
       role: user.role,

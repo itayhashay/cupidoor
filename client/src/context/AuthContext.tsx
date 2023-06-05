@@ -49,18 +49,31 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(user));
+    const storedAccessToken = localStorage.getItem("accessToken");
+    if (storedAccessToken) {
+      setAccessToken(storedAccessToken);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
   }, [user]);
+
+  useEffect(() => {
+    if (accessToken) {
+      localStorage.setItem("accessToken", String(accessToken));
+    }
+  }, [accessToken]);
 
   const signInUser = async (email: string, password: string) => {
     const response: AxiosResponse = await signIn(email, password);
-    let resData = response.data;
-    console.log(`Where the access token:`, resData);
-    let accessToken = resData.accessToken;
 
     if (response.status == 200) {
-      const { user }: User = response.data;
+      const { user, accessToken }: User = response.data;
       setUser(user);
+      setAccessToken(accessToken);
       return { success: true };
     }
     return { success: false, error: response.data };

@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { useAuth } from "../context/AuthContext";
-import axios from "../utils/axios";
+import axios from "../utils/axiosPrivate";
 import { User } from "../types/user";
 
 const useRefreshToken = () => {

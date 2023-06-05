@@ -8,21 +8,12 @@ import { Formik } from "formik";
 import "./SignIn.css";
 import { AuthContextType, useAuth } from "../../context/AuthContext";
 import { useSnackbar } from "../../context/SnackbarContext";
-import io from "socket.io-client";
+
 interface SignInPageProps {
   onTogglePage: () => void;
 }
 
 const SignInPage = ({ onTogglePage }: SignInPageProps) => {
-  let socket;
-  const connectSocket = ()=>{
-    socket = io("http://localhost:2309",{
-      query:{
-        _id:1
-      }
-    })
-  }
-  connectSocket();
   const navigate = useNavigate();
   const location = useLocation();
   const [isGoodLogin, setIsGoodLogin] = useState<boolean>(false);
