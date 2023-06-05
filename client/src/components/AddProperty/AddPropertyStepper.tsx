@@ -9,23 +9,18 @@ const AddPropertyStepper = () => {
   const [activeStep, setActiveStep] = useState(0);
 
   const steps: {
-    index: number,
     label: string;
     component: JSX.Element;
 }[] = [{
-    index: 1,
     label: "Property Address",
     component: <AddressForm />
   },{
-    index: 2,
     label: "About The Property",
     component: <AboutForm />
   },{
-    index: 3,
     label: "Payments",
     component: <PaymentsForm />
   },{
-    index: 4,
     label: "Photos and Videos",
     component: <UploadsForm />
   }];
@@ -59,18 +54,18 @@ const AddPropertyStepper = () => {
                 right: 0,
                 margin: "0 1rem 1rem 0" }}>
                   <Button
-                    variant="contained"
-                    onClick={handleNext}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Continue'}
-                  </Button>
-                  <Button
                     disabled={activeStep === 0}
                     onClick={handleBack}
                     sx={{ mt: 1, mr: 1 }}
                   >
                     Back
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={handleNext}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    {activeStep === steps.length - 1 ? 'Finish' : 'Continue'}
                   </Button>
               </Box>
     </Box>
