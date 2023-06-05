@@ -6,7 +6,7 @@ const UserModel = require("../model/user.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 const ChatService = {
-  getConversations: async (fromUser) => {
+  getConversations: async function (fromUser) {
     try {
       fromUser = fromUser.toString();
 
@@ -22,43 +22,40 @@ const ChatService = {
         return match.members.filter((userId) => userId !== fromUser)[0];
       });
 
-      const userPromises = [];
-      const conversationsPromises = [];
+      const users = await UserModel.find({
+        _id: {
+          $in: [...usersIds],
+        },
+      });
 
-      for (let user of usersIds) {
-        userPromises.push(UserService.getUsersForChat(user));
-        conversationsPromises.push(
-          conversationModel.findOne({
-            members: {
-              $all: [user, fromUser],
-            },
-          })
-        );
-      }
-
-      const users = await Promise.all(userPromises);
-      const conversations = await Promise.all(conversationsPromises);
       const response = [];
-      for (let conv of conversations) {
+
+      for (let user of users) {
+        let conversation = await conversationModel.findOne({
+          members: {
+            $all: [user._id.toString(), fromUser],
+          },
+        });
+        if (!conversation) {
+          conversation = await this.createConversation(
+            fromUser,
+            user._id.toString()
+          );
+        }
+
         const messages = await MessageModel.find({
-          conversationId: conv._id,
+          conversationId: conversation._id,
         }).sort({ createdAt: -1 });
-        const lastMessage = messages[0];
+        const lastMessage = messages[0] ? messages[0] : "";
         const notifications = await MessageModel.countDocuments({
-          conversationId: conv._id,
+          conversationId: conversation._id,
           sender: { $ne: fromUser },
           status: "sent",
         });
 
-        const otherUserId = conv.members.filter(
-          (member) => member !== fromUser
-        )[0];
-        const otherUser = users.filter(
-          (user) => user._id.toString() == otherUserId
-        )[0];
         response.push({
-          ...otherUser.toJSON(),
-          lastMessage: lastMessage.text,
+          ...user.toJSON(),
+          lastMessage,
           notifications,
         });
       }
@@ -68,7 +65,7 @@ const ChatService = {
       throw ex;
     }
   },
-  getMatches: async (fromUser) => {
+  getMatches: async function (fromUser) {
     try {
       const matches = await UsersRelationsModel.find({
         relation: "match",
@@ -94,7 +91,7 @@ const ChatService = {
       throw ex;
     }
   },
-  sendMessage: async (conversationId, sender, text) => {
+  sendMessage: async function (conversationId, sender, text) {
     const message = await MessageModel.create({
       conversationId,
       sender,
@@ -102,7 +99,7 @@ const ChatService = {
     });
     return message;
   },
-  createConversation: async (fromUser, toUser) => {
+  createConversation: async function (fromUser, toUser) {
     try {
       const toUserObject = UserService.getUser(toUser);
 
@@ -117,7 +114,7 @@ const ChatService = {
       throw ex;
     }
   },
-  getConversation: async (fromUser, toUser) => {
+  getConversation: async function (fromUser, toUser) {
     const conversation = await conversationModel.findOne({
       members: { $all: [fromUser, toUser] },
     });

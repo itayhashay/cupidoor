@@ -6,6 +6,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const cookieParaser = require("cookie-parser");
 
 const initializeChat = require("./middlewares/chat");
+const errorHandler = require("./middlewares/errorHandler");
 require("dotenv").config();
 
 const PORT = process.env.PORT || 2308;
@@ -23,6 +24,7 @@ app.use(cookieParaser());
 app.use(mongoSanitize());
 
 app.use("/", require("./router"));
+app.use(errorHandler);
 
 const startServer = async () => {
   try {
