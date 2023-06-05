@@ -42,7 +42,7 @@ const AboutForm = () => {
                 </Box>
                 <Box display="flex" flexDirection="column" width="48%">
                     <Typography variant="h6" fontWeight={400} marginBottom="5px">Description</Typography>
-                    <TextareaAutosize minRows={7} style={{resize: "none", padding: "12px", fontSize: "14px", fontFamily:"'Roboto'", wordSpacing: 1.5}} placeholder="Describe your property, the condition of the furnishings, the frequency of maintenance, etc."/>
+                    <TextareaAutosize minRows={7} style={{resize: "none", padding: "12px", fontSize: "14px", fontFamily:"'Roboto'", wordSpacing: 1.5, borderRadius: "4px", border: "1px solid #c4c4c4"}} placeholder="Describe your property, the condition of the furnishings, the frequency of maintenance, etc."/>
                 </Box>
             </Box>
             <Box height="45%" display="flex" flexDirection="row" justifyContent="space-between">

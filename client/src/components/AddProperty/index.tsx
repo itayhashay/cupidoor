@@ -11,9 +11,10 @@ const style = {
   width: "80vw",
   height: "80vh",
   bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
   p: 4,
+  border: 0,
+  borderRadius: "10px",
+  boxShadow: "rgba(226, 226, 226, 0.5) 0px 2px 4px 0px"
 };
 
 const AddProperty = ({ isOpen, onClose } : { isOpen: boolean, onClose: Function }) => {
