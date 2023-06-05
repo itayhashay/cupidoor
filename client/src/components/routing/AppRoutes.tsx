@@ -19,21 +19,35 @@ const appRoutes = [
   { path: "/Mainfeed", element: <MainFeed /> },
   {
     path: "/questions",
-    element: <ProtectedRoute>
-      <QuestionsStepper displayHouses={tmpApartments} />
-      </ProtectedRoute>,
+    element: (
+      <ProtectedRoute>
+        <QuestionsStepper displayHouses={tmpApartments} />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/home/*",
-    element: <HomeRouter apartments={[]} />,
+    element: (
+      <ProtectedRoute>
+        <HomeRouter apartments={[]} />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/apartment/:id",
-    element: <ApartmentDetails />,
+    element: (
+      <ProtectedRoute>
+        <ApartmentDetails />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/user/*",
-    element: <UserRouter />,
+    element: (
+      <ProtectedRoute>
+        <UserRouter />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/401",
