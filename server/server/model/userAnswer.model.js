@@ -10,7 +10,11 @@ const userAnswerSchema = new mongoose.Schema({
     ref: "User",
   },
   answer: {
-    type: String,
+    type: String, // Can be boolean - is 0 or 1
+    required: true,
+  },
+  priority: {
+    type: Number,
     required: true,
   },
 });
