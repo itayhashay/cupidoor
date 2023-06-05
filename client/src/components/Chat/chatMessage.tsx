@@ -16,7 +16,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           <Avatar src={avatar} sx={{ width: 32, height: 32, mr: 1 }}></Avatar>
         )}
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={"auto"}>
         <Box
           padding={1}
           bgcolor={isUser ? "#f9f9f9" : "#e5e9fa"}
