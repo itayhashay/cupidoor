@@ -55,7 +55,7 @@ const likeApartment = async (tenentId, apartmentId) => {
 const matchTenent = async (tenentId, apartmentId) => {
     try {
         const relation = await UsersRelations.findOne({ apartment: apartmentId, tenent: tenentId });
-        return await UsersRelations.findByIdAndUpdate({status: "approved"})
+        return await UsersRelations.findByIdAndUpdate(relation._id, { status: "approved" });
     } catch (err) {
         throw new Error('Error match tenent: ' + err.message);
     }
@@ -64,7 +64,7 @@ const matchTenent = async (tenentId, apartmentId) => {
 const declineTenet = async (tenentId, apartmentId) => {
     try {
         const relation = await UsersRelations.findOne({ apartment: apartmentId, tenent: tenentId });
-        return await UsersRelations.findByIdAndUpdate({status: "declined"})
+        return await UsersRelations.findByIdAndUpdate(relation._id, { status: "declined" });
     } catch (err) {
         throw new Error('Error decline tenent: ' + err.message);
     }
