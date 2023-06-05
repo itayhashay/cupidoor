@@ -9,9 +9,12 @@ import {
   Avatar,
   Slide,
   Collapse,
+  IconButton,
+  Button,
 } from "@mui/material";
 import { useAuth } from "../../context/AuthContext";
 import { Chat as ChatIcon } from "@mui/icons-material";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import ChatConversation from "./chatConversation";
 import {
   ChatArrivedMessageType,
@@ -38,6 +41,7 @@ const CupidChat: React.FC = () => {
   const [users, setUsers] = useState<ChatUserType[] | []>([]);
   const [arrivedMessage, setArrivedMessage] =
     useState<ChatArrivedMessageType | null>(null);
+  const [isChatCentered, setIsChatCentered] = useState(false);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
@@ -178,92 +182,111 @@ const CupidChat: React.FC = () => {
   };
 
   return (
-    <Grid
-      container
-      component={Paper}
-      elevation={3}
-      width={300}
-      position={"absolute"}
-      bottom={0}
-      right={"20px"}
-      zIndex={9999999999}
-      ref={chatContainerRef}
-      bgcolor={"white"}
-      sx={{ border: "black solid 1px" }}
-    >
-      <Grid
-        item
-        xs={12}
-        sx={{ cursor: "pointer", bgcolor: "primary.dark" }}
-        padding={1}
-        onClick={handleChatClick}
-      >
-        <Box
-          display={"flex"}
-          justifyContent={"center"}
-          color={"white"}
-          alignItems={"center"}
+    <>
+      {!isChatOpen && (
+        <Button
+          onClick={handleChatClick}
+          sx={{
+            position: "absolute",
+            bottom: 5,
+            right: 30,
+            borderRadius: 800,
+            height: 60,
+            width: 60,
+          }}
+          variant="contained"
         >
-          <ChatIcon sx={{ mr: 2 }}></ChatIcon>
-          <Typography fontWeight={"bold"} fontSize={"1.2em"}>
-            Chat
-          </Typography>
-        </Box>
-      </Grid>
-      <Collapse
-        in={isChatOpen}
-        mountOnEnter
-        unmountOnExit
-        sx={{ width: "100%" }}
+          <ChatIcon></ChatIcon>
+        </Button>
+      )}
+
+      <Grid
+        container
+        component={Paper}
+        elevation={3}
+        zIndex={9999999999}
+        ref={chatContainerRef}
+        bgcolor={"white"}
+        className={
+          isChatCentered ? "chat-container centered" : "chat-container"
+        }
+        sx={{ border: "black solid 1px" }}
       >
-        <Grid item xs={12} overflow={"auto"} height={"50vh"}>
-          <Grid container padding={1} height={"100%"}>
-            {!isLoading && !conversationUserId && (
-              <Grid item minHeight={200} xs={12} padding={1}>
-                {users.length > 0 ? (
-                  <Stack gap={1}>
-                    {users.map((user) => (
-                      <ChatContact
-                        key={user._id}
-                        id={user._id}
-                        name={user.name}
-                        avatar={user.avatar}
-                        lastMessage={user.lastMessage}
-                        notifications={user.notifications}
-                        handleContactClick={handleContactClick}
-                      ></ChatContact>
-                    ))}
-                  </Stack>
-                ) : (
-                  <Box
-                    alignItems={"center"}
-                    height={"100%"}
-                    display={"flex"}
-                    justifyContent={"center"}
-                  >
-                    <Typography textAlign={"center"}>
-                      No matches yet.
-                    </Typography>
-                  </Box>
-                )}
-              </Grid>
-            )}
-            {!isLoading && currentConversation && (
-              <Grid item xs={12} minHeight={200} height={"100%"}>
-                <ChatConversation
-                  userAvatar={user?.avatar}
-                  conversation={currentConversation.conversation}
-                  receiver={currentConversation.receiver}
-                  messages={currentConversation.messages}
-                  handleClose={handleCloseConversation}
-                  handleSendMessage={handleSendMessage}
-                ></ChatConversation>
-              </Grid>
-            )}
+        <Collapse
+          in={isChatOpen}
+          mountOnEnter
+          unmountOnExit
+          sx={{ width: "100%" }}
+        >
+          <Grid
+            item
+            xs={12}
+            sx={{ cursor: "pointer", bgcolor: "primary.dark" }}
+            padding={1}
+            onClick={handleChatClick}
+          >
+            <Box
+              display={"flex"}
+              justifyContent={"center"}
+              color={"white"}
+              alignItems={"center"}
+            >
+              <ChatIcon sx={{ mr: 2 }}></ChatIcon>
+              <Typography fontWeight={"bold"} fontSize={"1.2em"}>
+                Chat
+              </Typography>
+            </Box>
           </Grid>
-        </Grid>
-      </Collapse>
-    </Grid>
+
+          <Grid item xs={12} overflow={"auto"} height={"50vh"}>
+            <Grid container padding={1} height={"100%"}>
+              {!isLoading && !conversationUserId && (
+                <Grid item minHeight={200} xs={12} padding={1}>
+                  {users.length > 0 ? (
+                    <Stack gap={1}>
+                      {users.map((user) => (
+                        <ChatContact
+                          key={user._id}
+                          id={user._id}
+                          name={user.name}
+                          avatar={user.avatar}
+                          lastMessage={user.lastMessage}
+                          notifications={user.notifications}
+                          handleContactClick={handleContactClick}
+                        ></ChatContact>
+                      ))}
+                    </Stack>
+                  ) : (
+                    <Box
+                      alignItems={"center"}
+                      height={"100%"}
+                      display={"flex"}
+                      justifyContent={"center"}
+                    >
+                      <Typography textAlign={"center"}>
+                        No matches yet.
+                      </Typography>
+                    </Box>
+                  )}
+                </Grid>
+              )}
+              {!isLoading && currentConversation && (
+                <Grid item xs={12} minHeight={200} height={"100%"}>
+                  <ChatConversation
+                    userAvatar={user?.avatar}
+                    conversation={currentConversation.conversation}
+                    receiver={currentConversation.receiver}
+                    messages={currentConversation.messages}
+                    handleClose={handleCloseConversation}
+                    handleSendMessage={handleSendMessage}
+                  ></ChatConversation>
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+        </Collapse>
+      </Grid>
+    </>
   );
 };
 

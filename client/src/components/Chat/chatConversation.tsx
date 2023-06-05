@@ -6,11 +6,13 @@ import {
   Divider,
   Grid,
   IconButton,
+  InputAdornment,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { ArrowBack, Send as SendIcon } from "@mui/icons-material";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 import ChatMessage from "./chatMessage";
 import { ChatConversationProps } from "./types";
 
@@ -94,6 +96,10 @@ const ChatConversation: React.FC<ChatConversationProps> = ({
           maxRows={8}
           onChange={(e) => handleNewMessageChange(e.target.value)}
         ></TextField>
+        <IconButton component={"label"}>
+          <AttachFileIcon></AttachFileIcon>
+          <input hidden accept="image/*" multiple type="file" />
+        </IconButton>
         <IconButton color="primary" onClick={handleSendClick}>
           <SendIcon></SendIcon>
         </IconButton>
