@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema({
   answerdQuestions: {
     type: Boolean,
     default: false,
+    required: false,
   },
   createdAt: {
     type: Date,

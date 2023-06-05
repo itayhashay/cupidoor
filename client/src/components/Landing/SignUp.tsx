@@ -23,26 +23,41 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [goodRegistration, setGoodRegistration] = useState<boolean>(false);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  // const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedImage, setSelectedImage] = useState<
+    string | ArrayBuffer | null
+  >(null);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | undefined>();
   const { signUpUser } = useAuth() as AuthContextType;
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    setSelectedImage(file || null);
+    // setSelectedImage(file || null);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const onSubmitHandler = async (values: {
     firstName: string;
     lastName: string;
     email: string;
+    age: string;
     password: string;
     phone: string;
-    age: string;
     role: string;
+    description?: string;
+    selectedImage?: File | null;
+    answerdQuestions?: boolean;
   }) => {
     let userRole: UserTypes = values.role as UserTypes;
-    const { firstName, lastName, email, password, phone, age, role } = values;
+    const { firstName, lastName, email, password, phone, age, selectedImage } =
+      values;
     const response: any = await signUpUser({
       firstName,
       lastName,
@@ -143,8 +158,14 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                         flexDirection="column"
                         alignItems="center"
                       >
-                        <Avatar alt="Users avatar" src="/login-icon.jpg" />{" "}
-                        {/* Changes when chosen picture */}
+                        <Avatar
+                          alt="User's avatar"
+                          src={
+                            selectedImage
+                              ? String(selectedImage)
+                              : "/login-icon.jpg"
+                          }
+                        />{" "}
                         <Button
                           sx={{
                             color: "black",
@@ -158,7 +179,6 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                           <input
                             hidden
                             accept="image/*"
-                            multiple
                             type="file"
                             onChange={handleFileChange}
                           />
