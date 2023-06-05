@@ -1,5 +1,3 @@
-const express = require("express");
-const router = express.Router();
 const AuthService = require("../service/auth.service");
 const {
   CREATED,
@@ -17,6 +15,7 @@ const AuthController = {
       res.status(OK).json(await AuthService.signUp(userDetails));
     } catch (ex) {
       res.status(INTERNAL_SERVER_ERROR).json({ error: ex.message });
+      next(ex);
     }
   },
   async signIn(req, res, next) {
@@ -28,13 +27,12 @@ const AuthController = {
       );
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
         maxAge: 24 * 60 * 60 * 1000,
       });
       res.status(OK).json({ accessToken, user });
     } catch (ex) {
       res.status(INTERNAL_SERVER_ERROR).json({ error: ex.message });
+      next(ex);
     }
   },
   async signOut(req, res, next) {
@@ -42,32 +40,29 @@ const AuthController = {
       const cookies = req.cookies;
       if (!cookies?.jwt) return res.sendStatus(204);
       const refreshToken = cookies.jwt;
-      await AuthService.signOut();
-      res.clearCookie("jwt", {
-        httpOnly: true,
-        sameSite: "None",
-        secure: true,
-      });
-    } catch (ex) {}
+      await AuthService.signOut(refreshToken);
+      res.clearCookie("jwt");
+    } catch (ex) {
+      next(ex);
+    }
   },
 
   async refreshToken(req, res, next) {
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.status(401);
+    if (!cookies?.jwt) return res.status(401).send("Refresh token not found");
     const refreshToken = cookies.jwt;
 
     try {
-      const { newRefreshToken, accessToken } =
+      const { newRefreshToken, accessToken, user } =
         await AuthService.handleRefreshToken(refreshToken);
       res.cookie("jwt", newRefreshToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
         maxAge: 24 * 60 * 60 * 100,
       });
-      return res.json({ accessToken });
+      return res.json({ user, accessToken });
     } catch (ex) {
-      return res.status(401).json({ success: false, error: ex.message });
+      res.status(401).json({ success: false, error: ex.message });
+      next(ex);
     }
   },
 };
