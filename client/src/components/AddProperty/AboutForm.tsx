@@ -5,19 +5,14 @@ import { generateArrayFromRange } from "../../utils/logic";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 
 const AboutForm = () => {
-    const [parkings, setParkings] = useState(1);
-
-    const handleChange = (
-      event: React.MouseEvent<HTMLElement>,
-      newParkingsValue: number,
-    ) => {
-        setParkings(newParkingsValue);
-    };
   
     const conditionRef = useRef();
-    const streetRef = useRef();
-    const houseNumberRef = useRef();
-
+    const areaRef = useRef();
+    const roomsRef = useRef();
+    const floorRef = useRef();
+    const balconyRef = useRef();
+    const ParkingsRef = useRef();
+    const descriptionRef = useRef();
 
     return (
         <Box width="100%" display="flex" flexDirection="column" justifyContent="space-between" padding="0 24px">
@@ -38,6 +33,7 @@ const AboutForm = () => {
                     </TextField>
                     <Typography variant="body1" fontWeight={700} marginTop="16px">House area (in square meters)</Typography>
                     <TextField
+                        inputRef={areaRef}
                         sx={{ width: '-webkit-fill-available', marginBottom: "16px" }}
                         InputProps={{
                             endAdornment: <InputAdornment position="end">m²</InputAdornment>,
@@ -50,38 +46,13 @@ const AboutForm = () => {
                 </Box>
             </Box>
             <Box height="45%" display="flex" flexDirection="row" justifyContent="space-between">
-                <Box display="flex" flexDirection="column">
-                    <Box display="flex" flexDirection="column" marginBottom="1rem">
-                        <Typography variant="body1" fontWeight={700} marginBottom="5px">Rooms</Typography>
-                        <ToggleButtonGroup size="small"
-                            color="primary"
-                            value={parkings}
-                            exclusive
-                            onChange={handleChange}
-                            >
-                            {generateArrayFromRange(1, 10, 0.5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
-                        </ToggleButtonGroup>
-                    </Box>
-                    <Box display="flex" flexDirection="column">
-                        <Typography variant="body1" fontWeight={700} marginBottom="5px">Floor</Typography>
-                        <ToggleButtonGroup size="small"
-                            color="primary"
-                            value={parkings}
-                            exclusive
-                            onChange={handleChange}
-                            >
-                            {generateArrayFromRange(-1, 20).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
-                        </ToggleButtonGroup>
-                    </Box>
-                </Box>
-                <Box display="flex" flexDirection="column" marginLeft="2rem">
-                    <Box display="flex" flexDirection="column" marginBottom="1rem">
+            <Box display="flex" flexDirection="column" marginRight="2rem">
+                <Box display="flex" flexDirection="column" marginBottom="1rem">
                     <Typography variant="body1" fontWeight={700} marginBottom="5px">Balcony</Typography>
                         <ToggleButtonGroup size="small"
                             color="primary"
-                            value={parkings}
                             exclusive
-                            onChange={handleChange}
+                            ref={balconyRef}
                             >
                             {generateArrayFromRange(0, 5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
                         </ToggleButtonGroup>
@@ -90,11 +61,32 @@ const AboutForm = () => {
                         <Typography variant="body1" fontWeight={700} marginBottom="5px">Parking Spots</Typography>
                         <ToggleButtonGroup size="small"
                             color="primary"
-                            value={parkings}
                             exclusive
-                            onChange={handleChange}
+                            ref={ParkingsRef}
                             >
                             {generateArrayFromRange(0, 5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
+                        </ToggleButtonGroup>
+                    </Box>
+                </Box>
+                <Box display="flex" flexDirection="column">
+                    <Box display="flex" flexDirection="column" marginBottom="1rem">
+                        <Typography variant="body1" fontWeight={700} marginBottom="5px">Rooms</Typography>
+                        <ToggleButtonGroup size="small"
+                            color="primary"
+                            exclusive
+                            ref={roomsRef}
+                            >
+                            {generateArrayFromRange(1, 10, 0.5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
+                        </ToggleButtonGroup>
+                    </Box>
+                    <Box display="flex" flexDirection="column">
+                        <Typography variant="body1" fontWeight={700} marginBottom="5px">Floor</Typography>
+                        <ToggleButtonGroup size="small"
+                            color="primary"
+                            exclusive
+                            ref={floorRef}
+                            >
+                            {generateArrayFromRange(-1, 20).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
                         </ToggleButtonGroup>
                     </Box>
                 </Box>

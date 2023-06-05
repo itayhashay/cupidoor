@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button, Box, Stepper, Step, StepLabel } from '@mui/material';
 import AddressForm from "./AddressForm";
 import AboutForm from './AboutForm';
+import PaymentsForm from './PaymentsForm';
 
 const AddPropertyStepper = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -21,7 +22,7 @@ const AddPropertyStepper = () => {
   },{
     index: 3,
     label: "Payments",
-    component: <AddressForm />
+    component: <PaymentsForm />
   },{
     index: 4,
     label: "Photos and Videos",
