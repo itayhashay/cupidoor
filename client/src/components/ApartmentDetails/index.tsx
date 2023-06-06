@@ -13,25 +13,17 @@ import { Apartment } from "../../types/apartment";
 import { HOUSES, HOUSE_INIT } from "../../utils/mock";
 import DryDetails from "./DryDetails";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import SquareFootIcon from "@mui/icons-material/SquareFoot";
-import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
-import StairsIcon from "@mui/icons-material/Stairs";
-import {
-  ElementsLineOne,
-  ImageContainer,
-  DryDetailsContainer,
-  Frame,
-  ElementsLineTwo,
-  SubFrame,
-} from "./styles";
-import PaymentCalculator from "./PaymentCalculator";
-import LandlordSection from "./LandlordSection";
+import { ImageContainer } from "./styles";
 import ImagesGallery from "./ImagesGallery";
-import { FavoriteBorder } from "@mui/icons-material";
+import { FavoriteBorder, PercentRounded } from "@mui/icons-material";
 import ApartmentProperties from "./ApartmentProperties";
+import { green } from "@mui/material/colors";
+import { precentToColor } from "../../utils/colors";
+import { MatchLabelStyles } from "../HouseCard/styles";
 
 const ApartmentDetails = () => {
   const [apartmentInfo, setApartmentInfo] = useState<Apartment>(HOUSE_INIT);
+  const [matchColor, setMatchColor] = useState<string>("");
   const params = useParams();
 
   useEffect(() => {
@@ -51,16 +43,21 @@ const ApartmentDetails = () => {
     else console.log("error");
   }, [params.id]);
 
+  useEffect(() => {
+    const color: string = precentToColor(apartmentInfo.match);
+    setMatchColor(color);
+  }, [apartmentInfo]);
+
   return (
     // TODO: Change last updated mock.
     <Container maxWidth="xl" sx={{ paddingY: 10 }}>
-      <Grid container>
+      <Grid container component={Paper} elevation={3} position="relative">
         <Grid item xs={12}>
           <ImageContainer className="apartment-gallery">
             <ImagesGallery />
           </ImageContainer>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} padding={5}>
           <Grid container>
             <Grid item md={7} xs={12} padding={1}>
               <DryDetails apartmentInfo={apartmentInfo} />
@@ -79,6 +76,29 @@ const ApartmentDetails = () => {
                 >
                   {apartmentInfo.address}
                 </Typography>
+                <Box
+                  ml={3}
+                  width={56}
+                  height={56}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  display={"flex"}
+                  borderRadius={500}
+                  bgcolor={matchColor}
+                  component={Paper}
+                  elevation={6}
+                >
+                  <Typography
+                    textAlign={"center"}
+                    fontWeight={"bold"}
+                    fontSize={18}
+                    sx={{
+                      color: "white",
+                    }}
+                  >
+                    {apartmentInfo.match}%
+                  </Typography>
+                </Box>
               </Box>
               <Box display={"flex"} px={2}>
                 <Typography>

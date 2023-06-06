@@ -6,6 +6,7 @@ export type Apartment = {
   user: User;
   description: string;
   address: string;
+  images:string[],
   propertyCond: string;
   entryDate: Date;
   floor: number;

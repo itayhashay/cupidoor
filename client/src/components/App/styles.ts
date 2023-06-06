@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   height: 100%;
-  background-color: white;
+  background-color: #F5F5F5;
 `;
 
 export const ContentSection = styled.div`

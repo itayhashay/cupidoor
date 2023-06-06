@@ -69,14 +69,14 @@ const HouseCard = ({
           <CardMedia
             component="img"
             height="220"
-            image={HOUSES_IMAGES[Number(houseData._id) - 1]}
+            image={houseData.images[0]}
             alt="Paella dish"
           />
         )}
         <Tooltip title={houseData.user.name} placement="bottom">
           <Avatar
             alt=""
-            src={PROFILE_PICTURES[Number(houseData._id) - 1]}
+            src={houseData.user.avatar}
             sx={AvatarStyles}
           />
         </Tooltip>
