@@ -19,6 +19,7 @@ router.post("/", async (req, res) => {
   }
 });
 
+
 router.get("/", async (req, res) => {
   try {
     const users = await userService.getUsers();
@@ -29,7 +30,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const user = await userService.getUser(req.params.id);
     if (!user) {
@@ -43,7 +44,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const user = await userService.updateUser(req.params.id, req.body);
     res.status(OK).json(user);
