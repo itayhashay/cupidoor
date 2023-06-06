@@ -31,8 +31,8 @@ const updateScore = async (id, scoreData) => {
     if (scoreData.score != null) {
       score.score = scoreData.score;
     }
-    if (scoreData.tenent != null) {
-      score.tenent = scoreData.tenent; 
+    if (scoreData.tenant != null) {
+      score.tenant = scoreData.tenant; 
     }
     if (scoreData.apartment != null) {
       score.apartment = scoreData.apartment; 

@@ -73,7 +73,7 @@ const HouseCard = ({
             alt="Paella dish"
           />
         )}
-        <Tooltip title={houseData.landlord.name} placement="bottom">
+        <Tooltip title={houseData.user.name} placement="bottom">
           <Avatar
             alt=""
             src={PROFILE_PICTURES[houseData.id - 1]}
@@ -105,10 +105,11 @@ const HouseCard = ({
           </Typography>
         )}
 
-        <Box display={"flex"} padding={1}>
+        <Box display={"flex"} paddingX={1}>
           <Box display={"flex"} alignItems={"center"}>
             <LocationOnIcon></LocationOnIcon>
             <Typography
+              variant="body1"
               ml={1}
               sx={addressStyles}
               color="text.primary"
@@ -179,7 +180,7 @@ const HouseCard = ({
                   color={"white"}
                   fontSize={16}
                 >
-                  ₪{houseData.rent}
+                  ₪{houseData.cost}
                 </Typography>
               </Box>
             </>

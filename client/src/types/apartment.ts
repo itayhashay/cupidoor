@@ -2,18 +2,30 @@ import { PaymentsCond } from "./paymentsCond";
 import { User } from "./user";
 
 export type Apartment = {
-    id: number;
-    landlord: User;
-    description: string;
-    address: string;
-    propertyCond: string;
-    entryDate: Date;
-    floor: number;
-    squareMeter: number;
-    balcony: number;
-    match: number;
-    parkings: number;
-    rooms: number;
-    rent: number;
-    paymentsCond: PaymentsCond
-}
+  id: number;
+  user: User;
+  description: string;
+  address: string;
+  propertyCond: string;
+  entryDate: Date;
+  floor: number;
+  squareMeter: number;
+  balcony: number;
+  match: number;
+  parkings: number;
+  rooms: number;
+  cost: number;
+  isBasement: boolean;
+  haveBoiler: boolean;
+  haveBalcony: boolean;
+  furnished: boolean;
+  accessible: boolean;
+  hasElevator: boolean;
+  hasGarage: boolean;
+  hasAirConditioning: boolean;
+  isLongTerm: boolean;
+  hasBars: boolean;
+  isRenovated: boolean;
+  hasShelter: boolean;
+  paymentsCond: PaymentsCond;
+};

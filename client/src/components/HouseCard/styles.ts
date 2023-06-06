@@ -41,8 +41,8 @@ export const likeButtonStyles = {
 export const AvatarStyles = {
   margin: "auto",
   bottom: "30px",
-  width: "50px",
-  height: "50px",
+  width: "70px",
+  height: "70px",
   border: "5px solid #fff"
 }
 
