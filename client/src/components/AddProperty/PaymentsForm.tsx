@@ -1,13 +1,19 @@
-import { Box, FormControl, Grid, InputAdornment, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Box, FormControl, InputAdornment, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 import { generateArrayFromRange } from "../../utils/logic";
 
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from "dayjs";
+
 const PaymentsForm = () => {
+    const [paymentDay, setPaymentDay] = useState<number>(10);
+    const [entranceDate, setEntranceDate] = useState<Dayjs | null>(null);
+
     const numOfPaymentsRef = useRef();
     const priceRef = useRef();
     const taxRef = useRef();
     const committeeRef = useRef();
-    const dayRef = useRef();
 
 
     return (
@@ -61,17 +67,26 @@ const PaymentsForm = () => {
                     </TextField>
                 </Box>
                 <Box display="flex" flexDirection="column">
+                    <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Entrance Date</Typography>
+                    <DemoContainer components={['DatePicker']}>
+                        <DatePicker    
+                            value={entranceDate}
+                            onChange={(date) => setEntranceDate(date)}                            
+                            minDate={dayjs(new Date())}
+                            sx={{marginBottom: "8px"}}/>
+                    </DemoContainer>
+                </Box>
+                <Box display="flex" flexDirection="column">
                     <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Payment Day</Typography>
                     <Box display="flex" flexDirection="row" alignItems="center">
                         <Typography variant="body1" fontSize="18px" fontWeight={300} lineHeight={1}>Every</Typography>
                             <FormControl variant="filled" sx={{ mx: 0, minWidth: "auto", marginLeft: "4px" }} size="small">
                                 <Select
-                                    inputRef={dayRef}
+                                    value={paymentDay}
+                                    onChange={(e) => setPaymentDay(e.target.value as number)} 
                                     size="small"
                                     labelId="demo-simple-select-filled-label"
                                     id="demo-simple-select-filled"
-                                    value={12}
-                                    onChange={() => {}}
                                     sx={{ fontSize:"18px","& .MuiInputBase-inputSizeSmall" : {padding: "0 2px 0 0 !important"}, background: "white", "& .MuiSelect-iconFilled": { display: "none"} }}
                                     >
                                     {generateArrayFromRange(1, 31).map((option) => <MenuItem value={option}>{option}</MenuItem>)}
@@ -83,7 +98,8 @@ const PaymentsForm = () => {
         </Box>
         <Box width="30%" display="flex" flexDirection="column" justifyContent="center" alignItems="center" >
             <Typography variant="h4" fontWeight={400} >Total Payment</Typography>
-            <Typography variant="h6" fontWeight={400} >{`4500₪`}</Typography>
+            <Typography variant="h5" fontWeight={400} >{`4500₪`}</Typography>
+            <Typography variant="body1" fontSize="14px" fontWeight={100} >per month</Typography>
         </Box>    
     </Box>
 

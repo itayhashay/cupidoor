@@ -5,15 +5,15 @@ import { generateArrayFromRange } from "../../utils/logic";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 
 const AboutForm = () => {
-  
+    const [descriptionValue, setDescriptionValue] = useState<string>("");
+    const [roomsValue, setRoomsValue] = useState<number>();
+    const [floorValue, setFloorValue] = useState<number>();
+    const [balconyValue, setBalconyValue] = useState<number>();
+    const [parkingValue, setParkingValue] = useState<number>();
+
     const conditionRef = useRef();
     const areaRef = useRef();
-    const roomsRef = useRef();
-    const floorRef = useRef();
-    const balconyRef = useRef();
-    const ParkingsRef = useRef();
-    const descriptionRef = useRef();
-
+    
     return (
         <Box width="100%" display="flex" flexDirection="column" justifyContent="space-between" padding="0 24px">
             <Box height="45%" display="flex" flexDirection="row" justifyContent="space-between" marginBottom="16px">
@@ -41,8 +41,13 @@ const AboutForm = () => {
                     />
                 </Box>
                 <Box display="flex" flexDirection="column" width="48%">
-                    <Typography variant="h6" fontWeight={400} marginBottom="5px">Description</Typography>
-                    <TextareaAutosize minRows={7} style={{resize: "none", padding: "12px", fontSize: "14px", fontFamily:"'Roboto'", wordSpacing: 1.5, borderRadius: "4px", border: "1px solid #c4c4c4"}} placeholder="Describe your property, the condition of the furnishings, the frequency of maintenance, etc."/>
+                    <Typography variant="body1" fontWeight={700} marginBottom="5px">Description</Typography>
+                    <TextareaAutosize 
+                        value={descriptionValue} 
+                        onChange={(e) => setDescriptionValue(e.target.value)} 
+                        minRows={7.5} 
+                        style={{resize: "none", padding: "12px", fontSize: "14px", fontFamily:"'Roboto'", wordSpacing: 1.5, borderRadius: "4px", border: "1px solid #c4c4c4"}} 
+                        placeholder="Describe your property, the condition of the furnishings, the frequency of maintenance, etc."/>
                 </Box>
             </Box>
             <Box height="45%" display="flex" flexDirection="row" justifyContent="space-between">
@@ -52,7 +57,8 @@ const AboutForm = () => {
                         <ToggleButtonGroup size="small"
                             color="primary"
                             exclusive
-                            ref={balconyRef}
+                            value={balconyValue}
+                            onChange={(e, value) => setBalconyValue(value)} 
                             >
                             {generateArrayFromRange(0, 5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
                         </ToggleButtonGroup>
@@ -62,7 +68,8 @@ const AboutForm = () => {
                         <ToggleButtonGroup size="small"
                             color="primary"
                             exclusive
-                            ref={ParkingsRef}
+                            value={parkingValue}
+                            onChange={(e, value) => setParkingValue(value)} 
                             >
                             {generateArrayFromRange(0, 5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
                         </ToggleButtonGroup>
@@ -74,7 +81,8 @@ const AboutForm = () => {
                         <ToggleButtonGroup size="small"
                             color="primary"
                             exclusive
-                            ref={roomsRef}
+                            value={roomsValue}
+                            onChange={(e, value) => setRoomsValue(value)} 
                             >
                             {generateArrayFromRange(1, 10, 0.5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
                         </ToggleButtonGroup>
@@ -84,7 +92,8 @@ const AboutForm = () => {
                         <ToggleButtonGroup size="small"
                             color="primary"
                             exclusive
-                            ref={floorRef}
+                            value={floorValue}
+                            onChange={(e, value) => setFloorValue(value)} 
                             >
                             {generateArrayFromRange(-1, 20).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
                         </ToggleButtonGroup>

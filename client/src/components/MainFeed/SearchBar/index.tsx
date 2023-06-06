@@ -6,7 +6,7 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import Button from "@mui/material/Button";
 
-import { City } from "../../../types/city";
+import { City } from "../../../types/address";
 import { Container } from "./styles";
 import { Cities } from "../../../utils/cities";
 import { getFirsthundredCities } from "../../../utils/logic";
@@ -24,7 +24,7 @@ const SearchBar = () => {
 
   useEffect(() => {
     const filteredCities = Cities.filter((city: City) =>
-      city.title.includes(searchValue)
+      city.city_name.includes(searchValue)
     );
     setCities(getFirsthundredCities(filteredCities));
   }, [searchValue]);
@@ -35,7 +35,7 @@ const SearchBar = () => {
 
   return (
     <Container>
-      <Autocomplete
+      {/* <Autocomplete
         multiple
         id="checkboxes-tags-demo"
         limitTags={3}
@@ -64,7 +64,7 @@ const SearchBar = () => {
       />
       <Button id="main-search-button" variant="contained">
         Find my house!
-      </Button>
+      </Button> */}
     </Container>
   );
 };

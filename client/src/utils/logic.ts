@@ -1,4 +1,4 @@
-import { City } from "../types/city";
+import { City } from "../types/address";
 
 export const getFirsthundredCities = (citiesList: City[]): City[] => {
   return citiesList.slice(0, 100);

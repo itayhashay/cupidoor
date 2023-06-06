@@ -17,6 +17,10 @@ code {
   height: 100vh;
 }
 
+.MuiStack-root {
+  padding: 0 !important;
+}
+
 .MuiBox-root {
   width: 100%;
 }

@@ -1,6 +1,4 @@
-import { City } from "../types/city";
-
-export const Cities: City[] = [
+export const Cities: any[] = [
   {
     title: "אבו גוש",
     english_title: "abu ghosh",
