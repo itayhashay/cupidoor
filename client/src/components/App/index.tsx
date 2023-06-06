@@ -13,8 +13,9 @@ const App = () => {
       <Navbar />
       <ContentSection>
         <MainRouter />
-        {user && <CupidChat></CupidChat>}
+      
       </ContentSection>
+      {user && <CupidChat></CupidChat>}
     </Container>
   );
 };

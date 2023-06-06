@@ -34,7 +34,6 @@ export const DryDetailsContainer = styled.div`
 
 export const ImageContainer = styled.div`
   margin: 15px 15px 0px;
-  width: 33%;
   height: fit-content;
 `;
 

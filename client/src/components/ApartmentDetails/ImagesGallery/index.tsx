@@ -10,7 +10,7 @@ const images = HOUSES_IMAGES.slice(0, 15).map(imageUrl => {
   return {
     original: imageUrl,
     thumbnail: imageUrl,
-    originalHeight: 280,
+    originalHeight: 400,
     originalWidth: 540,
   }
 });
@@ -36,7 +36,7 @@ const navRightButtonStyle = {
 const ImagesGallery = () => {
 
   return (
-       <ImageGallery items={images} showFullscreenButton={false} showPlayButton={false} showIndex={true}
+       <ImageGallery items={images} showFullscreenButton={false} showPlayButton={false} showIndex={true} 
        renderLeftNav={(onClick, disabled) => (
         <Button onClick={onClick} disabled={disabled} sx={navLeftButtonStyle} disableRipple={true}>
           <ArrowBackIosNewIcon  fontSize='large' sx={{ color: "white", fontSize: "54px"}}/>

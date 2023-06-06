@@ -26,7 +26,7 @@ const initializeChat = () => {
   };
 
   server.listen(process.env.CHAT_PORT, () => {
-    console.log("Chat server listening on port 2309!");
+    console.log("Chat server listening on port: "+process.env.CHAT_PORT);
   });
 
   io.on("connection", async (socket) => {
