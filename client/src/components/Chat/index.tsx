@@ -1,23 +1,26 @@
 import { useState, useEffect, useRef } from "react";
 import {
-  Card,
   Paper,
   Grid,
   Typography,
   Box,
   Stack,
-  Avatar,
-  Slide,
   Collapse,
-  IconButton,
   Button,
+  Tabs,
+  Tab,
+  CircularProgress,
 } from "@mui/material";
 import { useAuth } from "../../context/AuthContext";
-import { Chat as ChatIcon } from "@mui/icons-material";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import {
+  Chat as ChatIcon,
+  HouseOutlined,
+  PersonOutlined,
+} from "@mui/icons-material";
 import ChatConversation from "./chatConversation";
 import {
   ChatArrivedMessageType,
+  ChatContactType,
   ChatConversationAxiosResponse,
   ChatConversationProps,
   ChatUserType,
@@ -26,6 +29,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import ChatContact from "./chatContact";
 import { Socket, io } from "socket.io-client";
 import { AxiosResponse } from "axios";
+import ChatContactList from "./chatContactList";
 
 const CupidChat: React.FC = () => {
   const { user } = useAuth();
@@ -34,11 +38,15 @@ const CupidChat: React.FC = () => {
   const [conversationUserId, setConversationUserId] = useState<string | null>(
     null
   );
+  const [selectedTab, setSelectedTab] = useState(() => {
+    return user?.role !== "landlord" ? 0 : 1;
+  });
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [currentConversation, setCurrentConversation] =
     useState<ChatConversationAxiosResponse | null>(null);
-  const [users, setUsers] = useState<ChatUserType[] | []>([]);
+  const [contacts, setContacts] = useState<ChatContactType[] | []>([]);
   const [arrivedMessage, setArrivedMessage] =
     useState<ChatArrivedMessageType | null>(null);
   const [isChatCentered, setIsChatCentered] = useState(false);
@@ -56,12 +64,16 @@ const CupidChat: React.FC = () => {
         setArrivedMessage(data);
       });
     });
+
+    socket.current?.on("disconnect", () => {
+      socket.current = io("http://localhost:2309");
+    });
   }, []);
 
   useEffect(() => {
     if (
       arrivedMessage &&
-      currentConversation?.conversation._id === arrivedMessage.conversationId
+      currentConversation?.conversationId === arrivedMessage.conversationId
     ) {
       setCurrentConversation((prev: any) => {
         if (prev) {
@@ -72,19 +84,19 @@ const CupidChat: React.FC = () => {
         return prev;
       });
     } else {
-      setUsers((prevState: any) => {
-        const newState = prevState.map((userState: ChatUserType) => {
-          if (userState._id === arrivedMessage?.sender) {
+      setContacts((prevState: any) => {
+        const newState = prevState.map((contactState: ChatContactType) => {
+          if (contactState.conversationId === arrivedMessage?.conversationId) {
             return {
-              ...userState,
+              ...contactState,
               lastMessage: arrivedMessage.text,
               notifications:
-                userState.notifications !== undefined
-                  ? userState.notifications + 1
+                contactState.notifications !== undefined
+                  ? contactState.notifications + 1
                   : 1,
             };
           }
-          return userState;
+          return contactState;
         });
         return newState;
       });
@@ -92,50 +104,55 @@ const CupidChat: React.FC = () => {
   }, [arrivedMessage]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await axiosPrivate.get("/chat/conversations");
-      const { conversations } = response.data;
-      setUsers(conversations);
+    const fetchContacts = async () => {
+      const url =
+        selectedTab === 0 ? "/chat/tenant/matches" : "/chat/landlord/matches";
+      const response = await axiosPrivate.get(url);
+      const { matches } = response.data;
+      setContacts(matches);
+      setIsLoading(false);
     };
-
-    fetchUsers();
-  }, []);
+    setIsLoading(true);
+    fetchContacts();
+  }, [selectedTab]);
 
   useEffect(() => {
     const fetchConversation = async () => {
       const response: AxiosResponse<ChatConversationAxiosResponse> =
-        await axiosPrivate.get(
-          `http://localhost:2308/chat/${conversationUserId}`
-        );
-      const { conversation, receiver, messages } = response.data;
+        await axiosPrivate.get(`http://localhost:2308/chat/${conversationId}`);
+      const { messages } = response.data;
+      const contact = contacts.filter(
+        (contact) => contact.conversationId === conversationId
+      )[0];
       setCurrentConversation({
-        conversation,
-        receiver,
+        conversationId: conversationId as string,
+        receiver: contact.receiver,
         messages,
       });
       setIsLoading(false);
     };
-    if (conversationUserId) {
+    if (conversationId) {
       setIsLoading(true);
       fetchConversation();
     } else if (currentConversation) {
       setCurrentConversation(null);
     }
-  }, [conversationUserId]);
+  }, [conversationId]);
 
   const handleCloseConversation = () => {
-    setConversationUserId(null);
+    setConversationId(null);
   };
 
-  const handleContactClick = (userId: string) => {
-    setConversationUserId(userId);
-    setUsers((prevState: any) => {
-      const newState = prevState.map((userState: ChatUserType) => {
-        if (userState._id === userId) {
-          userState.notifications = 0;
-          return userState;
+  const handleContactClick = (convId: string) => {
+    // setConversationUserId(userId);
+    setConversationId(convId);
+    setContacts((prevState: any) => {
+      const newState = prevState.map((contactState: ChatContactType) => {
+        if (contactState.conversationId === convId) {
+          contactState.notifications = 0;
+          return contactState;
         }
-        return userState;
+        return contactState;
       });
 
       return newState;
@@ -144,6 +161,10 @@ const CupidChat: React.FC = () => {
 
   const handleChatClick = () => {
     setIsChatOpen((prev) => !prev);
+  };
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setSelectedTab(newValue);
   };
 
   const handleSendMessage = async (
@@ -238,25 +259,39 @@ const CupidChat: React.FC = () => {
             </Box>
           </Grid>
 
+          {!conversationId && user?.role === "both" && (
+            <Grid item xs={12}>
+              <Tabs
+                value={selectedTab}
+                onChange={handleTabChange}
+                variant="fullWidth"
+              >
+                <Tab icon={<HouseOutlined></HouseOutlined>}></Tab>
+                <Tab icon={<PersonOutlined></PersonOutlined>}></Tab>
+              </Tabs>
+            </Grid>
+          )}
+
           <Grid item xs={12} overflow={"auto"} height={"50vh"}>
             <Grid container padding={1} height={"100%"}>
-              {!isLoading && !conversationUserId && (
-                <Grid item minHeight={200} xs={12} padding={1}>
-                  {users.length > 0 ? (
-                    <Stack gap={1}>
-                      {users.map((user) => (
-                        <ChatContact
-                          key={user._id}
-                          id={user._id}
-                          name={user.name}
-                          avatar={user.avatar}
-                          lastMessage={user.lastMessage}
-                          notifications={user.notifications}
-                          handleContactClick={handleContactClick}
-                        ></ChatContact>
-                      ))}
-                    </Stack>
-                  ) : (
+              {(() => {
+                if (isLoading) {
+                  return (
+                    <CircularProgress
+                      size={70}
+                      sx={{
+                        position: "absolute",
+                        left: 0,
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        margin: "auto",
+                      }}
+                    ></CircularProgress>
+                  );
+                }
+                if (contacts.length <= 0) {
+                  return (
                     <Box
                       alignItems={"center"}
                       height={"100%"}
@@ -267,14 +302,58 @@ const CupidChat: React.FC = () => {
                         No matches yet.
                       </Typography>
                     </Box>
-                  )}
-                </Grid>
-              )}
+                  );
+                }
+                let chatContacts;
+                if (selectedTab === 1) {
+                  const tags: any = {};
+                  contacts.map((contact) => {
+                    if (contact.tag) {
+                      if (!tags[contact.tag._id]) {
+                        tags[contact.tag._id] = {
+                          title: contact.tag.title,
+                          matches: [],
+                        };
+                      }
+                      tags[contact.tag._id].matches.push(
+                        <ChatContact
+                          key={contact._id}
+                          contact={contact}
+                          handleContactClick={handleContactClick}
+                        ></ChatContact>
+                      );
+                    }
+                  });
+                  chatContacts = Object.keys(tags).map((key) => {
+                    return (
+                      <ChatContactList title={tags[key].title} key={key}>
+                        {tags[key].matches}
+                      </ChatContactList>
+                    );
+                  });
+                } else {
+                  chatContacts = contacts.map((contact) => (
+                    <ChatContact
+                      key={contact._id}
+                      contact={contact}
+                      handleContactClick={handleContactClick}
+                    ></ChatContact>
+                  ));
+                }
+                if (!isLoading && !conversationId) {
+                  return (
+                    <Grid item minHeight={200} xs={12} padding={1}>
+                      <Stack gap={1}>{chatContacts}</Stack>
+                    </Grid>
+                  );
+                }
+              })()}
+
               {!isLoading && currentConversation && (
                 <Grid item xs={12} minHeight={200} height={"100%"}>
                   <ChatConversation
                     userAvatar={user?.avatar}
-                    conversation={currentConversation.conversation}
+                    conversationId={currentConversation.conversationId}
                     receiver={currentConversation.receiver}
                     messages={currentConversation.messages}
                     handleClose={handleCloseConversation}

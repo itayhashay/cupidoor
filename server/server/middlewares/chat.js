@@ -41,6 +41,7 @@ const initializeChat = () => {
 
     //Handle send and get message
     socket.on("sendMessage", ({ conversationId, senderId, receiver, text }) => {
+ 
       const user = getUser(receiver);
       if (!user) return;
       io.to(user.socketId).emit("getMessage", {

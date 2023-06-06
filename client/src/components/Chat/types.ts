@@ -4,16 +4,31 @@ export type ChatUserType = {
   _id: string;
   name: string;
   avatar: string;
+};
+
+export type ChatContactType = {
+  _id: string;
+  name: string;
+  avatar: string;
+  conversationId: string;
   lastMessage: string;
   notifications?: number;
+  receiver: ChatUserType;
+  tag?: {
+    _id: string;
+    title: string;
+  };
+};
+
+export type ChatMyApartmentsType = {
+  _id: string;
+  name: string;
+  avatar: string;
+  matches: ChatContactType[];
 };
 
 export type ChatContactProps = {
-  id: string;
-  avatar: string;
-  name: string;
-  lastMessage: string;
-  notifications?: number;
+  contact: ChatContactType;
   handleContactClick: (userId: string) => void;
 };
 
@@ -43,7 +58,7 @@ export type ConversationType = {
 };
 
 export type ChatConversationAxiosResponse = {
-  conversation: ConversationType;
+  conversationId: string;
   receiver: ChatReceiverType;
   messages: ChatMessageType[];
 };
@@ -51,7 +66,7 @@ export type ChatConversationAxiosResponse = {
 export type ChatConversationProps = {
   userAvatar?: string;
   receiver: ChatReceiverType;
-  conversation: ConversationType;
+  conversationId: string;
   messages: ChatMessageType[];
   handleClose: () => void;
   handleSendMessage: (
