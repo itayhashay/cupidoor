@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <AuthContextProvider>
       <SnackbarContextProvider>
         <Router>
@@ -21,5 +21,5 @@ root.render(
         <SnackbarCupid />
       </SnackbarContextProvider>
     </AuthContextProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

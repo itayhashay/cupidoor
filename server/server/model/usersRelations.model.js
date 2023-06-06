@@ -9,7 +9,7 @@ const usersRelationsSchema = new mongoose.Schema({
   //     String,
   //   ],
   // },
-  tenant: {
+  tenent: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },

@@ -18,7 +18,7 @@ import { ChatConversationProps } from "./types";
 
 const ChatConversation: React.FC<ChatConversationProps> = ({
   userAvatar,
-  conversation,
+  conversationId,
   receiver,
   messages,
   handleClose,
@@ -37,7 +37,7 @@ const ChatConversation: React.FC<ChatConversationProps> = ({
 
   const handleSendClick = () => {
     if (newMessage.trim() !== "") {
-      handleSendMessage(conversation._id, receiver._id, newMessage);
+      handleSendMessage(conversationId, receiver._id, newMessage);
       setNewMessage("");
     }
   };

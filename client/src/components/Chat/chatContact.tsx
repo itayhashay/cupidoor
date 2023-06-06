@@ -5,11 +5,7 @@ import "./index.css";
 import { ChatContactProps } from "./types";
 
 const ChatContact: React.FC<ChatContactProps> = ({
-  id,
-  avatar,
-  name,
-  lastMessage,
-  notifications,
+  contact,
   handleContactClick,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -28,18 +24,18 @@ const ChatContact: React.FC<ChatContactProps> = ({
         className={isHovered ? "chat-contact-hover" : ""}
         onMouseEnter={() => toggleHover(true)}
         onMouseLeave={() => toggleHover(false)}
-        onClick={() => handleContactClick(id)}
+        onClick={() => handleContactClick(contact.conversationId)}
       >
         <Box display={"flex"} alignItems={"center"}>
-          <Avatar src={avatar} sx={{ mr: 2 }}></Avatar>
+          <Avatar src={contact.avatar} sx={{ mr: 2 }}></Avatar>
           <Box>
-            <Typography fontWeight={"bold"}>{name}</Typography>
+            <Typography fontWeight={"bold"}>{contact.name}</Typography>
             <Typography variant="caption" color={"GrayText"}>
-              {lastMessage}
+              {contact.lastMessage}
             </Typography>
           </Box>
         </Box>
-        <Badge badgeContent={notifications} color="secondary">
+        <Badge badgeContent={contact.notifications} color="secondary">
           <MailIcon color="action"></MailIcon>
         </Badge>
       </Box>

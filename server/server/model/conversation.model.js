@@ -2,8 +2,13 @@ const mongoose = require("mongoose");
 
 const ConversationSchema = new mongoose.Schema(
   {
-    members: {
-      type: Array,
+    tenant: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    apartment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Apartment",
     },
   },
   { timestamps: true }

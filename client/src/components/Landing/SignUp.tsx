@@ -1,7 +1,14 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import LockIcon from "@mui/icons-material/Lock";
-import { Button, TextField, Container, MenuItem, Paper } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Container,
+  MenuItem,
+  Paper,
+  Avatar,
+} from "@mui/material";
 import { Grid, Box, Typography, CssBaseline, Link } from "@mui/material";
 import { Formik } from "formik";
 import { schema, roles, CustomHelperText } from "./AuthHelpers";
@@ -16,20 +23,41 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [goodRegistration, setGoodRegistration] = useState<boolean>(false);
+  // const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedImage, setSelectedImage] = useState<
+    string | ArrayBuffer | null
+  >(null);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | undefined>();
   const { signUpUser } = useAuth() as AuthContextType;
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    // setSelectedImage(file || null);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const onSubmitHandler = async (values: {
     firstName: string;
     lastName: string;
     email: string;
+    age: string;
     password: string;
     phone: string;
-    age: string;
     role: string;
+    description?: string;
+    selectedImage?: File | null;
+    answerdQuestions?: boolean;
   }) => {
     let userRole: UserTypes = values.role as UserTypes;
-    const { firstName, lastName, email, password, phone, age, role } = values;
+    const { firstName, lastName, email, password, phone, age, selectedImage } =
+      values;
     const response: any = await signUpUser({
       firstName,
       lastName,
@@ -38,7 +66,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
       phone,
       age,
       role: userRole,
-      isFilledAllQ: false
+      isFilledAllQ: false,
     });
     if (response.success) {
       setGoodRegistration(true);
@@ -113,16 +141,50 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                         justifyContent: "space-between",
                       }}
                     >
-                      <Box display={"flex"} justifyContent={"center"}>
+                      <Box
+                        display={"flex"}
+                        flexDirection={"column"}
+                        justifyContent={"center"}
+                      >
                         <Typography variant="h4" fontWeight={"bold"}>
                           Create your account
                         </Typography>
-                      </Box>
-                      <Box display={"flex"} justifyContent={"center"}>
                         <Typography variant="subtitle1" color={"#A9A9A9"}>
                           Let's get started with your account
                         </Typography>
                       </Box>
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                      >
+                        <Avatar
+                          alt="User's avatar"
+                          src={
+                            selectedImage
+                              ? String(selectedImage)
+                              : "/login-icon.jpg"
+                          }
+                        />{" "}
+                        <Button
+                          sx={{
+                            color: "black",
+                            ":hover": {
+                              backgroundColor: "rgba(0, 0, 0, 0.1)",
+                            },
+                          }}
+                          component="label"
+                        >
+                          Upload profile picture
+                          <input
+                            hidden
+                            accept="image/*"
+                            type="file"
+                            onChange={handleFileChange}
+                          />
+                        </Button>
+                      </Box>
+                      <div className="hidden-browse"></div>
 
                       <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>

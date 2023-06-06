@@ -42,13 +42,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  isSmoking: {
+  answerdQuestions: {
     type: Boolean,
     default: false,
-  },
-  hasPets: {
-    type: Boolean,
-    default: false,
+    required: false,
   },
   createdAt: {
     type: Date,
