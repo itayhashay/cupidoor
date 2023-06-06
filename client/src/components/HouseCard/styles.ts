@@ -11,10 +11,7 @@ export const DividerLine = styled.hr`
 `;
 
 export const cardStyles = {
-  maxWidth: 345,
-  width: "16rem",
-  height: "25rem",
-  margin: "20px 15px",
+  width:"100%",
   borderRadius: "8px",
   boxShadow: "rgb(0 0 0 / 35%) 0px 5px 15px",
   position: "relative",
@@ -29,7 +26,7 @@ export const addressStyles = {
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",
   overflow: "hidden",
-  fontSize: "18px"
+  fontSize: "14px"
 }
 
 export const likeButtonStyles = {    
@@ -55,7 +52,7 @@ export const CardContentStyles = {
   position: "relative",
   bottom: "32px",
   margin: "8px 0",
-  padding: "0 8px",
+  padding: "0 8px"
 };
 
 export const MatchLabelStyles = {
