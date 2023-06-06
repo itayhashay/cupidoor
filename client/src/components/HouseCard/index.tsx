@@ -56,7 +56,7 @@ const HouseCard = ({
   ) => {};
 
   return (
-    <Link to={`/apartment/${houseData.id}`}>
+    <Link to={`/apartment/${houseData._id}`}>
       <Card sx={cardStyles}>
         {isLoading ? (
           <Skeleton
@@ -69,14 +69,14 @@ const HouseCard = ({
           <CardMedia
             component="img"
             height="220"
-            image={HOUSES_IMAGES[houseData.id - 1]}
+            image={HOUSES_IMAGES[Number(houseData._id) - 1]}
             alt="Paella dish"
           />
         )}
         <Tooltip title={houseData.user.name} placement="bottom">
           <Avatar
             alt=""
-            src={PROFILE_PICTURES[houseData.id - 1]}
+            src={PROFILE_PICTURES[Number(houseData._id) - 1]}
             sx={AvatarStyles}
           />
         </Tooltip>

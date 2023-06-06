@@ -2,7 +2,7 @@ import { PaymentsCond } from "./paymentsCond";
 import { User } from "./user";
 
 export type Apartment = {
-  id: number;
+  _id: string;
   user: User;
   description: string;
   address: string;

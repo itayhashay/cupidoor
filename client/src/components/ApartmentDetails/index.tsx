@@ -35,14 +35,14 @@ const ApartmentDetails = () => {
   const params = useParams();
 
   useEffect(() => {
-    const fetchApartmentData = async (id: number) => {
+    const fetchApartmentData = async (id: string) => {
       const apartmentData: Apartment | undefined = HOUSES.find(
-        (house) => house.id === id
+        (house) => house._id === id
       );
       return apartmentData || HOUSE_INIT;
     };
 
-    const apartmentId: number = parseInt(params.id || "");
+    const apartmentId: string = params.id || "";
 
     if (apartmentId)
       fetchApartmentData(apartmentId).then((apartment) =>
