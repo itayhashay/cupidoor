@@ -1,35 +1,39 @@
-import { Box, Grid, TextField } from "@mui/material";
-import { useRef, useState } from "react";
+import { Box, TextField, Typography } from "@mui/material";
+import { useRef } from "react";
 
 const AddressForm = () => {
-    const [cities, setCities] = useState();
-    const [streets, setStreets] = useState();
-
+    const houseNumberRef = useRef();
     const cityRef = useRef();
     const streetRef = useRef();
-    const houseNumberRef = useRef();
-
 
     return (
-        <Box width="50%" display="flex" flexDirection="row">
-            <TextField
+        <Box width="50%" display="flex" flexDirection="column" padding="0 24px">
+            <Box display="flex" flexDirection="column">
+                <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">City</Typography>
+                    <TextField
+                        required
+                        focused
+                        inputRef={cityRef}
+                        />
+            </Box>
+            <Box display="flex" flexDirection="column">
+                <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Street</Typography>
+                                <TextField
                 required
-                label="City"
-                autoFocus
-                inputRef={cityRef}
-                />
-            <TextField
-                sx={{ marginLeft: "1rem" }}
-                required
-                label="Street"
                 inputRef={streetRef}
                 />
-            <TextField
-                sx={{ marginLeft: "1rem" }}
-                required
-                label="House Number"
-                inputRef={houseNumberRef}
-                />
+
+            </Box>
+            <Box display="flex" flexDirection="column">
+                <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">House Number</Typography>
+                    <TextField
+                        inputRef={houseNumberRef}
+                        required
+                        type="number"
+                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                  
+                        sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
+                    />
+            </Box>
         </Box>
     );
 }
