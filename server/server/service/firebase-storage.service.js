@@ -17,21 +17,21 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-// gets user id and profile photo in base64 format and upload it to firebase, returns the url of the photo
-const uploadProfilePhoto = async (username, base64Photo) => {
+// gets user email and profile photo in base64 format and upload it to firebase, returns the url of the photo
+const uploadProfilePhoto = async (userEmail, base64Photo) => {
   try {
-    const profilePhotoRef = ref(storage, `profiles/${userId}.png`);
+    const profilePhotoRef = ref(storage, `profiles/${userEmail}.png`);
     await uploadString(profilePhotoRef, base64Photo, 'base64');
-    return downloadProfilePhoto(userId);
+    return downloadProfilePhoto(userEmail);
   } catch (err) {
     console.log(err);
   }
 }
  
-// get user id and returns the url of the photo
-const downloadProfilePhoto = async (userId) => {
+// get user email and returns the url of the photo
+const downloadProfilePhoto = async (userEmail) => {
   try {
-    const profilePhotoRef = ref(storage, `profiles/${userId}.png`);
+    const profilePhotoRef = ref(storage, `profiles/${userEmail}.png`);
     return await getDownloadURL(profilePhotoRef);
   } catch (err) {
     console.log(err)

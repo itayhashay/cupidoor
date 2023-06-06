@@ -1,8 +1,15 @@
 const User = require('../model/user.model');
 const storage = require('../service/firebase-storage.service')
+const isBase64 = require('is-base64');
 
 const createUser = async (userData) => {
   try {
+    if (isBase64(userData.avatar) && userData.avatar) {
+      userData.avatar = storage.uploadProfilePhoto(userData.email ,userData.avatar);
+    } else {
+      // default avatar
+      userData.avatar = "https://firebasestorage.googleapis.com/v0/b/cupidoor-9a428.appspot.com/o/profiles%2Fdefault.png?alt=media&token=00ade410-04a4-44a5-9b88-615386abf78c&_gl=1*gjdizj*_ga*MTI1MDUwODEwMi4xNjg1OTA0NDkx*_ga_CW55HF8NVT*MTY4NjA3Mzg2MS4yLjEuMTY4NjA3Mzk1Mi4wLjAuMA.."
+    }
     const user = new User(userData);
     return await user.save();
   } catch (err) {
@@ -66,6 +73,9 @@ const updateUser = async (id, userData) => {
     }
     if (userData.role != null) {
       user.role = userData.role;
+    }
+    if (isBase64(userData.avatar) && userData.avatar) {
+      userData.avatar = await storage.uploadProfilePhoto(userData.email, userData.avatar)
     }
     return await user.save();
   } catch (err) {
