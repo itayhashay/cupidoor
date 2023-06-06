@@ -24,7 +24,7 @@ const getLikesByApartmentId = async (apartmentId) => {
     }
 }
 
-const getMatchesByApartmentId = async (tenentId) => {
+const getMatchesByApartmentId = async (apartmentId) => {
     try {
         return await UsersRelations.find({ apartment: apartmentId, status: "approved" });
     } catch (err) {
@@ -38,13 +38,14 @@ const likeApartment = async (tenentId, apartmentId) => {
         // if the relation already exist it delete the relation
         if (!relation) {
             const newRelation = new UsersRelations({
-                tenant: tenentId,
+                tenent: tenentId,
                 apartment: apartmentId,
                 status: 'pending',
                 relation: 'match'
             })
             return await newRelation.save();
         } else {
+            await UsersRelations.findByIdAndDelete(relation._id)
             return;
         }
     } catch (err) {
@@ -55,7 +56,7 @@ const likeApartment = async (tenentId, apartmentId) => {
 const matchTenent = async (tenentId, apartmentId) => {
     try {
         const relation = await UsersRelations.findOne({ apartment: apartmentId, tenent: tenentId });
-        return await UsersRelations.findByIdAndUpdate(relation._id, { status: "approved" });
+        return await UsersRelations.findByIdAndUpdate(relation._id, { status: "approved" }, { populate: { path: 'tenent apartment'}, returnOriginal: false});
     } catch (err) {
         throw new Error('Error match tenent: ' + err.message);
     }
@@ -64,7 +65,7 @@ const matchTenent = async (tenentId, apartmentId) => {
 const declineTenet = async (tenentId, apartmentId) => {
     try {
         const relation = await UsersRelations.findOne({ apartment: apartmentId, tenent: tenentId });
-        return await UsersRelations.findByIdAndUpdate(relation._id, { status: "declined" });
+        return await UsersRelations.findByIdAndUpdate(relation._id, { status: "declined" }, { populate: { path: 'tenent apartment'}, returnOriginal: false});
     } catch (err) {
         throw new Error('Error decline tenent: ' + err.message);
     }

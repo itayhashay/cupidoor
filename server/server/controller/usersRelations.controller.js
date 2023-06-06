@@ -4,7 +4,7 @@ const usersRelationsService = require('../service/usersRelations.service');
 const { CREATED, OK, NO_CONTENT, INTERNAL_SERVER_ERROR } = require('http-status-codes');
 
 // Get all likes of tenent
-router.get('/likes/:tenentId', async (req, res) => {
+router.get('/tenent/likes/:tenentId', async (req, res) => {
     try {
         const likes = await usersRelationsService.getLikesByTenentId(req.params.tenentId);
         res.status(OK).json(likes);
@@ -14,7 +14,7 @@ router.get('/likes/:tenentId', async (req, res) => {
 });
 
 // Get all matches of tenent
-router.get('/matches/:tenentId', async (req, res) => {
+router.get('/tenent/matches/:tenentId', async (req, res) => {
     try {
         const matches = await usersRelationsService.getMatchesByTenentId(req.params.tenentId);
         res.status(OK).json(matches);
@@ -24,7 +24,7 @@ router.get('/matches/:tenentId', async (req, res) => {
 });
 
 // Get all likes of tenent
-router.get('/likes/:apartmentId', async (req, res) => {
+router.get('/apartment/likes/:apartmentId', async (req, res) => {
     try {
         const likes = await usersRelationsService.getLikesByApartmentId(req.params.apartmentId);
         res.status(OK).json(likes);
@@ -34,7 +34,7 @@ router.get('/likes/:apartmentId', async (req, res) => {
 });
 
 // Get all matches of apartment
-router.get('/matches/:apartmentId', async (req, res) => {
+router.get('/apartment/matches/:apartmentId', async (req, res) => {
     try {
         const matches = await usersRelationsService.getMatchesByApartmentId(req.params.apartmentId);
         res.status(OK).json(matches);
@@ -44,7 +44,7 @@ router.get('/matches/:apartmentId', async (req, res) => {
 });
 
 // Get from params apartment ID and from body tenent ID and create a like/unlike
-router.post('/like/:apartmentId', async (req, res) => {
+router.post('/tenent/like/:apartmentId', async (req, res) => {
     try {
         const like = await usersRelationsService.likeApartment(req.body.tenentId, req.params.apartmentId);
         if (like)
@@ -57,7 +57,7 @@ router.post('/like/:apartmentId', async (req, res) => {
 });
 
 // Get a tenent ID form params and form body the apartment ID and create a new match
-router.post('/match/:tenentId', async (req, res) => {
+router.post('/apartment/match/:tenentId', async (req, res) => {
     try {
         const match = await usersRelationsService.matchTenent(req.params.tenentId, req.body.apartmentId);
         res.status(OK).json(match);
@@ -67,7 +67,7 @@ router.post('/match/:tenentId', async (req, res) => {
 });
 
 // Get a tenent ID form params and form body the apartment ID and decline match
-router.post('/decline/:tenentId', async (req, res) => {
+router.post('/apartment/decline/:tenentId', async (req, res) => {
     try {
         const match = await usersRelationsService.declineTenet(req.params.tenentId, req.body.apartmentId);
         res.status(OK).json(match);
