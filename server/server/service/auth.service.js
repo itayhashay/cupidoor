@@ -16,7 +16,7 @@ const AuthService = {
       const hashedPassword = await bcrypt.hash(user.password, salt);
       user.password = hashedPassword;
       user.salt = salt;
-      if (isBase64(user.avatar) && user.avatar) {
+      if (user.avatar && isBase64(user.avatar)) {
         user.avatar = await Storage.uploadProfilePhoto(user.email ,user.avatar);
       } else {
         // default avatar
