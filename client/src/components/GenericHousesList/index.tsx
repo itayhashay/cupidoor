@@ -146,24 +146,10 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
             >
               {renderFilters()}
             </Box>
-            {/* <Box className="apis-container" sx={{display: "flex",
-                                        justifyContent: "center",
-                                        flexWrap: "wrap",
-                                        maxHeight: filtersAmount === 0 ? "91vh" : "83vh",
-                                        overflow: "auto",
-                                        position: "relative",
-                                        width: "100%" }}>
-              {houses.map((house, index) => {
-                return (
-                  <div key={house.id}>
-                    <HouseCard houseData={house} isMyProperties={isMyProperties}/>
-                  </div>
-                );
-              })}
-          </Box> */}
+
 
             <Box>
-              <Grid container spacing={2} padding={2}>
+              <Grid container spacing={4} padding={2}>
                 {houses.map((house, index) => {
                   return (
                     <Grid item xs={6} sm={6} md={6} lg={4} xl={2}  key={house.id}>
