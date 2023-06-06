@@ -1,0 +1,19 @@
+.chat-contact-hover {
+    background-color: aliceblue;
+}
+
+.chat-container{
+    width:40vw !important;
+    position:absolute;;
+    bottom:0;
+    right:20px;
+}
+
+.chat-container.centered{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
