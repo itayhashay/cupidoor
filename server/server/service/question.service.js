@@ -2,7 +2,8 @@ const Question = require('../model/question.model');
  
 const createQuestion = async (questionData) => {
   try {
-    const question = new Question(questionData);
+    // const question = new Question(questionData);
+    const question = await Question.create(questionData);
     return await question.save();
   } catch (err) {
     throw new Error('Error creating question: ' + err.message);
