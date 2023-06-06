@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const scoreSchema = new mongoose.Schema({
-  tenent: {
+  tenant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     autopopulate: { select: "-password" },
