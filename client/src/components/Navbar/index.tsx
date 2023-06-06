@@ -28,7 +28,7 @@ export const Navbar = () => {
                   sx={{ marginRight: "16px" }}
                 >{`Hello ${user.firstName}`}</Typography>
                 <Link to={"/user/personal-info"}>
-                  <Avatar alt="" src={UserImg} />
+                  <Avatar alt="" src={user?.avatar} />
                 </Link>
               </>
             ) : (

@@ -1,6 +1,6 @@
 
 const { initializeApp } = require("firebase/app");
-const  { getStorage, ref,uploadString,getDownloadURL } = require("firebase/storage");
+const  { getStorage, ref,uploadString,getDownloadURL, StringFormat } = require("firebase/storage");
 require('dotenv').config();
 
 const firebaseConfig = {
@@ -21,8 +21,10 @@ const storage = getStorage(app);
 const uploadProfilePhoto = async (userEmail, base64Photo) => {
   try {
     const profilePhotoRef = ref(storage, `profiles/${userEmail}.png`);
-    await uploadString(profilePhotoRef, base64Photo, 'base64');
-    return downloadProfilePhoto(userEmail);
+    
+    await uploadString(profilePhotoRef, base64Photo, StringFormat.DATA_URL,{contentType:"image/png"});
+     const url = await downloadProfilePhoto(userEmail);
+     return url;
   } catch (err) {
     console.log(err);
   }

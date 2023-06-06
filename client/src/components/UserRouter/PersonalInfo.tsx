@@ -1,4 +1,4 @@
-import { Button, Typography, Box } from "@mui/material";
+import { Button, Typography, Box, CircularProgress } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import {
   PersonalInfoContainer,
@@ -17,16 +17,41 @@ import { DividerLine } from "../Navbar/styles";
 import { LINK_TO_ICON, USER_INFO_FIELDS, UserField } from "../../utils/user";
 import ProfileStepper from "./ProfileStepper";
 import { QUESTIONS } from "../QuestionsStepper/constant";
+import { convertFileToBase64 } from "../../utils/base64";
+import axiosPrivate from "../../utils/axiosPrivate";
+import useRefreshToken from "../../hooks/useRefreshToken";
+import { useSnackbar } from "../../context/SnackbarContext";
 
 const PersonalInfo = ({ user }: { user: User }) => {
   const [role, setRole] = useState("Tenant");
-
+  const [isUploadingPicture, setIsUploadingPicture] = useState(false);
+  const refresh = useRefreshToken();
+  const { snackBarState, setSnackBarState } = useSnackbar();
   const handleRoleChange = (event: SelectChangeEvent) => {
     setRole(event.target.value as string);
   };
 
   const openLink = (url: string) => {
     window.open(url, "_blank");
+  };
+
+  const uploadProfilePicture = async (event: React.SyntheticEvent) => {
+    setIsUploadingPicture(true);
+    const base64 = await convertFileToBase64((event.target as any).files[0]);
+    try {
+      const response = await axiosPrivate.put(`/user/${user._id}`, {
+        ...user,
+        avatar: base64,
+      });
+      await refresh();
+      setIsUploadingPicture(false);
+    } catch (ex) {
+      setSnackBarState({
+        severity: "error",
+        message: "Couldn't update profile picture!",
+        show: true,
+      });
+    }
   };
 
   const renderInfoLine = (fieldName: string, value: string, index: number) => {
@@ -116,10 +141,7 @@ const PersonalInfo = ({ user }: { user: User }) => {
       <Col>
         <Frame>
           <ProfilePictureContainer>
-            <ProfilePicture
-              alt=""
-              src={PROFILE_PICTURES[randomNumber(0, 20)]}
-            />
+            <ProfilePicture alt="" src={user?.avatar} />
             <Typography
               variant="h5"
               width="100%"
@@ -152,8 +174,18 @@ const PersonalInfo = ({ user }: { user: User }) => {
             </Typography>
             <Box display="flex" justifyContent="center" marginTop="15px">
               <Button color="primary" variant="outlined" component="label">
-                Edit Card
-                <input hidden accept="image/*" multiple type="file" />
+                {isUploadingPicture ? (
+                  <CircularProgress></CircularProgress>
+                ) : (
+                  "Edit Profile Picture"
+                )}
+                <input
+                  hidden
+                  accept="image/*"
+                  multiple
+                  type="file"
+                  onChange={uploadProfilePicture}
+                />
               </Button>
             </Box>
           </ProfilePictureContainer>

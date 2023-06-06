@@ -30,9 +30,6 @@ const initializeChat = () => {
   });
 
   io.on("connection", async (socket) => {
-    //Log when a user is connected to the chat.
-    console.log(chalk.blue("A user connected to the chat!"));
-
     //Retrieve the user id
     socket.on("addUser", (userId) => {
       addUser(userId, socket.id);
