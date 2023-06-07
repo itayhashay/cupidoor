@@ -5,6 +5,7 @@ export const UserSection = styled.div`
   flex-direction: row;
   align-items: center;
   min-width: 170px;
+  justify-content: end;
 `;
 export const DividerLine = styled.hr`
   height: 1px;

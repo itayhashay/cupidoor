@@ -22,41 +22,16 @@ declare module "@mui/material/styles" {
 const theme = createTheme({
   appBar: {
     main: blue[300],
-    secondary: "black",
+    secondary: "#FFFDD0",
   },
 });
 
 const Landing = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ flexGrow: 1 }} height={64}>
-        <AppBar sx={{ bgcolor: theme.appBar.main }}>
-          <Toolbar>
-            <Box
-              display={"flex"}
-              justifyContent={"flex-start"}
-              alignItems={"center"}
-            >
-              <Typography variant="h6" noWrap sx={{}} textAlign={"center"}>
-                CupiDoor
-              </Typography>
-            </Box>
-            <Button sx={{ width: 90 }} color="inherit">
-              {" "}
-              <Link
-                href="signIn"
-                sx={{ color: "white", textDecoration: "none" }}
-              >
-                {" "}
-                Sign In
-              </Link>
-            </Button>
-          </Toolbar>
-        </AppBar>
-      </Box>
       <Grid
         container
-        bgcolor={"black"}
+        bgcolor={"#F1F1DF"}
         spacing={3}
         justifyContent={"center"}
         padding={5}
@@ -66,13 +41,13 @@ const Landing = () => {
             fontSize={"3rem"}
             fontWeight={"bold"}
             fontFamily={"OpenSans"}
-            color={"white"}
+            color={"#434336"}
           >
-            Your House <br /> Is Waiting <br />
+            Your House is a Match <br /> Away Waiting <br />
             For You!
           </Typography>
           <Button variant="contained" sx={{ mt: 3 }}>
-            Enquire Now
+            Match Now!
           </Button>
         </Grid>
         <Grid item>
@@ -90,7 +65,7 @@ const Landing = () => {
                     <Typography
                       fontWeight={"bold"}
                       fontSize={"1rem"}
-                      color={"white"}
+                      color={"#434336"}
                     >
                       100
                     </Typography>
@@ -107,7 +82,7 @@ const Landing = () => {
                     <Typography
                       fontWeight={"bold"}
                       fontSize={"1rem"}
-                      color={"white"}
+                      color={"#434336"}
                     >
                       150
                     </Typography>
@@ -124,7 +99,7 @@ const Landing = () => {
                     <Typography
                       fontWeight={"bold"}
                       fontSize={"1rem"}
-                      color={"white"}
+                      color={"#434336"}
                     >
                       50
                     </Typography>
