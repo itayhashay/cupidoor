@@ -1,14 +1,13 @@
-import { AppBar, Box, Toolbar, Button, Grid, MenuItem } from "@mui/material";
-import { Avatar, Typography } from "@mui/material";
+import { AppBar, Box, Toolbar, Button, Grid, Menu } from "@mui/material";
+import { Avatar, Typography, MenuItem } from "@mui/material";
 import { LogoImg, UserSection, linkStyles } from "./styles";
-import Logo from "../../icons/logo.png";
-import UserImg from "../../icons/user.jpeg";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { USER_ROUTES } from "../UserRouter/constants";
-import { useState } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
+import Logo from "../../icons/logo.png";
 
 export const Navbar = () => {
   const { user, setUser, signOutUser } = useAuth();
@@ -16,6 +15,29 @@ export const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const [navbarBGcolor, setNavbarBGcolor] = useState<string>("#e7e6f0");
+  const [navbarColor, setNavbarColor] = useState<string>("#434336");
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setNavbarBGcolor("#e7e6f0");
+      setNavbarColor("#434336");
+    } else {
+      setNavbarBGcolor("#1976d2");
+      setNavbarColor("#fff");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setNavbarBGcolor("#e7e6f0");
+      setNavbarColor("#434336");
+    } else {
+      setNavbarBGcolor("#1976d2");
+      setNavbarColor("#fff");
+    }
+  }, [location.pathname]);
+
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
     setIsMenuOpen(true);
@@ -37,7 +59,13 @@ export const Navbar = () => {
 
   return (
     <Box sx={{ flexGrow: 1, position: "sticky", top: "0", zIndex: "100" }}>
-      <AppBar sx={{ position: "static" }}>
+      <AppBar
+        sx={{
+          position: "static",
+          bgcolor: navbarBGcolor,
+          color: navbarColor,
+        }}
+      >
         <Toolbar>
           <Grid container>
             <Grid item xs={3}>
@@ -108,41 +136,44 @@ export const Navbar = () => {
                   {user ? (
                     <>
                       <Typography
-                  variant="h6"
-                  sx={{ marginRight: "16px" }}
-                >{`Hello ${user.firstName}`}</Typography>
-                <Link to={"/user/personal-info"}></Link>
-                <Avatar
-                  id="avatar-menu-button"
-                  alt={user.name}
-                  src={user?.avatar}
-                  sx={{cursor:"pointer"}}
-                  onClick={handleMenuClick}
-                />
-                <Menu
-                  id="avatar-menu"
-                  aria-labelledby="avatar-menu-button"
-                  anchorEl={anchorEl}
-                  open={isMenuOpen}
-                  onClose={handleMenuClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuItem onClick={handleAccountNavigation} sx={{ mb: 1 }}>
-                    <AccountCircleIcon sx={{ mr: 1 }}></AccountCircleIcon>{" "}
-                    Account
-                  </MenuItem>
-                  <MenuItem onClick={handleSignOut}>
-                    <LogoutIcon sx={{ mr: 1 }}></LogoutIcon>
-                    Sign Out
-                  </MenuItem>
-                </Menu>
+                        variant="h6"
+                        sx={{ marginRight: "16px" }}
+                      >{`Hello ${user.firstName}`}</Typography>
+                      <Link to={"/user/personal-info"}></Link>
+                      <Avatar
+                        id="avatar-menu-button"
+                        alt={user.name}
+                        src={user?.avatar}
+                        sx={{ cursor: "pointer" }}
+                        onClick={handleMenuClick}
+                      />
+                      <Menu
+                        id="avatar-menu"
+                        aria-labelledby="avatar-menu-button"
+                        anchorEl={anchorEl}
+                        open={isMenuOpen}
+                        onClose={handleMenuClose}
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
+                        }}
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "left",
+                        }}
+                      >
+                        <MenuItem
+                          onClick={handleAccountNavigation}
+                          sx={{ mb: 1 }}
+                        >
+                          <AccountCircleIcon sx={{ mr: 1 }}></AccountCircleIcon>{" "}
+                          Account
+                        </MenuItem>
+                        <MenuItem onClick={handleSignOut}>
+                          <LogoutIcon sx={{ mr: 1 }}></LogoutIcon>
+                          Sign Out
+                        </MenuItem>
+                      </Menu>
                     </>
                   ) : (
                     <>

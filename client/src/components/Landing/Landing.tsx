@@ -1,5 +1,6 @@
 import { Box, Chip, Typography } from "@mui/material";
 import { Grid, Avatar } from "@mui/material";
+import { Link } from "react-router-dom";
 import FlashOnIcon from "@mui/icons-material/FlashOn";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import RequestPageIcon from "@mui/icons-material/RequestPage";
@@ -64,6 +65,8 @@ const Landing = () => {
             color: "white",
             fontSize: "18px",
           }}
+          component={Link}
+          to={"/signIn"}
           onClick={handleMatchClick}
         />
       </Grid>
