@@ -17,6 +17,10 @@ code {
   height: 100vh;
 }
 
+.MuiStack-root {
+  padding: 0 !important;
+}
+
 .MuiBox-root {
   width: 100%;
 }
@@ -42,8 +46,8 @@ code {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 5px;
+  height: 5px;
 }
 
 /* Track */
@@ -71,4 +75,32 @@ a {
 
 .apartment-gallery .image-gallery-slide img {
   object-fit: cover;
+}
+
+.MuiToggleButtonGroup-grouped {
+  width: 2.3rem;
+}
+
+.filepond--panel-root {
+  border: 3px solid #c5d7ee !important;
+  background-color: #e1f1fb !important;
+}
+
+.filepond--drop-label {
+  height: 200px !important;
+  background-image: url('../../client/public/uploadImageCover.svg');
+  background-repeat: no-repeat;
+  background-position: center 30px;
+  cursor: pointer;
+  padding-top: 70px;
+}
+
+.filepond--browser {
+  display: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

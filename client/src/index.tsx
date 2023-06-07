@@ -6,6 +6,8 @@ import App from "./components/App";
 import { AuthContextProvider } from "./context/AuthContext";
 import SnackbarCupid from "./components/Snackbar";
 import { SnackbarContextProvider } from "./context/SnackbarContext";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -14,12 +16,14 @@ const root = ReactDOM.createRoot(
 root.render(
   // <React.StrictMode>
     <AuthContextProvider>
-      <SnackbarContextProvider>
-        <Router>
-          <App />
-        </Router>
-        <SnackbarCupid />
-      </SnackbarContextProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <SnackbarContextProvider>
+          <Router>
+            <App />
+          </Router>
+          <SnackbarCupid />
+        </SnackbarContextProvider>
+      </LocalizationProvider>
     </AuthContextProvider>
   // </React.StrictMode>
 );
