@@ -26,9 +26,6 @@ export const Navbar = () => {
       setNavbarBGcolor("#1976d2");
       setNavbarColor("#fff");
     }
-    console.log(location.pathname);
-    console.log("navbar color: ", navbarColor);
-    console.log("navbar BG color: ", navbarBGcolor);
   }, []);
 
   useEffect(() => {
