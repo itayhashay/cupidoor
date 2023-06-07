@@ -9,6 +9,7 @@ import { User } from "../types/user";
 import { signIn, signUp } from "../utils/api";
 import { AxiosError, AxiosResponse } from "axios";
 import { CupidAxiosError } from "../types/cupidAxiosError";
+import axiosPrivate from "../utils/axiosPrivate";
 
 type Props = { children: React.ReactNode };
 
@@ -88,7 +89,7 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   const signUpUser = async (user: User) => {
     const response: AxiosResponse | AxiosError = await signUp(user);
     if (response.status == 200) {
-      setUser(user);
+      await signInUser(user.email,user.password);
       return { success: true };
     }
     const error: AxiosError = response as AxiosError;
@@ -96,11 +97,17 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
     return cupidError;
   };
 
-  const signOutUser = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
-    setUser(null);
-    setAccessToken(null);
+  const signOutUser = async () => {
+    try{
+      await axiosPrivate.get('/signOut');
+      localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
+      setUser(null);
+      setAccessToken(null);
+    }catch(ex){
+
+    }
+    
   };
 
   const contextData: AuthContextType = {
