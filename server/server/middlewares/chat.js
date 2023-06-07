@@ -26,13 +26,10 @@ const initializeChat = () => {
   };
 
   server.listen(process.env.CHAT_PORT, () => {
-    console.log("Chat server listening on port 2309!");
+    console.log("Chat server listening on port: "+process.env.CHAT_PORT);
   });
 
   io.on("connection", async (socket) => {
-    //Log when a user is connected to the chat.
-    console.log(chalk.blue("A user connected to the chat!"));
-
     //Retrieve the user id
     socket.on("addUser", (userId) => {
       addUser(userId, socket.id);

@@ -1,16 +1,16 @@
 const UsersRelations = require('../model/usersRelations.model');
 
-const getLikesByTenentId = async (tenentId) => {
+const getLikesByTenantId = async (tenantId) => {
     try {
-        return await UsersRelations.find({ tenent: tenentId, status: "pending" });
+        return await UsersRelations.find({ tenant: tenantId, status: "pending" });
     } catch (err) {
         throw new Error('Error getting liked apartments: ' + err.message);
     }
 }
 
-const getMatchesByTenentId = async (tenentId) => {
+const getMatchesByTenantId = async (tenantId) => {
     try {
-        return await UsersRelations.find({ tenent: tenentId, status: "approved" });
+        return await UsersRelations.find({ tenant: tenantId, status: "approved" });
     } catch (err) {
         throw new Error('Error getting matched apartments: ' + err.message);
     }
@@ -32,13 +32,13 @@ const getMatchesByApartmentId = async (apartmentId) => {
     }
 }
 
-const likeApartment = async (tenentId, apartmentId) => {
+const likeApartment = async (tenantId, apartmentId) => {
     try {
-        const relation = await UsersRelations.findOne({ apartment: apartmentId, tenent: tenentId });
+        const relation = await UsersRelations.findOne({ apartment: apartmentId, tenant: tenantId });
         // if the relation already exist it delete the relation
         if (!relation) {
             const newRelation = new UsersRelations({
-                tenent: tenentId,
+                tenant: tenantId,
                 apartment: apartmentId,
                 status: 'pending',
                 relation: 'match'
@@ -53,30 +53,30 @@ const likeApartment = async (tenentId, apartmentId) => {
     }
 }
 
-const matchTenent = async (tenentId, apartmentId) => {
+const matchTenant = async (tenantId, apartmentId) => {
     try {
-        const relation = await UsersRelations.findOne({ apartment: apartmentId, tenent: tenentId });
-        return await UsersRelations.findByIdAndUpdate(relation._id, { status: "approved" }, { populate: { path: 'tenent apartment'}, returnOriginal: false});
+        const relation = await UsersRelations.findOne({ apartment: apartmentId, tenant: tenantId });
+        return await UsersRelations.findByIdAndUpdate(relation._id, { status: "approved" }, { populate: { path: 'tenant apartment'}, returnOriginal: false});
     } catch (err) {
-        throw new Error('Error match tenent: ' + err.message);
+        throw new Error('Error match tenant: ' + err.message);
     }
 }
 
-const declineTenet = async (tenentId, apartmentId) => {
+const declineTenet = async (tenantId, apartmentId) => {
     try {
-        const relation = await UsersRelations.findOne({ apartment: apartmentId, tenent: tenentId });
-        return await UsersRelations.findByIdAndUpdate(relation._id, { status: "declined" }, { populate: { path: 'tenent apartment'}, returnOriginal: false});
+        const relation = await UsersRelations.findOne({ apartment: apartmentId, tenant: tenantId });
+        return await UsersRelations.findByIdAndUpdate(relation._id, { status: "declined" }, { populate: { path: 'tenant apartment'}, returnOriginal: false});
     } catch (err) {
-        throw new Error('Error decline tenent: ' + err.message);
+        throw new Error('Error decline tenant: ' + err.message);
     }
 }
 
 module.exports = {
-    getLikesByTenentId,
-    getMatchesByTenentId,
+    getLikesByTenantId,
+    getMatchesByTenantId,
     getLikesByApartmentId,
     getMatchesByApartmentId,
     likeApartment,
-    matchTenent,
+    matchTenant,
     declineTenet
 };

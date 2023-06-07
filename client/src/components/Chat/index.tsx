@@ -214,6 +214,7 @@ const CupidChat: React.FC = () => {
             borderRadius: 800,
             height: 60,
             width: 60,
+            zIndex:999999
           }}
           variant="contained"
         >

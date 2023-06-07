@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const UserModel = require("../model/user.model");
 const UserService = require("../service/user.service");
+const Storage = require('../service/firebase-storage.service')
+const isBase64 = require('is-base64');
 const jwt = require("jsonwebtoken");
 
 const AuthService = {
@@ -14,6 +16,12 @@ const AuthService = {
       const hashedPassword = await bcrypt.hash(user.password, salt);
       user.password = hashedPassword;
       user.salt = salt;
+      if (user.avatar && isBase64(user.avatar,{ allowMime: true })) {
+        user.avatar = await Storage.uploadProfilePhoto(user.email ,user.avatar);
+      } else {
+        // default avatar
+        user.avatar = "https://firebasestorage.googleapis.com/v0/b/cupidoor-9a428.appspot.com/o/profiles%2Fdefault.png?alt=media&token=00ade410-04a4-44a5-9b88-615386abf78c&_gl=1*gjdizj*_ga*MTI1MDUwODEwMi4xNjg1OTA0NDkx*_ga_CW55HF8NVT*MTY4NjA3Mzg2MS4yLjEuMTY4NjA3Mzk1Mi4wLjAuMA.."
+      }
       const newUser = await UserModel.create(user);
       await newUser.save();
       return newUser;

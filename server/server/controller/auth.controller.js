@@ -42,6 +42,7 @@ const AuthController = {
       const refreshToken = cookies.jwt;
       await AuthService.signOut(refreshToken);
       res.clearCookie("jwt");
+      res.status(200).json({success:true});
     } catch (ex) {
       next(ex);
     }
