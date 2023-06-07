@@ -131,11 +131,11 @@ export const HOUSES_IMAGES: string[] = [
     "https://images1.apartments.com/i2/uswEseKnMnU4ebRfW82ffcgXEYpOCC83yHHHKKNUEzM/116/the-residences-at-newcity-chicago-il-primary-photo.jpg?p=1"
 ];
 
-
+var index = 0
 const randomImages = ()=>{
     const randomImageArray = [...HOUSES_IMAGES];
-    const randomIndex = Math.floor(Math.random() * randomImageArray.length -2);
-    randomImageArray[0] = randomImageArray[randomIndex];
+    const randomIndex = Math.floor(Math.random() * randomImageArray.length -3);
+    randomImageArray[0] = randomImageArray[(++index)%HOUSES_IMAGES.length];
     return randomImageArray;
 }
 
@@ -304,19 +304,19 @@ export const PROFILE_PICTURES: string[] = [
 ];
 
 export const LANDLORD_PROPERTIES: Apartment[] = [
-    {_id: "1",images:[], user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Tel Aviv, George Wise 2' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 2, squareMeter: 60, balcony: 1, parkings: 0, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
-    {_id: "2",images:[], user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Jerusalem, Gooday 32' , propertyCond: PROPERTY_CONDITIONS.NEW_FROM_A_CONTRACTOR ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 5, squareMeter: 60, balcony: 1, parkings: 1, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
-    {_id: "3",images:[], user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Rishon, Yordei hasira 4' , propertyCond: PROPERTY_CONDITIONS.RENOVATED ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 1, squareMeter: 60, balcony: 1, parkings: 1, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
+    {_id: "1",images:randomImages(), user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Tel Aviv, George Wise 2' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 2, squareMeter: 60, balcony: 1, parkings: 0, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
+    {_id: "2",images:randomImages(), user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Jerusalem, Gooday 32' , propertyCond: PROPERTY_CONDITIONS.NEW_FROM_A_CONTRACTOR ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 5, squareMeter: 60, balcony: 1, parkings: 1, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
+    {_id: "3",images:randomImages(), user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Rishon, Yordei hasira 4' , propertyCond: PROPERTY_CONDITIONS.RENOVATED ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 1, squareMeter: 60, balcony: 1, parkings: 1, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
 ]
 
 export const LIKED_APARTMENTS: Apartment[] = [
-    {_id: "4",images:[], user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Maccabbim-Reut, Meshushim 666' , propertyCond: PROPERTY_CONDITIONS.RENOVATION_IS_NEEDED ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 0, squareMeter: 60, balcony: 1, parkings: 3, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
-    {_id: "5",images:[], user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Tivon, Pashus 99' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 1, squareMeter: 60, balcony: 1, parkings: 1,match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
-    {_id: "6",images:[], user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Hod hasharon, Tsharnichovsky 11' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 2, squareMeter: 60, balcony: 1, parkings: 0, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
-    {_id: "7",images:[], user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Neverland, Chip 55' , propertyCond: PROPERTY_CONDITIONS.RENOVATED ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 1, squareMeter: 60, balcony: 1, parkings: 3, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
-    {_id: "8",images:[], user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Eilat, Hovevei zion 34' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 0, squareMeter: 60, balcony: 1, parkings: 1,match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
-    {_id: "9",images:[], user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Holon, Matityahu 12' , propertyCond: PROPERTY_CONDITIONS.NEW_FROM_A_CONTRACTOR ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 3, squareMeter: 60, balcony: 1, parkings: 0, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
-    {_id: "10", images:[],user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Modiin, Lev hair 10' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 2, squareMeter: 60, balcony: 1, parkings: 2, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
+    {_id: "4",images:randomImages(), user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Maccabbim-Reut, Meshushim 666' , propertyCond: PROPERTY_CONDITIONS.RENOVATION_IS_NEEDED ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 0, squareMeter: 60, balcony: 1, parkings: 3, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
+    {_id: "5",images:randomImages(), user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Tivon, Pashus 99' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 1, squareMeter: 60, balcony: 1, parkings: 1,match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
+    {_id: "6",images:randomImages(), user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Hod hasharon, Tsharnichovsky 11' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 2, squareMeter: 60, balcony: 1, parkings: 0, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
+    {_id: "7",images:randomImages(), user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Neverland, Chip 55' , propertyCond: PROPERTY_CONDITIONS.RENOVATED ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 1, squareMeter: 60, balcony: 1, parkings: 3, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
+    {_id: "8",images:randomImages(), user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Eilat, Hovevei zion 34' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 0, squareMeter: 60, balcony: 1, parkings: 1,match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
+    {_id: "9",images:randomImages(), user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Holon, Matityahu 12' , propertyCond: PROPERTY_CONDITIONS.NEW_FROM_A_CONTRACTOR ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 3, squareMeter: 60, balcony: 1, parkings: 0, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
+    {_id: "10", images:randomImages(),user: LANDLORD_MOCK, description: DESC_MOCK, address: 'Modiin, Lev hair 10' , propertyCond: PROPERTY_CONDITIONS.NEW ,entryDate: randomDate(new Date(2012, 0, 1), new Date()), floor: 2, squareMeter: 60, balcony: 1, parkings: 2, match: randomNumber(0, 100), rooms: 3, cost: randomNumber(3000, 9000), paymentsCond: randomPaymentCond(), ...randomProperties()},
 ]    
 
 export const USER_NAMES: string[] = [

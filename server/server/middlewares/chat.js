@@ -2,6 +2,7 @@ const http = require("http");
 const server = http.createServer();
 const chalk = require("chalk");
 const { Server } = require("socket.io");
+require("dotenv").config();
 const initializeChat = () => {
   const io = new Server(server, {
     cors: {

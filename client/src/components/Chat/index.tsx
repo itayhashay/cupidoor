@@ -232,7 +232,7 @@ const CupidChat: React.FC = () => {
         className={
           isChatCentered ? "chat-container centered" : "chat-container"
         }
-        sx={{ border: "black solid 1px" }}
+    
       >
         <Collapse
           in={isChatOpen}
