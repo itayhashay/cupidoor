@@ -1,28 +1,40 @@
 import { Box, FormControl, InputAdornment, MenuItem, Select, TextField, Typography } from "@mui/material";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { generateArrayFromRange } from "../../utils/logic";
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from "dayjs";
 
-const PaymentsForm = () => {
+const PaymentsForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveChangesOnNext?: (values: any) => void}) => {
     const [paymentDay, setPaymentDay] = useState<number>(10);
     const [entranceDate, setEntranceDate] = useState<Dayjs | null>(null);
 
     const numOfPaymentsRef = useRef();
-    const priceRef = useRef();
-    const taxRef = useRef();
-    const committeeRef = useRef();
+    const [price, setPrice] = useState<number>(0);
+    const [tax, setTax] = useState<number>(0);
+    const [committee, setCommittee] = useState<number>(0);
+    const [totalPrice, setTotalPrice] = useState<number>();
 
+    useEffect(() => {
+        console.log(activeStep)
+        console.log("STEP CHANGE PAYMENTS")
+    }, [activeStep]);
 
+    useEffect(() => {
+        setTotalPrice(price + committee + (tax/2));
+    }, [price, tax, committee]);
+  
     return (
         <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between" padding="0 24px">
             <Box width="30%"  display="flex" flexDirection="column">
                 <Box display="flex" flexDirection="column">
                     <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Price</Typography>
                         <TextField
-                            inputRef={priceRef}
+                            value={price}
+                            onChange={(e) => setPrice(parseInt(e.target.value))}
+                            type="number"
+                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                       
                             sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">₪</InputAdornment>,
@@ -32,7 +44,10 @@ const PaymentsForm = () => {
                 <Box display="flex" flexDirection="column">
                     <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Property tax (for two months)</Typography>
                         <TextField
-                            inputRef={taxRef}
+                            value={tax}
+                            onChange={(e) => setTax(parseInt(e.target.value))}
+                            type="number"
+                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                       
                             sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">₪</InputAdornment>,
@@ -42,7 +57,10 @@ const PaymentsForm = () => {
                 <Box display="flex" flexDirection="column">
                     <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">House committee</Typography>
                         <TextField
-                            inputRef={committeeRef}
+                            value={committee}
+                            onChange={(e) => setCommittee(parseInt(e.target.value))}
+                            type="number"
+                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                       
                             sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">₪</InputAdornment>,
@@ -98,8 +116,10 @@ const PaymentsForm = () => {
         </Box>
         <Box width="30%" display="flex" flexDirection="column" justifyContent="center" alignItems="center" >
             <Typography variant="h4" fontWeight={400} >Total Payment</Typography>
-            <Typography variant="h5" fontWeight={400} >{`4500₪`}</Typography>
-            <Typography variant="body1" fontSize="14px" fontWeight={100} >per month</Typography>
+            <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center">
+                <Typography variant="h5" fontWeight={400} >{`${totalPrice}₪`}</Typography>
+                <Typography variant="body1" fontSize="15px" fontWeight={100} margin="0 0 1px 1px">/month</Typography>
+            </Box>
         </Box>    
     </Box>
 

@@ -14,7 +14,8 @@ export const randomPaymentCond = (): PaymentsCond => {
         propertyTax: randomNumber(100, 350),
         numOfPayments: randomNumber(1, 12),
         houseCommittee: randomNumber(50, 200),
-        paymentDay: randomNumber(1, 31)
+        paymentDay: randomNumber(1, 31),
+        totalPrice: randomNumber(3000, 6000)
     } 
 
     return pc;

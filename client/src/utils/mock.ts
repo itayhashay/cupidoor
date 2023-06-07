@@ -153,7 +153,8 @@ export const HOUSE_INIT: Apartment = {
         propertyTax: 0,
         numOfPayments: 0,
         houseCommittee: 0,
-        paymentDay: 0
+        paymentDay: 0,
+        totalPrice: 0
     }
 };
 

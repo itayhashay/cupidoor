@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FilePond, registerPlugin } from "react-filepond";
 
 import "filepond/dist/filepond.min.css";
@@ -10,8 +10,13 @@ import { Box } from '@mui/material'
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
-const UploadsForm = () => {
+const UploadsForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveChangesOnNext?: (values: any) => void}) => {
     const [files, setFiles] = useState<any>([]);
+
+    useEffect(() => {
+        console.log(activeStep)
+        console.log("STEP CHANGE UPLOADS")
+    }, [activeStep]);
 
     const renderLabelIdle = (message: string, maxFiles: number) => `
         <div>

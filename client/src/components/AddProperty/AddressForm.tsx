@@ -1,10 +1,15 @@
 import { Box, TextField, Typography } from "@mui/material";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
-const AddressForm = () => {
+const AddressForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveChangesOnNext?: (values: any) => void}) => {
     const houseNumberRef = useRef();
     const cityRef = useRef();
     const streetRef = useRef();
+
+    useEffect(() => {
+        console.log(activeStep)
+        console.log("STEP CHANGE ADDRESS")
+    }, [activeStep]);
 
     return (
         <Box width="50%" display="flex" flexDirection="column" padding="0 24px">

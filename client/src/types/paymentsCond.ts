@@ -4,4 +4,5 @@ export type PaymentsCond = {
     numOfPayments: number;
     houseCommittee: number;
     paymentDay: number;
+    totalPrice: number;
 }

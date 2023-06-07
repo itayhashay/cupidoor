@@ -33,14 +33,11 @@ const AddProperty = ({ isOpen, onClose } : { isOpen: boolean, onClose: Function 
   return (
       <Modal
         open={open}
-        onClose={handleClose}
-      >
-
+        onClose={handleClose}>
         <Box sx={style}>
-        <IconButton sx={{position: "absolute", top: "1rem", left: "1rem", zIndex: 1}} onClick={handleClose}>
-          <CloseIcon />
-        </IconButton>
-
+          <IconButton sx={{position: "absolute", top: "1rem", left: "1rem", zIndex: 1}} onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
           <AddPropertyStepper />
         </Box>
       </Modal>
