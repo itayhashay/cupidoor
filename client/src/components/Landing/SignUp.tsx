@@ -8,6 +8,7 @@ import {
   MenuItem,
   Paper,
   Avatar,
+  IconButton,
 } from "@mui/material";
 import { Grid, Box, Typography, CssBaseline, Link } from "@mui/material";
 import { Formik } from "formik";
@@ -17,6 +18,7 @@ import { AuthContextType, useAuth } from "../../context/AuthContext";
 import { UserTypes } from "../../types/user";
 import { useSnackbar } from "../../context/SnackbarContext";
 import { convertFileToBase64 } from "../../utils/base64";
+import { FileUploadOutlined } from "@mui/icons-material";
 interface SignUpPageProps {
   onTogglePage: () => void;
 }
@@ -118,7 +120,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
           <Container component="main" maxWidth="lg">
             <CssBaseline />
             <Paper elevation={3}>
-              <Grid container component={Paper}>
+              <Grid container >
                 <Grid item xs={6} padding={3}>
                   <Box
                     display={"flex"}
@@ -140,8 +142,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                     noValidate
                     onSubmit={handleSubmit}
                     sx={{
-                      mt: 3,
-                      height: 800,
+                      mt: 1,
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "space-between",
@@ -166,14 +167,15 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                     >
                       <Avatar
                         alt="User's avatar"
-                        sx={{ height: 100, width: 100, mb: 1 }}
+                        sx={{ height: 70, width: 70, mb: 1 }}
                         src={
                           selectedImage
                             ? String(selectedImage)
                             : "/login-icon.jpg"
                         }
                       />{" "}
-                      <Button
+                      <IconButton
+
                         sx={{
                           color: "black",
                           ":hover": {
@@ -182,7 +184,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                         }}
                         component="label"
                       >
-                        Upload profile picture
+                     <FileUploadOutlined></FileUploadOutlined>
                         <input
                           id="avatar"
                           name="avatar"
@@ -191,7 +193,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                           type="file"
                           onChange={handleFileChange}
                         />
-                      </Button>
+                      </IconButton>
                       {showAvatarError && (
                         <CustomHelperText>
                           {"Please upload a profile picture"}
@@ -200,7 +202,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                     </Box>
                     <div className="hidden-browse"></div>
 
-                    <Grid container spacing={2}>
+                    <Grid container spacing={1}>
                       <Grid item xs={12} sm={6}>
                         <TextField
                           name="firstName"
