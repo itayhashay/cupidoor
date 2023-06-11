@@ -1,4 +1,5 @@
 const UsersRelations = require('../model/usersRelations.model');
+const ObjectId = require('mongoose').Schema.Types.ObjectId;
 
 const getLikesByTenantId = async (tenantId) => {
     try {

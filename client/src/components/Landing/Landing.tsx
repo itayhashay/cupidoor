@@ -52,9 +52,10 @@ const Landing = () => {
           color={"#A3A5A7"}
           sx={{ marginBottom: "22px" }}
         >
-          your new landlord/tenant is Waiting for you just some few clicks!{" "}
-          <br /> It is never to late to actually like and trust your
-          landlord/tenant
+          Discover a new era of landlord-tenant matchmaking with Cupid,
+          <br/> where
+          finding the perfect match for your property or ideal rental has never
+          been easier.
         </Typography>
         <Chip
           label="Match Now!"

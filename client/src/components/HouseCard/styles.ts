@@ -35,7 +35,8 @@ export const likeButtonStyles = {
   right: "10px",
   background: "#ffffffd1",
   height: "40px",
-  width: "40px"
+  width: "40px",
+  color:"red"
 }
 
 export const AvatarStyles = {

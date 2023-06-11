@@ -46,7 +46,7 @@ router.get('/apartment/matches/:apartmentId', async (req, res) => {
 // Get from params apartment ID and from body tenant ID and create a like/unlike
 router.post('/tenant/like/:apartmentId', async (req, res) => {
     try {
-        const like = await usersRelationsService.likeApartment(req.body.tenantId, req.params.apartmentId);
+        const like = await usersRelationsService.likeApartment(req.user._id, req.params.apartmentId);
         if (like)
             res.status(CREATED).json(like);
         else

@@ -29,4 +29,5 @@ export type Apartment = {
   isRenovated: boolean;
   hasShelter: boolean;
   paymentsCond: PaymentsCond;
+  like?:boolean
 };

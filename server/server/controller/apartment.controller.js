@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
 // Get all apartments
 router.get('/', async (req, res) => {
   try {
-    const apartments = await apartmentService.getApartments();
+    const apartments = await apartmentService.getApartments(req.user._id);
     res.status(OK).json(apartments);
   } catch (err) {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });

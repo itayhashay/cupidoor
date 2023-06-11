@@ -35,6 +35,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import SquareFootIcon from "@mui/icons-material/SquareFoot";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import StairsIcon from "@mui/icons-material/Stairs";
+import useCupidAPI from "../../hooks/useCupidAPI";
 
 const HouseCard = ({
   houseData,
@@ -45,15 +46,20 @@ const HouseCard = ({
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [matchColor, setMatchColor] = useState<string>("");
-
+  const api = useCupidAPI();
   useEffect(() => {
     const color: string = precentToColor(houseData.match);
     setMatchColor(color);
   }, [houseData]);
 
-  const handleClickFavorite = (
+  const handleClickFavorite = async (
     event: Event | SyntheticEvent<Element, Event>
-  ) => {};
+  ) => {
+    try {
+      event.preventDefault();
+      await api.likeApartment(houseData._id);
+    } catch (ex) {}
+  };
 
   return (
     <Link to={`/apartment/${houseData._id}`}>
@@ -74,15 +80,11 @@ const HouseCard = ({
           />
         )}
         <Tooltip title={houseData.user.name} placement="bottom">
-          <Avatar
-            alt=""
-            src={houseData.user.avatar}
-            sx={AvatarStyles}
-          />
+          <Avatar alt="" src={houseData.user.avatar} sx={AvatarStyles} />
         </Tooltip>
 
         {!isMyProperties && (
-          <Fab sx={likeButtonStyles} onClick={handleClickFavorite}>
+          <Fab sx={likeButtonStyles} className={houseData.like ? "liked" : ""} onClick={handleClickFavorite}>
             {true ? <FavoriteBorderOutlinedIcon /> : <FavoriteIcon />}
           </Fab>
         )}

@@ -4,11 +4,11 @@ const landlords = require("./mock/landlords.json");
 const verifyToken = require("./middlewares/verifyToken");
 
 router.use("/user", require("./controller/user.controller"));
-router.use("/apartment", require("./controller/apartment.controller"));
+router.use("/apartment",[verifyToken], require("./controller/apartment.controller"));
 router.use("/question", require("./controller/question.controller"));
 router.use("/score", require("./controller/score.controller"));
 router.use("/user-answer", require("./controller/usersAnswer.controller"));
-router.use("/users-relations", require("./controller/usersRelations.controller"));
+router.use("/users-relations",[verifyToken], require("./controller/usersRelations.controller"));
 router.use("/", require("./routes/auth.routes"));
 router.use("/chat",[verifyToken], require("./routes/chat.routes"));
 
