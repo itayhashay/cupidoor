@@ -1,67 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Box, Stepper, Step, StepLabel } from '@mui/material';
 import AddressForm from "./AddressForm";
 import AboutForm from './AboutForm';
 import PaymentsForm from './PaymentsForm';
 import UploadsForm from './UploadsForm';
+import CupidoorSpinner from '../CupidoorSpinner';
+import { NewApartment } from './types';
+import { DEFAULT_NEW_APARTMENT_DATA, STEPS } from './constants';
+import { addApartment } from '../../utils/api';
+import { AxiosResponse } from 'axios';
 
-type NewApartment = {
-  city: string;
-  street: string;
-  houseNumber: number;
-  propertyCondition: string;
-  houseArea: number;
-  rooms: number;
-  floor: number;
-  parkings: number;
-  balconies: number;
-  description: string;
-  accessible: boolean,
-  boiler: boolean,
-  furnished: boolean,
-  airConditioner: boolean,
-  bars: boolean,
-  elevator: boolean,
-  garage: boolean,
-  longTerm: boolean,
-  shelter: boolean,
-}
-
-const DEFAULT_NEW_APARTMENT_DATA: NewApartment = {
-  city: "",
-  street: "",
-  houseNumber: 0,
-  propertyCondition: "",
-  houseArea: 0,
-  rooms: 0,
-  floor: 0,
-  parkings: 0,
-  balconies: 0,
-  description: "",
-  accessible: false,
-  boiler: false,
-  furnished: false,
-  airConditioner: false,
-  bars: false,
-  elevator: false,
-  garage: false,
-  longTerm: false,
-  shelter: false,
-}
-
-const AddPropertyStepper = () => {
+const AddPropertyStepper = ({handleClose} : {handleClose: () => void}) => {
   const [activeStep, setActiveStep] = useState(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newApartmentData, setNewApartmentData] = useState<NewApartment>(DEFAULT_NEW_APARTMENT_DATA);
+  
   const saveChangesOnNext = (values: any) => {
-    setNewApartmentData((prev: NewApartment) => { return {...prev, values} })
+    setNewApartmentData((prev: NewApartment) => { 
+      return {...prev, ...values} 
+    })
   }
-
-  const steps: string[] = [
-    "Property Address",
-    "About The Property",
-    "Payments",
-    "Photos and Videos",
-  ]
   
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -71,27 +29,42 @@ const AddPropertyStepper = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    console.log(newApartmentData)
+    try {
+      const response: AxiosResponse = await addApartment(newApartmentData);
+      console.log(response);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error };
+    } finally {
+      setIsLoading(false);
+      handleClose();
+    }
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={activeStep} alternativeLabel sx={{ marginBottom: "1.5rem" }}>
-        {steps.map((label, index) => (
+      <Stepper activeStep={activeStep}  alternativeLabel sx={{ marginBottom: "1.5rem" }}>
+        {STEPS.map((label, index) => (
           <Step key={index}>
             <StepLabel>{label}</StepLabel>
           </Step>
         ))}
       </Stepper>
-      {(() => {
+      {isLoading? <CupidoorSpinner /> : (() => {
         switch (activeStep) {
           case 0:
-            return <AddressForm activeStep={activeStep} saveChangesOnNext={saveChangesOnNext}/>;
+            return <AddressForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
           case 1:
-            return <AboutForm activeStep={activeStep} saveChangesOnNext={saveChangesOnNext}/>;
+            return <AboutForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
           case 2:
-            return <PaymentsForm activeStep={activeStep} saveChangesOnNext={saveChangesOnNext}/>;
+            return <PaymentsForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
           case 3:
-            return <UploadsForm activeStep={activeStep} saveChangesOnNext={saveChangesOnNext}/>;      
+            return <UploadsForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;      
           default:
-            return <AddressForm activeStep={activeStep} saveChangesOnNext={saveChangesOnNext}/>;
+            return <AddressForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
           }
       })()}
       <Box sx={{ width: "auto",
@@ -108,10 +81,10 @@ const AddPropertyStepper = () => {
                   </Button>
                   <Button
                     variant="contained"
-                    onClick={handleNext}
+                    onClick={activeStep === STEPS.length - 1 ? handleSubmit: handleNext}
                     sx={{ mt: 1, mr: 1 }}
                   >
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Continue'}
+                    {activeStep === STEPS.length - 1 ? 'Finish' : 'Continue'}
                   </Button>
               </Box>
     </Box>

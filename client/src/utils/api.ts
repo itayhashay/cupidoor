@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import config from "../config.json";
 import { MatchData } from "../types/matchData";
 import { User } from "../types/user";
+import { NewApartment } from "../components/AddProperty/types";
 
 export const getTenantMatches = async (data: MatchData) => {
   const response = await axios.post(
@@ -38,6 +39,20 @@ export const signUp = async (user: User) => {
     const response: AxiosResponse = await axios.post(
       `${config.api.baseUrl}${config.api.routes.signUp}`,
       user
+    );
+    return response;
+  } catch (ex: AxiosError | any) {
+    alert(ex);
+    console.log(ex);
+    return ex;
+  }
+};
+
+export const addApartment = async (newApartment: NewApartment) => {
+  try {
+    const response: AxiosResponse = await axios.post(
+      `${config.api.baseUrl}${config.api.routes.addApartment}`,
+      newApartment
     );
     return response;
   } catch (ex: AxiosError | any) {
