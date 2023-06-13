@@ -8,6 +8,7 @@ import { USER_ROUTES } from "../UserRouter/constants";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Logo from "../../icons/logo.svg";
+import LogoWhite from "../../icons/logo-white.svg";
 
 export const Navbar = () => {
   const { user, setUser, signOutUser } = useAuth();
@@ -77,7 +78,7 @@ export const Navbar = () => {
                 }}
               >
                 <Link to={`/home/${USER_ROUTES.ALL_APARTMENTS}`}>
-                  <img src={Logo} alt="logo" style={{ height: "7rem", marginRight: "1rem" }}/>
+                  <img src={location.pathname === "/" ? Logo : LogoWhite} alt="logo" style={{ height: "4rem", marginRight: "1rem" }}/>
                 </Link>
                 <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
                   Cupidoor
