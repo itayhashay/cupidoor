@@ -4,6 +4,7 @@ const Storage = require('./firebase-storage.service');
 const createApartment = async (apartmentData) => {
   try {
     let base64Images = apartmentData.images;
+    apartmentData.images = [];
     const apartment = new Apartment(apartmentData);
     const newApartment = await apartment.save();
     const imagesUrl = await Storage.uploadApartmentImages(newApartment._id.toString(),base64Images);

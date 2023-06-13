@@ -115,9 +115,16 @@ const apartmentSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  images: {
-    type: [String],
-  },
+  images: [
+    {
+      name: {
+        type: String,
+      },
+      url: {
+        type: String,
+      }
+    }
+  ],
   // address: {
   //   type: String,
   //   required: true,
