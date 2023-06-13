@@ -1,29 +1,19 @@
 import { Route, Routes } from "react-router";
 import AppRoutes from "./AppRoutes";
-import Navbar from "../Navbar";
-import { Container, ContentSection } from "../App/styles";
+// import Navbar from "../Navbar";
 
 const MainRouter = () => {
   return (
-    // <Container>
-      /* <ContentSection> */
-        <Routes>
-          {AppRoutes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              element={
-                <>
-                  {!/401|404|\*/.test(route.path) && route.path !== "/" && (
-                    <Navbar />
-                  )}
-                  {route.element}
-                </>
-              }
-            />
-          ))}
-        </Routes>
-    // </Container>
-)};
+    <Routes>
+      {AppRoutes.map((route, index) => (
+        <Route key={index} path={route.path} element={<>{route.element}</>} />
+      ))}
+    </Routes>
+  );
+};
+
+// {!/401|404|\*/.test(route.path) &&
+// route.path !== "/" &&
+// route.path !== "/signIn" && <Navbar />}
 
 export default MainRouter;

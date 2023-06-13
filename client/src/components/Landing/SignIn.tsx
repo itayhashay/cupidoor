@@ -1,13 +1,13 @@
-import * as Yup from "yup";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Avatar, Button, CssBaseline, TextField, Box } from "@mui/material";
+import { Button, CssBaseline, TextField, Box } from "@mui/material";
 import { Typography, Container, Link, Grid, Paper } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
 import { loginScheme, CustomHelperText } from "./AuthHelpers";
 import { Formik } from "formik";
 import "./SignIn.css";
 import { AuthContextType, useAuth } from "../../context/AuthContext";
+import { useSnackbar } from "../../context/SnackbarContext";
 
 interface SignInPageProps {
   onTogglePage: () => void;
@@ -20,7 +20,7 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
   const [loginTimeoutId, setLoginTimeoutId] = useState<
     NodeJS.Timeout | undefined
   >();
-
+  const { snackBarState, setSnackBarState } = useSnackbar();
   const { signInUser } = useAuth() as AuthContextType;
 
   const onSubmitHandler = async (values: {
@@ -31,34 +31,19 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
       email: values.email,
       password: values.password,
     };
-    // isUsersQues all good?
-    // auth.login
-    // .then(navigate(location.state ? location.state.redirect : "/home"))
-    // : auth.login.then(navigate(location.state ? location.state.redirect : "/questions"))
     const response: any = await signInUser(userData.email, userData.password);
+    console.log(response);
     if (response.success) {
-      alert("success");
+      setSnackBarState({
+        severity: "success",
+        message: "Welcome Back!",
+        show: true,
+      });
+      navigate(location.state ? location.state.redirect : "/questions"); // isAllAnswered ? redirect /home
     } else {
       alert(response.data);
     }
-
-    alert(JSON.stringify(userData));
-
-    // setIsGoodLogin(true);
-    // setLoginTimeoutId(
-    //   setTimeout(() => {
-    //     navigate(location.state ? location.state.redirect : "/home");
-    //   }, 1500)
-    // );
   };
-
-  useEffect(() => {
-    return () => {
-      if (loginTimeoutId) {
-        clearTimeout(loginTimeoutId);
-      }
-    };
-  }, [loginTimeoutId]);
 
   if (isGoodLogin) {
     return <div>Logged good! redirecting you...</div>;
@@ -69,10 +54,7 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
       <Formik
         validationSchema={loginScheme}
         initialValues={{ email: "", password: "" }}
-        onSubmit={(event) => {
-          debugger;
-          onSubmitHandler(event);
-        }}
+        onSubmit={(event) => onSubmitHandler(event)}
       >
         {({ values, errors, touched, handleChange, handleSubmit }) => (
           <Container component="main" maxWidth="lg">
@@ -147,19 +129,17 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
                         {errors?.password && (
                           <CustomHelperText>{errors.password}</CustomHelperText>
                         )}
-                      </Box>
-                    </Grid>
 
-                    <Grid item xs={12}>
-                      <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                        startIcon={<LockIcon></LockIcon>}
-                      >
-                        Sign In
-                      </Button>
+                        <Button
+                          type="submit"
+                          fullWidth
+                          variant="contained"
+                          sx={{ mt: 3, mb: 2 }}
+                          startIcon={<LockIcon></LockIcon>}
+                        >
+                          Sign In
+                        </Button>
+                      </Box>
                     </Grid>
 
                     <Grid item xs={12}>

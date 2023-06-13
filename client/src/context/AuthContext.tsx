@@ -1,19 +1,39 @@
-import { createContext, useContext, useState, FunctionComponent } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  FunctionComponent,
+  useEffect,
+} from "react";
 import { User } from "../types/user";
 import { signIn, signUp } from "../utils/api";
 import { AxiosError, AxiosResponse } from "axios";
 import { CupidAxiosError } from "../types/cupidAxiosError";
+import axiosPrivate from "../utils/axiosPrivate";
 
 type Props = { children: React.ReactNode };
 
 export type AuthContextType = {
   user: User | null;
-  authTokens: object | null;
+  accessToken: string | null;
+  isAuthLoading: boolean;
+  setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   signInUser: (email: string, password: string) => void;
   signUpUser: (user: User) => void;
+  signOutUser: () => void;
 };
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  accessToken: null,
+  isAuthLoading: true,
+  setAccessToken: () => {},
+  setUser: () => {},
+  signInUser: () => {},
+  signUpUser: () => {},
+  signOutUser: () => {},
+});
 
 export default AuthContext;
 
@@ -23,13 +43,44 @@ export function useAuth() {
 
 export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [authTokens, setAuthTokens] = useState(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+
+  // Games yet not finished - storing the user in local storage, adv will be the cookie
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    setIsAuthLoading(false);
+  }, []);
+
+  useEffect(() => {
+    const storedAccessToken = localStorage.getItem("accessToken");
+    if (storedAccessToken) {
+      setAccessToken(storedAccessToken);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (accessToken) {
+      localStorage.setItem("accessToken", String(accessToken));
+    }
+  }, [accessToken]);
 
   const signInUser = async (email: string, password: string) => {
     const response: AxiosResponse = await signIn(email, password);
+
     if (response.status == 200) {
-      const user: User = response.data;
+      const { user, accessToken }: User = response.data;
       setUser(user);
+      setAccessToken(accessToken);
       return { success: true };
     }
     return { success: false, error: response.data };
@@ -38,7 +89,7 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   const signUpUser = async (user: User) => {
     const response: AxiosResponse | AxiosError = await signUp(user);
     if (response.status == 200) {
-      setUser(user);
+      await signInUser(user.email,user.password);
       return { success: true };
     }
     const error: AxiosError = response as AxiosError;
@@ -46,11 +97,28 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
     return cupidError;
   };
 
-  const contextData = {
+  const signOutUser = async () => {
+    try{
+      await axiosPrivate.get('/signOut');
+      localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
+      setUser(null);
+      setAccessToken(null);
+    }catch(ex){
+
+    }
+    
+  };
+
+  const contextData: AuthContextType = {
     user,
-    authTokens,
+    accessToken: accessToken,
+    isAuthLoading: isAuthLoading,
+    setAccessToken: setAccessToken,
+    setUser: setUser,
     signInUser: signInUser,
     signUpUser: signUpUser,
+    signOutUser: signOutUser,
   };
 
   return (

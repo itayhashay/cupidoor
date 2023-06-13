@@ -24,8 +24,9 @@ import {
 import { useState } from "react";
 import AnswerForm from "./AnswerForm";
 import PriorityForm from "./PriorityForm";
-import { getTenantMatches } from "../../utils/api";
+import { getTenantMatches, setUserAnswers } from "../../utils/api";
 import { Card, Divider } from "@mui/material";
+import { USER_ROUTES } from "../UserRouter/constants";
 
 function ColorlibStepIcon(props: StepIconProps) {
   const { active, completed, className } = props;
@@ -89,6 +90,8 @@ export default function QuestionsStepper({
       priority,
     });
 
+    const submitResponse = await setUserAnswers({answers,priority});
+
     const res = await getTenantMatches({
       answers,
       priority,
@@ -149,7 +152,7 @@ export default function QuestionsStepper({
                 Back
               </Button>
               {isLastStep ? (
-                <Link className="navbar-link" to={`/home`}>
+                <Link className="navbar-link" to={`/home/${USER_ROUTES.ALL_APARTMENTS}`}>
                   <Button
                     variant="contained"
                     onClick={handleSubmit}

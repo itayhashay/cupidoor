@@ -1,28 +1,21 @@
-import { Routes, Route } from "react-router-dom";
-import MainFeed from "../MainFeed";
 import { Container, ContentSection } from "./styles";
 import Navbar from "../Navbar";
-import QuestionsStepper from "../QuestionsStepper";
-import GenericHousesList from "../GenericHousesList";
 import { useState } from "react";
-import ApartmentDetails from "../ApartmentDetails";
-import UserRouter from "../UserRouter";
+import MainRouter from "../routing/MainRouter";
+import CupidChat from "../Chat";
+import { useAuth } from "../../context/AuthContext";
 
 const App = () => {
   const [houses, setHouses] = useState<any[]>([]);
-
+  const {user} = useAuth();
   return (
     <Container>
       <Navbar />
       <ContentSection>
-      <Routes>
-        <Route path={`/`} element={<MainFeed />}></Route>
-        <Route path={`/questions`} element={<QuestionsStepper displayHouses={(apartments : any[]) => setHouses(apartments)} />}></Route>
-        <Route path={`/home`} element={<GenericHousesList apartments={houses}/>}></Route>
-        <Route path={`/apartment/:id`} element={<ApartmentDetails />}></Route>
-        <Route path={`/user/*`} element={<UserRouter />}></Route>
-      </Routes>
+        <MainRouter />
+      
       </ContentSection>
+      {user && <CupidChat></CupidChat>}
     </Container>
   );
 };

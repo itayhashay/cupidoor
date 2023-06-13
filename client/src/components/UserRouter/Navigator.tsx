@@ -17,22 +17,42 @@ const Navigator = () => {
     }, [location])
     
     const breadcrumbs = [
-        <Link to={USER_ROUTES.PERSONAL_INFO}>
-            <Button sx={{ color: "#757575", fontWeight: navStates[USER_ROUTES.PERSONAL_INFO] ? 700 : 400 }}>
-            Personal Info
+      <Link to={USER_ROUTES.PERSONAL_INFO}>
+        <Button
+          sx={{
+            color: "#757575",
+            fontWeight: navStates[USER_ROUTES.PERSONAL_INFO] ? 700 : 400,
+          }}
+        >
+          Personal Info
+        </Button>
+      </Link>,
+      <Link to={USER_ROUTES.LIKED_APARTMENTS}>
+        <Button
+          sx={{
+            color: "#757575",
+            fontWeight: navStates[USER_ROUTES.LIKED_APARTMENTS] ? 700 : 400,
+          }}
+        >
+          Liked Apartments
+        </Button>
+      </Link>,
+      <>
+        {
+          // (User.role = 'both' || User.role = 'landlord') &&
+          <Link to={USER_ROUTES.MY_PROPERTIES}>
+            <Button
+              sx={{
+                color: "#757575",
+                fontWeight: navStates[USER_ROUTES.MY_PROPERTIES] ? 700 : 400,
+              }}
+            >
+              My Apartments
             </Button>
-        </Link>,        
-        <Link to={USER_ROUTES.LIKED_APARTMENTS}>
-            <Button sx={{ color: "#757575", fontWeight: navStates[USER_ROUTES.LIKED_APARTMENTS] ? 700 : 400}}>
-            Liked Apartments
-            </Button>
-        </Link>,
-        <Link to={USER_ROUTES.MY_PROPERTIES}>
-            <Button sx={{ color: "#757575", fontWeight: navStates[USER_ROUTES.MY_PROPERTIES] ? 700 : 400}}>
-            My Apartments
-            </Button>
-        </Link>    
-    ]
+          </Link>
+        }
+      </>,
+    ];
 
     return (
         <NavContainer>

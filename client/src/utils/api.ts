@@ -12,28 +12,37 @@ export const getTenantMatches = async (data: MatchData) => {
   return response.data;
 };
 
-export const signIn = async (email: string, password: string) => {
+export const setUserAnswers = async (data: MatchData) => {
   const response = await axios.post(
+    `${config.api.baseUrl}${config.api.routes.userAnswer}`,
+    data
+  );
+
+  return response.data;
+};
+
+export const signIn = async (email: string, password: string) => {
+  const response = await axios(
     `${config.api.baseUrl}${config.api.routes.signIn}`,
     {
-      email,
-      password,
+      data: { email, password },
+      method:"POST",
+      withCredentials: true,
     }
   );
   return response;
 };
 
 export const signUp = async (user: User) => {
-  try{
-    const response:AxiosResponse = await axios.post(
+  try {
+    const response: AxiosResponse = await axios.post(
       `${config.api.baseUrl}${config.api.routes.signUp}`,
       user
     );
     return response;
-  }catch(ex:AxiosError | any){
+  } catch (ex: AxiosError | any) {
     alert(ex);
     console.log(ex);
     return ex;
   }
-  
 };

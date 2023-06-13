@@ -1,13 +1,14 @@
 import LandingPage from "../Landing/LandingPage";
 import NotFoundPage from "../404/404";
-import ProtectedRoute from "./ProtectedRoute.js";
+import ProtectedRoute from "./ProtectedRoute";
 import UnAuthorizedPage from "../401/401";
 import MainFeed from "../MainFeed";
 import QuestionsStepper from "../QuestionsStepper";
-import GenericHousesList from "../GenericHousesList";
+import HomeRouter from "../HomeRouter";
 import ApartmentDetails from "../ApartmentDetails";
 import UserRouter from "../UserRouter";
 import Landing from "../Landing/Landing";
+import { HOUSES } from "../../utils/mock";
 
 // Will Change!!!!
 let tmpApartments: any = [];
@@ -18,19 +19,35 @@ const appRoutes = [
   { path: "/Mainfeed", element: <MainFeed /> },
   {
     path: "/questions",
-    element: <QuestionsStepper displayHouses={tmpApartments} />,
+    element: (
+      <ProtectedRoute>
+        <QuestionsStepper displayHouses={tmpApartments} />
+      </ProtectedRoute>
+    ),
   },
   {
-    path: "/home",
-    element: <GenericHousesList apartments={tmpApartments} />,
+    path: "/home/*",
+    element: (
+      <ProtectedRoute>
+        <HomeRouter apartments={[]} />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/apartment/:id",
-    element: <ApartmentDetails />,
+    element: (
+      <ProtectedRoute>
+        <ApartmentDetails />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/user/*",
-    element: <UserRouter />,
+    element: (
+      <ProtectedRoute>
+        <UserRouter />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/401",

@@ -18,6 +18,14 @@ import { Filter } from "../types/filters";
 import * as FILTERS from "../components/Filters/constants";
 import { Apartment } from "../types/apartment";
 import { FILTERS_TO_PATH } from "../components/Filters/constants";
+import { USER_ROUTES } from "../components/UserRouter/constants";
+
+import AllIcon from "../icons/sidebar/all.png";
+import AllSelecedIcon from "../icons/sidebar/all-selected.png";
+import LikedIcon from "../icons/sidebar/liked.png";
+import LikedSelectedIcon from "../icons/sidebar/liked-selected.png";
+import MyIcon from "../icons/sidebar/my.png";
+import MySelecedIcon from "../icons/sidebar/my-selected.png";
 
 export const BasicFilters: Filter[] = [
   {
@@ -96,6 +104,31 @@ export const LifeStyleFilters: Filter[] = [
     props: FILTERS.PRECENT_MATCH_PROPS
   },
 ];
+
+export const UserMenuItems = [
+  {
+    id: 3,
+    displayName: "My Properties",
+    urlName: USER_ROUTES.MY_PROPERTIES,
+    icon: <img alt="" src={MyIcon} />,
+    selectedIcon: <img alt="" src={MySelecedIcon} />,
+  },
+  {
+    id: 2,
+    displayName: "Liked Apartments",
+    urlName: USER_ROUTES.LIKED_APARTMENTS,
+    icon: <img alt="" src={LikedIcon} />,
+    selectedIcon: <img alt="" src={LikedSelectedIcon} />,
+  },
+  {
+    id: 1,
+    displayName: "All Apartments",
+    urlName: USER_ROUTES.ALL_APARTMENTS,
+    icon: <img alt="" src={AllIcon} />,
+    selectedIcon: <img alt="" src={AllSelecedIcon} />,
+  },
+];
+
 
 export const filtersToUrl = (filters: {[x: string]: number[] | null}): string => {
   let url = '?';

@@ -1,23 +1,32 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const userService = require('../service/user.service');
-const { CREATED, OK, NOT_FOUND, NO_CONTENT, INTERNAL_SERVER_ERROR } = require('http-status-codes');
+const userService = require("../service/user.service");
+const {
+  CREATED,
+  OK,
+  NOT_FOUND,
+  NO_CONTENT,
+  INTERNAL_SERVER_ERROR,
+} = require("http-status-codes");
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const user = await userService.createUser(req.body);
     res.status(CREATED).json(user);
   } catch (err) {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(ex);
   }
 });
 
-router.get('/', async (req, res) => {
+
+router.get("/", async (req, res) => {
   try {
     const users = await userService.getUsers();
     res.status(OK).json(users);
   } catch (err) {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(ex);
   }
 });
 
@@ -31,6 +40,7 @@ router.get('/:id', async (req, res) => {
     }
   } catch (err) {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(ex);
   }
 });
 
@@ -40,15 +50,17 @@ router.put('/:id', async (req, res) => {
     res.status(OK).json(user);
   } catch (err) {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(ex);
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     await userService.deleteUser(req.params.id);
     res.status(NO_CONTENT).send();
   } catch (err) {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(ex);
   }
 });
 

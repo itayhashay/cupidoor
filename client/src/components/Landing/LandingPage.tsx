@@ -3,16 +3,22 @@ import "./LandingPage.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import SignInPage from "./SignIn";
 import SignUpPage from "./SignUp";
+import { useAuth } from "../../context/AuthContext";
+import { Navigate } from "react-router-dom";
 
 const theme = createTheme();
 
 const LandingPage = () => {
-  const [isUserRegisterd, setIsUserRegistered] = useState<boolean>(false);
+  const [isUserRegisterd, setIsUserRegistered] = useState<boolean>(true);
   const togglePage = (): void => {
     setIsUserRegistered((prevIsUserRegisterd) => !prevIsUserRegisterd);
   };
+  const { isAuthLoading, user } = useAuth();
 
-  return (
+  if (isAuthLoading) return null;
+  return user?._id ? (
+    <Navigate to={"/home"} replace></Navigate>
+  ) : (
     <ThemeProvider theme={theme}>
       <div id="landing-layout">
         {isUserRegisterd ? (

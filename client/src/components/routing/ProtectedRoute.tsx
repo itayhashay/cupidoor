@@ -1,23 +1,14 @@
-// import { useNavigate } from "react-router-dom";
-// import { useAuth } from "../../context/AuthContext";
-// import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-// const ProtectedRoute = ({ children }) => {
-//   const { currentUser } = useAuth();
-//   const navigate = useNavigate();
-//   useEffect(() => {
-//     if (!currentUser) {
-//       navigate({ pathname: "/login" });
-//     }
-//   }, [currentUser]);
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const { user, isAuthLoading } = useAuth();
 
-//   return currentUser && children;
-// };
-
-// export default ProtectedRoute;
-
-const ProtectedRoute = () => {
-  return <div>Where the protection will be</div>;
+  if (!isAuthLoading) {
+    return user?._id ? children : <Navigate to="/signIn" replace></Navigate>;
+  } else {
+    return null;
+  }
 };
 
 export default ProtectedRoute;

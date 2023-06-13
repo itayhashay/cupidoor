@@ -6,7 +6,7 @@ import { PROFILE_PICTURES } from "../../utils/mock";
 
 const LandlordSection = ({landlord, apartmentId}:{landlord: User, apartmentId: number}) => {
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'row', height: 'auto'}}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', height: 'auto', padding: "10px 0"}}>
             <AvatarConatiner>
                 <Typography variant="h6" sx={{ fontWeight: '400', fontSize: '18px', marginBottom: '5px', whiteSpace: 'nowrap'}}>
                     {`${landlord.firstName} ${landlord.lastName}`}
