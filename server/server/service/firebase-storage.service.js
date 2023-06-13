@@ -44,7 +44,7 @@ const downloadProfilePhoto = async (userEmail) => {
 const uploadApartmentImages = async (apartmentId, base64ImagesArray) => {
   try {
     let images = [];
-    for (const [index, image] of base64ImagesArray.entries()) {
+    for (const image of base64ImagesArray) {
       const fileName = `${uuidv4()}.png`;
       const imageRef = ref(storage, `apartments/${apartmentId}/${fileName}`);
       await uploadString(imageRef, image, StringFormat.DATA_URL, { contentType: "image/png" });
@@ -56,6 +56,8 @@ const uploadApartmentImages = async (apartmentId, base64ImagesArray) => {
     console.log(err)
   }
 };
+
+
 
 module.exports = {
   downloadProfilePhoto,

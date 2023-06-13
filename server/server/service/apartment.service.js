@@ -33,6 +33,88 @@ const getApartment = async (id) => {
 const updateApartment = async (id, apartmentData) => {
   try {
     const apartment = await Apartment.findById(id);
+    let {newImages,removedImages} = apartmentData;
+    let updatedImagesArray = apartment.images.filter(image => !removedImages.includes(image.name));
+    let newSavedimages = await Storage.uploadApartmentImages(id, newImages)
+    apartment.images = [...updatedImagesArray, ...newSavedimages];
+    if (apartmentData.description != null) {
+      apartment.description = apartmentData.description;
+    }
+    if (apartmentData.propertyCondition != null) {
+      apartment.propertyCondition = apartmentData.propertyCondition;
+    }
+    if (apartmentData.city != null) {
+      apartment.city = apartmentData.city;
+    }
+    if (apartmentData.street != null) {
+      apartment.street = apartmentData.street;
+    }
+    if (apartmentData.houseNumber != null) {
+      apartment.houseNumber = apartmentData.houseNumber;
+    }
+    if (apartmentData.floor != null) {
+      apartment.floor = apartmentData.floor;
+    }
+    if (apartmentData.rooms != null) {
+      apartment.rooms = apartmentData.rooms;
+    }
+    if (apartmentData.elevator != null) {
+      apartment.elevator = apartmentData.elevator;
+    }
+    if (apartmentData.houseArea != null) {
+      apartment.houseArea = apartmentData.houseArea;
+    }
+    if (apartmentData.parkings != null) {
+      apartment.parkings = apartmentData.parkings;
+    }
+    if (apartmentData.balconies != null) {
+      apartment.balconies = apartmentData.balconies;
+    }
+    if (apartmentData.entranceDate != null) {
+      apartment.entranceDate = apartmentData.entranceDate;
+    }
+    if (apartmentData.furnished != null) {
+      apartment.furnished = apartmentData.furnished;
+    }
+    if (apartmentData.bars != null) {
+      apartment.bars = apartmentData.bars;
+    }
+    if (apartmentData.boiler != null) {
+      apartment.boiler = apartmentData.boiler;
+    }
+    if (apartmentData.airConditioner != null) {
+      apartment.airConditioner = apartmentData.airConditioner;
+    }
+    if (apartmentData.accessible != null) {
+      apartment.accessible = apartmentData.accessible;
+    }
+    if (apartmentData.garage != null) {
+      apartment.garage = apartmentData.garage;
+    }
+    if (apartmentData.shelter != null) {
+      apartment.shelter = apartmentData.shelter;
+    }
+    if (apartmentData.longTerm != null) {
+      apartment.longTerm = apartmentData.longTerm;
+    }
+    if (apartmentData.numOfPayments != null) {
+      apartment.numOfPayments = apartmentData.numOfPayments;
+    }
+    if (apartmentData.paymentDay != null) {
+      apartment.paymentDay = apartmentData.paymentDay;
+    }
+    if (apartmentData.price != null) {
+      apartment.price = apartmentData.price;
+    }
+    if (apartmentData.committee != null) {
+      apartment.committee = apartmentData.committee;
+    }
+    if (apartmentData.tax != null) {
+      apartment.tax = apartmentData.tax;
+    }
+    if (apartmentData.totalPrice != null) {
+      apartment.totalPrice = apartmentData.totalPrice;
+    }
     return await apartment.save();
   } catch (err) {
     throw new Error('Error updating apartment: ' + err.message);
