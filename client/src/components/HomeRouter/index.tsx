@@ -44,7 +44,7 @@ const HomeRouter = ({ apartments }: { apartments: Apartment[] }) => {
           <Routes>
             <Route
               path={`/${USER_ROUTES.ALL_APARTMENTS}`}
-              element={<GenericHousesList apartments={ap} />}
+              element={<GenericHousesList apartments={HOUSES} />}
             ></Route>
             <Route
               path={`/${USER_ROUTES.LIKED_APARTMENTS}`}
