@@ -10,12 +10,15 @@ import { DEFAULT_NEW_APARTMENT_DATA, STEPS } from './constants';
 import { addApartment } from '../../utils/api';
 import { AxiosResponse } from 'axios';
 import { convertFilePondImagesToBase64 } from '../../utils/base64';
+import { getUserId } from '../../utils/localStorage';
+import { useNavigate } from "react-router-dom";
 
 const AddPropertyStepper = ({handleClose} : {handleClose: () => void}) => {
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newApartmentData, setNewApartmentData] = useState<NewApartment>(DEFAULT_NEW_APARTMENT_DATA);
-  
+  const navigate = useNavigate();
+
   const saveChangesOnNext = (values: any) => {
     setNewApartmentData((prev: NewApartment) => { 
       return {...prev, ...values} 
@@ -30,24 +33,13 @@ const AddPropertyStepper = ({handleClose} : {handleClose: () => void}) => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const getUserId = () => {
-    const user: any = localStorage.getItem("user");
-    if(user) {
-      const userData = JSON.parse(user);
-      return userData._id;
-    }
-    return "";
-
-  }
-
   const handleSubmit = async () => {
     setIsLoading(true);
     newApartmentData.images = convertFilePondImagesToBase64(newApartmentData.images);
     newApartmentData.user = getUserId();
     try {
-      console.log(newApartmentData);
       const response: AxiosResponse = await addApartment(newApartmentData);
-      console.log(response);
+      response.status === 201 && navigate(`/apartment/${response.data._id}`);
       return { success: true };
     } catch (error) {
       return { success: false, error };

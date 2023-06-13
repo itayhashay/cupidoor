@@ -6,7 +6,8 @@
       "match": "/match",
       "signIn": "/signIn",
       "signUp": "/signUp",
-      "addApartment": "/apartment"
+      "addApartment": "/apartment",
+      "getLandloard": "/apartment/landlord"
     }
   }
 }

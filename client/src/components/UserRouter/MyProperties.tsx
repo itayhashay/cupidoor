@@ -3,14 +3,30 @@ import { LANDLORD_PROPERTIES } from "../../utils/mock";
 import GenericHousesList from "../GenericHousesList";
 import AddHomeOutlinedIcon from '@mui/icons-material/AddHomeOutlined';
 import AddProperty from "../AddProperty";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getUserProperties } from "../../utils/api";
+import { getUserId } from "../../utils/localStorage";
+import { Apartment } from "../../types/apartment";
 
 const MyProperties = () => {
     const [open, setOpen] = useState(false);
+    const [myApartments, setMyApartments] = useState<Apartment[]>([]);
+    
+    const fetchUserProperties = async () => {
+        const userId = getUserId();
+        const userProperties: Apartment[] = await getUserProperties(userId);
+        return userProperties;
+    }
+
+    useEffect(() => {
+        fetchUserProperties().then((myApartments: Apartment[]) => {
+            setMyApartments(myApartments);
+        })
+    }, []);
 
     return (
-    <Box>
-        {LANDLORD_PROPERTIES.length > 0 ? <GenericHousesList apartments={LANDLORD_PROPERTIES}/> :
+    <Box sx={{ overflowY: "auto" }}>
+        {LANDLORD_PROPERTIES.length > 0 ? <GenericHousesList apartments={myApartments}/> :
         <Box height="85%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" padding="0 45px">
             <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="space-evenly" height="60vh">
                 <Typography variant="h2" fontWeight="700">

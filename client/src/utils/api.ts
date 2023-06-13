@@ -3,6 +3,7 @@ import config from "../config.json";
 import { MatchData } from "../types/matchData";
 import { User } from "../types/user";
 import { NewApartment } from "../components/AddProperty/types";
+import { Apartment } from "../types/apartment";
 
 export const getTenantMatches = async (data: MatchData) => {
   const response = await axios.post(
@@ -60,4 +61,12 @@ export const addApartment = async (newApartment: NewApartment) => {
     console.log(ex);
     return ex;
   }
+};
+
+export const getUserProperties = async (userId: string): Promise<Apartment[]> => {
+  const response = await axios.get(
+    `${config.api.baseUrl}${config.api.routes.getLandloard}/${userId}`
+  );
+
+  return response.data;
 };
