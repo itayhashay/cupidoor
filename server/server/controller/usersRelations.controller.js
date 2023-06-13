@@ -59,7 +59,7 @@ router.post('/tenant/like/:apartmentId', async (req, res) => {
 // Get a tenant ID form params and form body the apartment ID and create a new match
 router.post('/apartment/match/:tenantId', async (req, res) => {
     try {
-        const match = await usersRelationsService.matchtenant(req.params.tenantId, req.body.apartmentId);
+        const match = await usersRelationsService.matchTenant(req.params.tenantId, req.body.apartmentId);
         res.status(OK).json(match);
     } catch (err) {
         res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
