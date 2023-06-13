@@ -1,95 +1,199 @@
 const mongoose = require("mongoose");
 
 const apartmentSchema = new mongoose.Schema({
-  type: {
-    type: String,
-    enum: ["Apartment", "Land House", "Penthouse"],
-    default: "Apartment",
-  },
+  // type: {
+  //   type: String,
+  //   enum: ["Apartment", "Land House", "Penthouse"],
+  //   default: "Apartment",
+  // },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     autopopulate: { select: "-password" },
   },
-  images: {
-    type: [String],
-  },
-  address: {
-    type: String,
-    required: true,
-  },
-  entryDate: {
-    type: Date,
-    required: true,
-  },
-  cost: {
-    type: Number,
-    required: true,
-  },
   description: {
     type: String,
-    required: true,
+    required: true
+  },
+  propertyCondition: {
+    type: String,
+    required: true
+  },
+  city: {
+    type: String,
+    required: true
+  },
+  street: {
+    type: String,
+    required: true
+  },
+  houseNumber: {
+    type: String,
+    required: true
   },
   floor: {
     type: Number,
-    required: true,
-  },
-  parkings: {
-    type: Number,
-    required: true,
+    required: true
   },
   rooms: {
     type: Number,
-    required: true,
+    required: true
   },
-  isBasement: {
+  elevator: {
     type: Boolean,
-    required: true,
+    required: true
   },
-  haveBoiler: {
-    type: Boolean,
-    required: true,
+  houseArea: {
+    type: String,
+    required: true
   },
-  haveBalcony: {
-    type: Boolean,
-    required: true,
+  parkings: {
+    type: Number,
+    required: true
+  },
+  balconies: {
+    type: Number,
+    required: true
+  },
+  entranceDate: {
+    type: Date,
+    default: Date.now,
   },
   furnished: {
     type: Boolean,
-    required: true,
+    required: true
+  },
+  bars: {
+    type: Boolean,
+    required: true
+  },
+  boiler: {
+    type: Boolean,
+    required: true
+  },
+  airConditioner: {
+    type: Boolean,
+    required: true
   },
   accessible: {
     type: Boolean,
-    required: true,
+    required: true
   },
-  hasElevator: {
+  garage: {
     type: Boolean,
-    default: false,
+    required: true
   },
-  hasGarage: {
+  shelter: {
     type: Boolean,
-    default: false,
+    required: true
   },
-  hasAirConditioning: {
+  longTerm: {
     type: Boolean,
-    default: false,
+    required: true
   },
-  isLongTerm: {
-    type: Boolean,
-    default: false,
+  numOfPayments: {
+    type: Number,
+    required: true
   },
-  hasBars: {
-    type: Boolean,
-    default: false,
+  paymentDay: {
+    type: Number,
+    required: true
   },
-  isRenovated: {
-    type: Boolean,
-    default: false,
+  price: {
+    type: Number,
+    required: true
+  }, 
+  committee: {
+    type: Number,
+    required: true
   },
-  hasShelter: {
-    type: Boolean,
-    default: false,
+  tax: {
+    type: Number,
+    required: true
   },
+  totalPrice: {
+    type: Number,
+    required: true
+  },
+  images: {
+    type: [String],
+  },
+  // address: {
+  //   type: String,
+  //   required: true,
+  // },
+  // entryDate: {
+  //   type: Date,
+  //   required: true,
+  // },
+  // cost: {
+  //   type: Number,
+  //   required: true,
+  // },
+  // description: {
+  //   type: String,
+  //   required: true,
+  // },
+  // floor: {
+  //   type: Number,
+  //   required: true,
+  // },
+  // parkings: {
+  //   type: Number,
+  //   required: true,
+  // },
+  // rooms: {
+  //   type: Number,
+  //   required: true,
+  // },
+  // isBasement: {
+  //   type: Boolean,
+  //   required: true,
+  // },
+  // haveBoiler: {
+  //   type: Boolean,
+  //   required: true,
+  // },
+  // haveBalcony: {
+  //   type: Boolean,
+  //   required: true,
+  // },
+  // furnished: {
+  //   type: Boolean,
+  //   required: true,
+  // },
+  // accessible: {
+  //   type: Boolean,
+  //   required: true,
+  // },
+  // hasElevator: {
+  //   type: Boolean,
+  //   default: false,
+  // },
+  // hasGarage: {
+  //   type: Boolean,
+  //   default: false,
+  // },
+  // hasAirConditioning: {
+  //   type: Boolean,
+  //   default: false,
+  // },
+  // isLongTerm: {
+  //   type: Boolean,
+  //   default: false,
+  // },
+  // hasBars: {
+  //   type: Boolean,
+  //   default: false,
+  // },
+  // isRenovated: {
+  //   type: Boolean,
+  //   default: false,
+  // },
+  // hasShelter: {
+  //   type: Boolean,
+  //   default: false,
+  // },
   createdAt: {
     type: Date,
     default: Date.now,
