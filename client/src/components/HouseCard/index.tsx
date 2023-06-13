@@ -44,16 +44,31 @@ const HouseCard = ({
   isMyProperties: boolean;
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [matchColor, setMatchColor] = useState<string>("");
 
   useEffect(() => {
     const color: string = precentToColor(houseData.match);
     setMatchColor(color);
+
+    // check favorite
+
+    const id = houseData._id;
+
+    // check if id in array of favorite houses of the user.
+
+    // setIsFavorite(true) if it does
   }, [houseData]);
 
   const handleClickFavorite = (
     event: Event | SyntheticEvent<Element, Event>
-  ) => {};
+  ) => {
+    event.preventDefault();
+
+    // api call. await toggleFavoire(!isFavorite)
+    setIsFavorite(!isFavorite)
+
+  };
 
   return (
     <Link to={`/apartment/${houseData._id}`}>
@@ -82,8 +97,8 @@ const HouseCard = ({
         </Tooltip>
 
         {!isMyProperties && (
-          <Fab sx={likeButtonStyles} onClick={handleClickFavorite}>
-            {true ? <FavoriteBorderOutlinedIcon /> : <FavoriteIcon />}
+          <Fab sx={likeButtonStyles} onClick={handleClickFavorite} id="favorite-button">
+            {isFavorite ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
           </Fab>
         )}
         {!isMyProperties ? (
