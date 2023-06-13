@@ -1,9 +1,14 @@
 const Apartment = require('../model/apartment.model');
+const Storage = require('./firebase-storage.service');
 
 const createApartment = async (apartmentData) => {
   try {
+    let base64Images = apartmentData.images;
+    apartmentData.images = [];
     const apartment = new Apartment(apartmentData);
-    return await apartment.save();
+    const newApartment = await apartment.save();
+    const imagesUrl = await Storage.uploadApartmentImages(newApartment._id.toString(),base64Images);
+    return await Apartment.findByIdAndUpdate(newApartment._id, { images: imagesUrl }, { populate: { path: 'user'}, returnOriginal: false})
   } catch (err) {
     throw new Error('Error creating apartment: ' + err.message);
   }
@@ -28,45 +33,6 @@ const getApartment = async (id) => {
 const updateApartment = async (id, apartmentData) => {
   try {
     const apartment = await Apartment.findById(id);
-    if (apartmentData.type != null) {
-      apartment.type = apartmentData.type;
-    }
-    if (apartmentData.user != null) {
-      apartment.user = apartmentData.user;
-    }
-    if (apartmentData.address != null) {
-      apartment.address = apartmentData.address;
-    }
-    if (apartmentData.cost != null) {
-      apartment.cost = apartmentData.cost;
-    }
-    if (apartmentData.description != null) {
-      apartment.description = apartmentData.description;
-    }
-    if (apartmentData.floor != null) {
-      apartment.floor = apartmentData.floor;
-    }
-    if (apartmentData.parkings != null) {
-      apartment.parkings = apartmentData.parkings;
-    }
-    if (apartmentData.rooms != null) {
-      apartment.rooms = apartmentData.rooms;
-    }
-    if (apartmentData.isBasement != null) {
-      apartment.isBasement = apartmentData.isBasement;
-    }
-    if (apartmentData.haveBoiler != null) {
-      apartment.haveBoiler = apartmentData.haveBoiler;
-    }
-    if (apartmentData.haveBalcony != null) {
-      apartment.haveBalcony = apartmentData.haveBalcony;
-    }
-    if (apartmentData.furnished != null) {
-      apartment.furnished = apartmentData.furnished;
-    }
-    if (apartmentData.accessible != null) {
-      apartment.accessible = apartmentData.accessible;
-    }
     return await apartment.save();
   } catch (err) {
     throw new Error('Error updating apartment: ' + err.message);
