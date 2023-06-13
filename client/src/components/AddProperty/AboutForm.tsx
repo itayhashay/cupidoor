@@ -3,84 +3,54 @@ import { useEffect, useRef, useState } from "react";
 import { PROPERTY_CONDITIONS } from "../../utils/properyConditions";
 import { generateArrayFromRange } from "../../utils/logic";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
-
-type CheckboxProps = {
-    key: string;
-    display: string;
-    value: boolean;
-}
-
-const CHECKBOXES_DEFAULT: CheckboxProps[] = [
-    {
-      key: "accessible",
-      display: "Accessible",
-      value: false,
-    },
-    {
-      key: "boiler",
-      display: "Boiler",
-      value: false,
-    },
-    {
-      key: "furnished",
-      display: "Furnished",
-      value: false,
-    },
-    {
-      key: "airConditioner",
-      display: "A/C",
-      value: false,
-    },
-    {
-      key: "bars",
-      display: "Bars",
-      value: false,
-    },
-    {
-      key: "elevator",
-      display: "Elevator",
-      value: false,
-    },
-    {
-      key: "garage",
-      display: "Garage",
-      value: false,
-    },
-    {
-      key: "longTerm",
-      display: "Long Term",
-      value: false,
-    },
-    {
-      key: "shelter",
-      display: "Shelter",
-      value: false,
-    },
-  ];
+import { ApartmentAbout, NewApartment } from "./types";
+import { CHECKBOXES_DEFAULT, DEFAULT_ABOUT } from "./constants";
   
-const AboutForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveChangesOnNext?: (values: any) => void}) => {
-    const [descriptionValue, setDescriptionValue] = useState<string>("");
-    const [roomsValue, setRoomsValue] = useState<number>();
-    const [floorValue, setFloorValue] = useState<number>();
-    const [balconyValue, setBalconyValue] = useState<number>();
-    const [parkingValue, setParkingValue] = useState<number>();
-    const [checkboxesValues, setCheckboxesValues] = useState<CheckboxProps[]>(CHECKBOXES_DEFAULT);
-    const conditionRef = useRef();
-    const areaRef = useRef();
+const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: NewApartment,  saveChangesOnNext: (values: any) => void}) => {
+    const [aboutState, setAboutState] = useState<ApartmentAbout>(DEFAULT_ABOUT) 
+    const aboutStateRef = useRef(aboutState); // Create a mutable ref
 
     useEffect(() => {
-        console.log(activeStep)
-        console.log("STEP CHANGE ABOUT")
-    }, [activeStep]);
+        setAboutState(apartmentData);
+    }, [apartmentData]);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const index = checkboxesValues.findIndex((checkbox: CheckboxProps) => checkbox.key === event.target.id);
+    useEffect(() => {
+        aboutStateRef.current = (aboutState)
+    }, [aboutState]);
 
-        if (index !== -1) {
-        const newData = [...checkboxesValues];
-        newData[index] = { ...newData[index], value: event.target.checked };
-        setCheckboxesValues(newData);
-        }
+    useEffect(() => {
+        return () => {
+          saveChangesOnNext(aboutStateRef.current);
+        };
+      }, []);
+      
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setAboutState((prev) => {
+            return {
+                ...prev,
+                [e.target.id || e.target.name]: e.target.value
+            }
+        })
+    }
+
+    const handleChangeToggleGroup = (event: React.MouseEvent<HTMLElement>, value: any) => {
+        const parentId = (event.currentTarget.parentNode as HTMLElement).id;
+        
+        setAboutState((prev) => {
+            return {
+                ...prev,
+                [parentId]: parseFloat(value)
+            }
+        })
+    }
+    const handleChangeCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAboutState((prev) => {
+            return {
+                ...prev,
+                [event.target.id]: event.target.checked
+            }
+        })
     };
 
     return (
@@ -89,7 +59,9 @@ const AboutForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveC
                 <Box display="flex" flexDirection="column" width="48%">
                     <Typography variant="body1" fontWeight={700} marginBottom="5px">Property Condition</Typography>
                     <TextField
-                        inputRef={conditionRef}
+                        name="propertyCondition"
+                        value={aboutState.propertyCondition}
+                        onChange={handleChange} 
                         select
                         required
                         sx={{width: '-webkit-fill-available'}}
@@ -102,7 +74,9 @@ const AboutForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveC
                     </TextField>
                     <Typography variant="body1" fontWeight={700} marginTop="16px">House area (in square meters)</Typography>
                     <TextField
-                        inputRef={areaRef}
+                        id="houseArea"
+                        value={aboutState.houseArea}
+                        onChange={handleChange} 
                         sx={{ width: '-webkit-fill-available', marginBottom: "16px" }}
                         InputProps={{
                             endAdornment: <InputAdornment position="end">m²</InputAdornment>,
@@ -112,8 +86,9 @@ const AboutForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveC
                 <Box display="flex" flexDirection="column" width="48%">
                     <Typography variant="body1" fontWeight={700} marginBottom="5px">Description</Typography>
                     <TextareaAutosize 
-                        value={descriptionValue} 
-                        onChange={(e) => setDescriptionValue(e.target.value)} 
+                        id="description"
+                        value={aboutState.description}
+                        onChange={handleChange} 
                         minRows={7.5} 
                         style={{resize: "none", padding: "12px", fontSize: "14px", fontFamily:"'Roboto'", wordSpacing: 1.5, borderRadius: "4px", border: "1px solid #c4c4c4"}} 
                         placeholder="Describe your property, the condition of the furnishings, the frequency of maintenance, etc."/>
@@ -128,9 +103,10 @@ const AboutForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveC
                                     sx={{border: "0.5px solid #c4c4c4", width:"fit-content"}}
                                     color="primary"
                                     exclusive
-                                    value={balconyValue}
-                                    onChange={(e, value) => setBalconyValue(value)} 
-                                    >
+                                    id="balconies"
+                                    value={aboutState.balconies}
+                                    onChange={handleChangeToggleGroup} 
+                                                >
                                     {generateArrayFromRange(0, 5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
                                 </ToggleButtonGroup>
                         </Box>
@@ -140,9 +116,10 @@ const AboutForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveC
                                 sx={{border: "0.5px solid #c4c4c4", width:"fit-content"}}
                                 color="primary"
                                 exclusive
-                                value={parkingValue}
-                                onChange={(e, value) => setParkingValue(value)} 
-                                >
+                                id="parkings"
+                                value={aboutState.parkings}
+                                onChange={handleChangeToggleGroup} 
+                            >
                                 {generateArrayFromRange(0, 5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
                             </ToggleButtonGroup>
                         </Box>
@@ -154,9 +131,10 @@ const AboutForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveC
                                     sx={{maxWidth: "calc(100% - 2vh)", overflowY: "auto", border: "0.5px solid #c4c4c4"}}
                                     color="primary"
                                     exclusive
-                                    value={roomsValue}
-                                    onChange={(e, value) => setRoomsValue(value)} 
-                                    >
+                                    id="rooms"
+                                    value={aboutState.rooms}
+                                    onChange={handleChangeToggleGroup} 
+                                        >
                                     {generateArrayFromRange(1, 10, 0.5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
                                 </ToggleButtonGroup>
                             </Box>
@@ -166,8 +144,9 @@ const AboutForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveC
                                     sx={{maxWidth: "calc(100% - 2vh)", overflowY: "auto", border: "0.5px solid #c4c4c4"}}
                                     color="primary"
                                     exclusive
-                                    value={floorValue}
-                                    onChange={(e, value) => setFloorValue(value)} 
+                                    id="floor"
+                                    value={aboutState.floor}
+                                    onChange={handleChangeToggleGroup} 
                                     >
                                     {generateArrayFromRange(-1, 20).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
                                 </ToggleButtonGroup>
@@ -178,9 +157,9 @@ const AboutForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveC
                 <Box width="48%" display="flex" flexDirection="row">
                     <Box sx={{ flexGrow: 1 }}>
                         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                            {checkboxesValues.map((checkboxesProp, index) => (
+                            {CHECKBOXES_DEFAULT.map((checkboxesProp, index) => (
                                 <Grid item xs={2} sm={4} md={4} key={index}>
-                                    <FormControlLabel sx={{ "& .MuiFormControlLabel-label": { fontSize: "14px" } }} control={<Checkbox size="small" id={checkboxesProp.key} checked={checkboxesProp.value} onChange={handleChange}/>} label={checkboxesProp.display} />
+                                    <FormControlLabel sx={{ "& .MuiFormControlLabel-label": { fontSize: "14px" } }} control={<Checkbox size="small" id={checkboxesProp.key} checked={Boolean(aboutState[checkboxesProp.key as keyof typeof aboutState])} onChange={handleChangeCheckbox}/>} label={checkboxesProp.display} />
                                 </Grid>
                             ))}
                         </Grid>

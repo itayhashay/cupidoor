@@ -1,29 +1,66 @@
-import { Box, FormControl, InputAdornment, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Box, FormControl, InputAdornment, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { generateArrayFromRange } from "../../utils/logic";
-
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from "dayjs";
+import { ApartmentPayments, NewApartment } from "./types";
+import { DEFAULT_PAYMENTS } from "./constants";
 
-const PaymentsForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, saveChangesOnNext?: (values: any) => void}) => {
-    const [paymentDay, setPaymentDay] = useState<number>(10);
-    const [entranceDate, setEntranceDate] = useState<Dayjs | null>(null);
-
-    const numOfPaymentsRef = useRef();
-    const [price, setPrice] = useState<number>(0);
-    const [tax, setTax] = useState<number>(0);
-    const [committee, setCommittee] = useState<number>(0);
-    const [totalPrice, setTotalPrice] = useState<number>();
+const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: NewApartment,  saveChangesOnNext: (values: any) => void}) => {
+    const [paymentsState, setPaymentsState] = useState<ApartmentPayments>(DEFAULT_PAYMENTS) 
+    const paymentsStateRef = useRef(paymentsState); // Create a mutable ref
 
     useEffect(() => {
-        console.log(activeStep)
-        console.log("STEP CHANGE PAYMENTS")
-    }, [activeStep]);
+        setPaymentsState(apartmentData);
+    }, [apartmentData]);
 
     useEffect(() => {
-        setTotalPrice(price + committee + (tax/2));
-    }, [price, tax, committee]);
+        paymentsStateRef.current = (paymentsState)
+    }, [paymentsState]);
+
+    useEffect(() => {
+        return () => {
+          saveChangesOnNext(paymentsStateRef.current);
+        };
+      }, []);
+      
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setPaymentsState((prev) => {
+            return {
+                ...prev,
+                [e.target.id || e.target.name]: e.target.value
+            }
+        })
+    }
+    
+    const handleChangePaymentsDay = (event: SelectChangeEvent<number>) => {
+        setPaymentsState((prev) => {
+            return {
+                ...prev,
+                paymentDay: Number(event.target.value)
+            }
+        })
+    }
+
+    const handleDatePickerChange = (value: Dayjs | null) => {
+        setPaymentsState((prev) => {
+            return {
+                ...prev,
+                entranceDate: value
+            }
+        })
+    }
+
+    useEffect(() => {
+        setPaymentsState((prev) => {
+            return {
+                ...prev,
+                totalPrice: Number(paymentsState.price) + Number(paymentsState.committee) + Number(paymentsState.tax/2)
+            }
+        })
+    }, [paymentsState.committee, paymentsState.price, paymentsState.tax]);
   
     return (
         <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between" padding="0 24px">
@@ -31,8 +68,9 @@ const PaymentsForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, sa
                 <Box display="flex" flexDirection="column">
                     <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Price</Typography>
                         <TextField
-                            value={price}
-                            onChange={(e) => setPrice(parseInt(e.target.value))}
+                            id="price"
+                            value={paymentsState.price}
+                            onChange={handleChange} 
                             type="number"
                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                       
                             sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
@@ -44,8 +82,9 @@ const PaymentsForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, sa
                 <Box display="flex" flexDirection="column">
                     <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Property tax (for two months)</Typography>
                         <TextField
-                            value={tax}
-                            onChange={(e) => setTax(parseInt(e.target.value))}
+                            id="tax"
+                            value={paymentsState.tax}
+                            onChange={handleChange} 
                             type="number"
                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                       
                             sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
@@ -57,8 +96,9 @@ const PaymentsForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, sa
                 <Box display="flex" flexDirection="column">
                     <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">House committee</Typography>
                         <TextField
-                            value={committee}
-                            onChange={(e) => setCommittee(parseInt(e.target.value))}
+                            id="committee"
+                            value={paymentsState.committee}
+                            onChange={handleChange} 
                             type="number"
                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                       
                             sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
@@ -72,7 +112,9 @@ const PaymentsForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, sa
             <Box display="flex" flexDirection="column">
                     <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Number of Payments</Typography>
                     <TextField
-                        inputRef={numOfPaymentsRef}
+                        name="numOfPayments"
+                        value={paymentsState.numOfPayments}
+                        onChange={handleChange} 
                         select
                         required
                         sx={{width: '-webkit-fill-available', marginBottom: "8px"}}
@@ -87,9 +129,9 @@ const PaymentsForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, sa
                 <Box display="flex" flexDirection="column">
                     <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Entrance Date</Typography>
                     <DemoContainer components={['DatePicker']}>
-                        <DatePicker    
-                            value={entranceDate}
-                            onChange={(date) => setEntranceDate(date)}                            
+                        <DatePicker
+                            value={paymentsState.entranceDate}
+                            onChange={(date) => handleDatePickerChange(date)}                            
                             minDate={dayjs(new Date())}
                             sx={{marginBottom: "8px"}}/>
                     </DemoContainer>
@@ -100,11 +142,10 @@ const PaymentsForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, sa
                         <Typography variant="body1" fontSize="18px" fontWeight={300} lineHeight={1}>Every</Typography>
                             <FormControl variant="filled" sx={{ mx: 0, minWidth: "auto", marginLeft: "4px" }} size="small">
                                 <Select
-                                    value={paymentDay}
-                                    onChange={(e) => setPaymentDay(e.target.value as number)} 
+                                    onChange={handleChangePaymentsDay}
+                                    value={paymentsState.paymentDay}
                                     size="small"
                                     labelId="demo-simple-select-filled-label"
-                                    id="demo-simple-select-filled"
                                     sx={{ fontSize:"18px","& .MuiInputBase-inputSizeSmall" : {padding: "0 2px 0 0 !important"}, background: "white", "& .MuiSelect-iconFilled": { display: "none"} }}
                                     >
                                     {generateArrayFromRange(1, 31).map((option) => <MenuItem value={option}>{option}</MenuItem>)}
@@ -116,9 +157,9 @@ const PaymentsForm = ({activeStep, saveChangesOnNext} : {activeStep?: number, sa
         </Box>
         <Box width="30%" display="flex" flexDirection="column" justifyContent="center" alignItems="center" >
             <Typography variant="h4" fontWeight={400} >Total Payment</Typography>
-            <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center">
-                <Typography variant="h5" fontWeight={400} >{`${totalPrice}₪`}</Typography>
-                <Typography variant="body1" fontSize="15px" fontWeight={100} margin="0 0 1px 1px">/month</Typography>
+            <Box display="flex" flexDirection="row" justifyContent="center" alignItems="flex-end">
+                <Typography variant="h5" fontWeight={400} >{`${paymentsState.totalPrice}₪`}</Typography>
+                <Typography variant="body1" fontSize="15px" fontWeight={100} margin="0 0 1px 1px" lineHeight={1.7}>/month</Typography>
             </Box>
         </Box>    
     </Box>

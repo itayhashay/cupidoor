@@ -1,6 +1,6 @@
-
 const { initializeApp } = require("firebase/app");
 const  { getStorage, ref,uploadString,getDownloadURL, StringFormat } = require("firebase/storage");
+const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
 
 const firebaseConfig = {
@@ -38,11 +38,29 @@ const downloadProfilePhoto = async (userEmail) => {
   } catch (err) {
     console.log(err)
   }
-}
+};
+
+//get apartment id and array of base 64 images and returns an array of urls of images
+const uploadApartmentImages = async (apartmentId, base64ImagesArray) => {
+  try {
+    let images = [];
+    for (const image of base64ImagesArray) {
+      const fileName = `${uuidv4()}.png`;
+      const imageRef = ref(storage, `apartments/${apartmentId}/${fileName}`);
+      await uploadString(imageRef, image, StringFormat.DATA_URL, { contentType: "image/png" });
+      let url = await getDownloadURL(imageRef);
+      images.push({ name: fileName,url: url});
+    }
+    return images;
+  } catch (err) {
+    console.log(err)
+  }
+};
+
+
 
 module.exports = {
   downloadProfilePhoto,
-  uploadProfilePhoto
+  uploadProfilePhoto,
+  uploadApartmentImages
 }
-
-
