@@ -14,6 +14,14 @@ const createApartment = async (apartmentData) => {
   }
 };
 
+const getApartmentsByUser = async (userId) => {
+  try {
+    return await Apartment.find({user: userId}).populate('user', '-password');
+  } catch (err) {
+    throw new Error('Error getting apartments: ' + err.message);
+  }
+};
+
 const getApartments = async () => {
   try {
     return await Apartment.find().populate('user', '-password');
@@ -131,6 +139,7 @@ const deleteApartment = async (id) => {
 
 module.exports = {
   createApartment,
+  getApartmentsByUser,
   getApartments,
   getApartment,
   updateApartment,

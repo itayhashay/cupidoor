@@ -13,6 +13,15 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.get('/landlord/:userId', async (req, res) => {
+  try {
+    const apartments = await apartmentService.getApartmentsByUser(req.params.userId);
+    res.status(OK).json(apartments);
+  } catch (err) {
+    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+  }
+})
+
 // Get all apartments
 router.get('/', async (req, res) => {
   try {
