@@ -16,11 +16,6 @@ export const DividerLine = styled.hr`
   margin: 15px 0;
 `;
 
-export const LogoImg = styled.img`
-  height: 42px;
-  padding-right: 16px;
-`;
-
 export const linkStyles = {
   display: "flex",
   alignItems: "center",

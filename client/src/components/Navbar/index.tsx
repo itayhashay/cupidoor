@@ -1,13 +1,13 @@
 import { AppBar, Box, Toolbar, Button, Grid, Menu } from "@mui/material";
 import { Avatar, Typography, MenuItem } from "@mui/material";
-import { LogoImg, UserSection, linkStyles } from "./styles";
+import { UserSection, linkStyles } from "./styles";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { USER_ROUTES } from "../UserRouter/constants";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
-import Logo from "../../icons/logo.png";
+import Logo from "../../icons/logo.svg";
 
 export const Navbar = () => {
   const { user, setUser, signOutUser } = useAuth();
@@ -77,7 +77,7 @@ export const Navbar = () => {
                 }}
               >
                 <Link to={`/home/${USER_ROUTES.ALL_APARTMENTS}`}>
-                  <LogoImg src={Logo} alt="logo" />
+                  <img src={Logo} alt="logo" style={{ height: "7rem", marginRight: "1rem" }}/>
                 </Link>
                 <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
                   Cupidoor
