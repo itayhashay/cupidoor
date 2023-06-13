@@ -1,6 +1,7 @@
 import { Dayjs } from "dayjs";
 
 export type NewApartment = {
+    user: string;
     city: string;
     street: string;
     houseNumber: number;

@@ -24,6 +24,7 @@ export const STEPS: string[] = [
 
 
 export const DEFAULT_NEW_APARTMENT_DATA: NewApartment = {
+    user: "",
     city: "",
     street: "",
     houseNumber: 0,

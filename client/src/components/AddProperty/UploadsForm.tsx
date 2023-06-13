@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { Box } from '@mui/material'
@@ -9,23 +10,20 @@ import { FilePondFile } from "filepond";
 import { ApartmentImages, NewApartment } from "./types";
 import { DEFAULT_IMAGES } from "./constants";
 
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginFileEncode);
 
 const UploadsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: NewApartment,  saveChangesOnNext: (values: any) => void}) => {
     const [imagesState, setImagesState] = useState<ApartmentImages>(DEFAULT_IMAGES) 
     const imageStateRef = useRef(imagesState); // Create a mutable ref
     
     useEffect(() => {
-        setImagesState((prev) => {
-            if(imagesState.images.length === apartmentData.images.length) return prev;
-
-            return apartmentData
-        });
+         if(imagesState.images.length === apartmentData.images.length) return;
+         setImagesState({ images: apartmentData.images });
     }, [apartmentData]);
 
     useEffect(() => {
         imageStateRef.current = (imagesState);
-        saveChangesOnNext(imagesState);
+        // saveChangesOnNext(imagesState);
     }, [imagesState]);
 
     useEffect(() => {
@@ -35,7 +33,7 @@ const UploadsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: NewApa
       }, []);
 
     const handleImageUpload = (fileItems: FilePondFile[]) => {
-        const files: any[] = fileItems.map(fileItem => fileItem.file);
+        const files: any[] = fileItems.map(fileItem => fileItem);
         setImagesState({ images: files })
     }
 
@@ -49,6 +47,7 @@ const UploadsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: NewApa
     return (
         <Box maxHeight={"55vh"} overflow={"auto"} width={"70%"} margin={"auto"}>
             <FilePond
+                allowFileEncode={true}
                 files={imagesState.images}
                 allowReorder={true}
                 allowMultiple={true}

@@ -9,6 +9,7 @@ import { NewApartment } from './types';
 import { DEFAULT_NEW_APARTMENT_DATA, STEPS } from './constants';
 import { addApartment } from '../../utils/api';
 import { AxiosResponse } from 'axios';
+import { convertFilePondImagesToBase64 } from '../../utils/base64';
 
 const AddPropertyStepper = ({handleClose} : {handleClose: () => void}) => {
   const [activeStep, setActiveStep] = useState(0);
@@ -29,10 +30,22 @@ const AddPropertyStepper = ({handleClose} : {handleClose: () => void}) => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const getUserId = () => {
+    const user: any = localStorage.getItem("user");
+    if(user) {
+      const userData = JSON.parse(user);
+      return userData._id;
+    }
+    return "";
+
+  }
+
   const handleSubmit = async () => {
     setIsLoading(true);
-    console.log(newApartmentData)
+    newApartmentData.images = convertFilePondImagesToBase64(newApartmentData.images);
+    newApartmentData.user = getUserId();
     try {
+      console.log(newApartmentData);
       const response: AxiosResponse = await addApartment(newApartmentData);
       console.log(response);
       return { success: true };
@@ -62,7 +75,7 @@ const AddPropertyStepper = ({handleClose} : {handleClose: () => void}) => {
           case 2:
             return <PaymentsForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
           case 3:
-            return <UploadsForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;      
+            return <UploadsForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext} />;      
           default:
             return <AddressForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
           }

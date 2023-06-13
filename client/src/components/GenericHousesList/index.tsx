@@ -150,7 +150,7 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
 
             <Box>
               <Grid container spacing={4} padding={2}>
-                {houses.map((house, index) => {
+                {HOUSES.map((house, index) => {
                   return (
                     <Grid item xs={6} sm={6} md={6} lg={4} xl={3}  key={house._id}>
                       <HouseCard
