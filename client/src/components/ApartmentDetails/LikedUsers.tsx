@@ -10,7 +10,8 @@ const LikedUsers = ({users} : LikedUsersProps) => {
     return (
         <>
         <DividerLine />
-        <Box display="flex" flexDirection="column" alignItems="center" sx={{maxHeight:"127px", overflowY:"auto"}}>
+        <Box display="flex" flexDirection="column" alignItems="center" sx={{maxHeight:"127px", overflowY:"auto", 
+    padding: "10px"}}>
         <AvatarGroup max={4}>
             {USER_NAMES.map((user) => {
                 return (

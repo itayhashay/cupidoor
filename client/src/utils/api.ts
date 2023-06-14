@@ -70,3 +70,30 @@ export const getUserProperties = async (userId: string): Promise<Apartment[]> =>
 
   return response.data;
 };
+
+export const getUserLikedApartments = async (userId: string): Promise<any> => {
+  const response = await axios.get(
+    `${config.api.baseUrl}${config.api.routes.getLikedApartments}/${userId}`
+  );
+  console.log(response);
+
+  return response.data;
+};
+
+export const toggleTenantLike = async (apartmentId: string, userId: string) => {
+  const response = await axios.post(
+    `${config.api.baseUrl}${config.api.routes.toggleTenantLike}/${apartmentId}`,
+    {tenantId: userId}
+  );
+
+  return response.data;
+};
+
+export const getApartmentById = async (apartmentId: string): Promise<Apartment> => {
+  const response = await axios.get(
+    `${config.api.baseUrl}${config.api.routes.getApartment}/${apartmentId}`
+  );
+  console.log(response);
+
+  return response.data;
+};
