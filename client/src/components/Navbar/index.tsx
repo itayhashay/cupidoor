@@ -24,7 +24,7 @@ export const Navbar = () => {
       setNavbarBGcolor("#e7e6f0");
       setNavbarColor("#434336");
     } else {
-      setNavbarBGcolor("#1976d2");
+      setNavbarBGcolor("#e7e6f0");
       setNavbarColor("#fff");
     }
   }, []);
@@ -34,8 +34,8 @@ export const Navbar = () => {
       setNavbarBGcolor("#e7e6f0");
       setNavbarColor("#434336");
     } else {
-      setNavbarBGcolor("#1976d2");
-      setNavbarColor("#fff");
+      setNavbarBGcolor("#e7e6f0");
+      setNavbarColor("#434336");
     }
   }, [location.pathname]);
 
@@ -93,30 +93,7 @@ export const Navbar = () => {
                 justifyContent: "center",
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <MenuItem>
-                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    About
-                  </Typography>
-                </MenuItem>
-                <MenuItem>
-                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    How it works
-                  </Typography>
-                </MenuItem>
-                <MenuItem>
-                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    Contact
-                  </Typography>
-                </MenuItem>
-              </Box>
+             
             </Grid>
             <Grid
               item

@@ -6,26 +6,31 @@ import FormLabel from "@mui/material/FormLabel/FormLabel";
 import { ANSWERS_MAP, FormProps, QUESTIONS } from "./constant";
 import { useEffect, useState } from "react";
 
-const AnswerForm = ({ activeStep, setAnswer, value }: FormProps) => {
+const AnswerForm = ({ questionId, content, setAnswer, value }: FormProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<number>(value);
 
   useEffect(() => {
     setSelectedAnswer(value);
-  }, [activeStep, value]);
+  }, [questionId, value]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAnswer(activeStep, ANSWERS_MAP[event.target.value]);
+    setAnswer(questionId, ANSWERS_MAP[event.target.value]);
   };
 
   return (
     <FormControl
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center" }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+      }}
     >
       <FormLabel
         sx={{ fontSize: "30px", fontWeight: "bold", padding: "0 12px" }}
         id="demo-radio-buttons-group-label"
       >
-        {QUESTIONS[activeStep]}
+        {content}
       </FormLabel>
       <RadioGroup
         aria-labelledby="demo-radio-buttons-group-label"

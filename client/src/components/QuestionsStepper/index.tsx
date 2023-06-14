@@ -1,5 +1,4 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
 import Stepper from "@mui/material/Stepper";
@@ -21,12 +20,16 @@ import {
   ColorlibStepIconRoot,
   QuestionFormSection,
 } from "./styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AnswerForm from "./AnswerForm";
 import PriorityForm from "./PriorityForm";
 import { getTenantMatches, setUserAnswers } from "../../utils/api";
 import { Card, Divider } from "@mui/material";
 import { USER_ROUTES } from "../UserRouter/constants";
+import { useAuth } from "../../context/AuthContext";
+import { Question } from "../../types/question";
+import { AxiosResponse } from "axios";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 function ColorlibStepIcon(props: StepIconProps) {
   const { active, completed, className } = props;
@@ -54,9 +57,20 @@ export default function QuestionsStepper({
 }: {
   displayHouses: Function;
 }) {
+  const { user } = useAuth();
+  const [questions, setQuestions] = useState<Question[]>([] as Question[]);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [answers, setAnswers] = useState<number[]>([-1, -1, -1, -1, -1]);
   const [priority, setPriorities] = useState<number[]>([0, 0, 0, 0, 0]);
+  const axiosPrivate = useAxiosPrivate();
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      const response: AxiosResponse = await axiosPrivate.get("/question");
+      const questions: Question[] = response.data;
+      setQuestions(questions);
+    };
+    fetchQuestions();
+  }, []);
 
   const setAnswer = (index: number, value: number) => {
     const newAnswers = [...answers]; // create a new copy of the array
@@ -90,7 +104,7 @@ export default function QuestionsStepper({
       priority,
     });
 
-    const submitResponse = await setUserAnswers({answers,priority});
+    const submitResponse = await setUserAnswers({ answers, priority });
 
     const res = await getTenantMatches({
       answers,
@@ -108,72 +122,81 @@ export default function QuestionsStepper({
   };
 
   const isLastStep = activeStep === QUESTIONS.length - 1;
-  return (
-    <Box sx={{ display: "flex", justifyContent: "center" }} mt={4}>
-      <Card sx={{ width: "60%", borderRadius: "24px" }}>
-        <Stack sx={{ width: "100%" }} spacing={3}>
-          <Stepper
-            sx={{ marginTop: "24px" }}
-            alternativeLabel
-            activeStep={activeStep}
-            connector={<ColorlibConnector />}
-          >
-            {QUESTIONS.map((label, index) => (
-              <Step key={index}>
-                <StepLabel StepIconComponent={ColorlibStepIcon}></StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <Divider />
-          <QuestionFormSection>
-            <AnswerForm
+  if (user?.answeredQuestions) {
+    return <Navigate to={"/all-apartments"}></Navigate>;
+  } else {
+    return questions.length == 0 ? null : (
+      <Box sx={{ display: "flex", justifyContent: "center" }} mt={4}>
+        <Card sx={{ width: "60%", borderRadius: "24px" }}>
+          <Stack sx={{ width: "100%" }} spacing={3}>
+            <Stepper
+              sx={{ marginTop: "24px" }}
+              alternativeLabel
               activeStep={activeStep}
-              setAnswer={setAnswer}
-              value={answers[activeStep]}
-            />
-            <PriorityForm
-              activeStep={activeStep}
-              setAnswer={setPriority}
-              value={priority[activeStep]}
-            />
-            <Box
-              sx={{
-                mb: 2,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              connector={<ColorlibConnector />}
             >
-              <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mt: 1, mr: 2 }}
+              {questions.map((question, index) => (
+                <Step key={index}>
+                  <StepLabel StepIconComponent={ColorlibStepIcon}></StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            <Divider />
+            <QuestionFormSection>
+              <AnswerForm
+                questionId={questions[activeStep]._id}
+                content={questions[activeStep].tenant}
+                setAnswer={setAnswer}
+                value={answers[activeStep]}
+              />
+              <PriorityForm
+                content=""
+                questionId={questions[activeStep]._id}
+                setAnswer={setPriority}
+                value={priority[activeStep]}
+              />
+              <Box
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                Back
-              </Button>
-              {isLastStep ? (
-                <Link className="navbar-link" to={`/home/${USER_ROUTES.ALL_APARTMENTS}`}>
+                <Button
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  sx={{ mt: 1, mr: 2 }}
+                >
+                  Back
+                </Button>
+                {isLastStep ? (
+                  <Link
+                    className="navbar-link"
+                    to={`/home/${USER_ROUTES.ALL_APARTMENTS}`}
+                  >
+                    <Button
+                      variant="contained"
+                      onClick={handleSubmit}
+                      sx={{ mt: 1, mr: 1 }}
+                    >
+                      {"Find My Home!"}
+                    </Button>{" "}
+                  </Link>
+                ) : (
                   <Button
                     variant="contained"
-                    onClick={handleSubmit}
+                    onClick={handleNext}
                     sx={{ mt: 1, mr: 1 }}
                   >
-                    {"Find My Home!"}
-                  </Button>{" "}
-                </Link>
-              ) : (
-                <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  sx={{ mt: 1, mr: 1 }}
-                >
-                  {"Next"}
-                </Button>
-              )}
-            </Box>
-          </QuestionFormSection>
-        </Stack>
-      </Card>
-    </Box>
-  );
+                    {"Next"}
+                  </Button>
+                )}
+              </Box>
+            </QuestionFormSection>
+          </Stack>
+        </Card>
+      </Box>
+    );
+  }
 }

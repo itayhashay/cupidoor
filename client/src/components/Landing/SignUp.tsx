@@ -82,8 +82,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
       phone,
       age,
       avatar:base64Image,
-      role: userRole,
-      isFilledAllQ: false,
+      role: userRole
     });
     if (response.success) {
       setSnackBarState({
