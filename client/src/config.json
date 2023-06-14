@@ -7,7 +7,10 @@
       "signIn": "/signIn",
       "signUp": "/signUp",
       "addApartment": "/apartment",
-      "getLandloard": "/apartment/landlord"
+      "getApartment": "/apartment",
+      "getLandloard": "/apartment/landlord",
+      "getLikedApartments": "/users-relations/tenant/likes",
+      "toggleTenantLike": "/users-relations/tenant/like"
     }
   }
 }

@@ -28,6 +28,7 @@ import {
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import EditIcon from '@mui/icons-material/Edit';
 import { precentToColor } from "../../utils/colors";
 import { HOUSES_IMAGES, PROFILE_PICTURES, TANENT_MOCK } from "../../utils/mock";
 import LikedUsers from "../ApartmentDetails/LikedUsers";
@@ -35,6 +36,9 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import SquareFootIcon from "@mui/icons-material/SquareFoot";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import StairsIcon from "@mui/icons-material/Stairs";
+import { getUserLikedApartments, toggleTenantLike } from "../../utils/api";
+import { getUserId } from "../../utils/localStorage";
+import { randomNumber } from "../../utils/random";
 
 const HouseCard = ({
   houseData,
@@ -46,28 +50,34 @@ const HouseCard = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [matchColor, setMatchColor] = useState<string>("");
+  const match: number = randomNumber(0, 100);
+  
+  const fetchLikedApartments = async (userId: string) => {
+    const likes: any[] = await getUserLikedApartments(userId);
+    const apartmentsIds: string[] = likes.map(like => like.apartment);
+    return apartmentsIds;
+  }
 
   useEffect(() => {
-    const color: string = precentToColor(houseData.match);
+    const color: string = precentToColor(match);
     setMatchColor(color);
 
-    // check favorite
+    const apartmentId: string = houseData._id;
+    const userId: string = getUserId();
 
-    const id = houseData._id;
-
-    // check if id in array of favorite houses of the user.
-
-    // setIsFavorite(true) if it does
+    fetchLikedApartments(userId).then((likedApartmentsIds: string[]) => {
+      setIsFavorite(likedApartmentsIds.includes(apartmentId));
+    })
   }, [houseData]);
 
-  const handleClickFavorite = (
+  const handleClickFavorite = async (
     event: Event | SyntheticEvent<Element, Event>
   ) => {
     event.preventDefault();
 
-    // api call. await toggleFavoire(!isFavorite)
+    await toggleTenantLike(houseData._id, String(houseData.user._id))
+    
     setIsFavorite(!isFavorite)
-
   };
 
   return (
@@ -84,7 +94,7 @@ const HouseCard = ({
           <CardMedia
             component="img"
             height="220"
-            image={houseData.images[0]}
+            image={HOUSES_IMAGES[randomNumber(0, 59)]}
             alt="Paella dish"
           />
         )}
@@ -96,16 +106,19 @@ const HouseCard = ({
           />
         </Tooltip>
 
-        {!isMyProperties && (
+        {!isMyProperties ?
           <Fab sx={likeButtonStyles} onClick={handleClickFavorite} id="favorite-button">
             {isFavorite ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
-          </Fab>
-        )}
+          </Fab> :
+          <Fab sx={likeButtonStyles} onClick={handleClickFavorite} id="favorite-button">
+          {<EditIcon />}
+        </Fab>
+        }
         {!isMyProperties ? (
           <Typography sx={{ ...MatchLabelStyles, color: matchColor }}>{`${
-            houseData.match
-          }% ${houseData.match === 100 ? "Perfect" : ""} Match${
-            houseData.match === 100 ? "!" : ""
+            match
+          }% ${match === 100 ? "Perfect" : ""} Match${
+            match === 100 ? "!" : ""
           }`}</Typography>
         ) : (
           <Typography
@@ -115,8 +128,8 @@ const HouseCard = ({
             justifyContent="center"
             alignItems="center"
           >
-            <FavoriteIcon sx={{ margin: "0 5px", color: "red" }} />
-            <Typography margin={"0 5px"}>15</Typography>
+            {/* <FavoriteIcon sx={{ margin: "0 5px", color: "red" }} />
+            <Typography margin={"0 5px"}>15</Typography> */}
           </Typography>
         )}
 

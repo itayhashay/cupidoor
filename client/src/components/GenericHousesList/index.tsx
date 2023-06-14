@@ -30,7 +30,7 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
 
   useEffect(() => {
     setIsHomePage(window.location.pathname === "/home");
-    setIsMyProperties(window.location.pathname === "/user/my-properties");
+    setIsMyProperties(window.location.pathname === "/home/my-properties");
     const queryString = window.location.search;
     if (!queryString) {
       setFilters(DEFAULT_FILTERS);
@@ -124,11 +124,11 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
           sx={{
             display: "flex",
             flexDirection: "row",
-            height: "calc(100% - 9vh)",
+            height: "100%",
           }}
         >
           {isPageHome && <Sidebar />}
-          <Box sx={{ width: "100%" }}>
+          <Box sx={{ width: "100%", overflowY: "auto" }}>
             <Box
               sx={{
                 position: "sticky",

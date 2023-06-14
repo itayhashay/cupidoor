@@ -9,6 +9,7 @@ import GenericHousesList from "../GenericHousesList";
 import { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import LikedApartments from "../UserRouter/LikedApartments";
 const HomeRouter = ({ apartments }: { apartments: Apartment[] }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [ap,setAp] = useState<Apartment[]>([] as Apartment[]);
@@ -48,7 +49,7 @@ const HomeRouter = ({ apartments }: { apartments: Apartment[] }) => {
             ></Route>
             <Route
               path={`/${USER_ROUTES.LIKED_APARTMENTS}`}
-              element={<GenericHousesList apartments={LIKED_APARTMENTS} />}
+              element={<LikedApartments />}
             ></Route>
             <Route
               path={`/${USER_ROUTES.MY_PROPERTIES}`}
