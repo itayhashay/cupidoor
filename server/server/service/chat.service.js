@@ -8,7 +8,7 @@ const ObjectId = require("mongoose").Types.ObjectId;
 
 const ChatService = {
   getTenantMatches: async function (user) {
-    let matches = await UsersRelationsModel.find({ tenant: user._id,status:"approved" })
+    let matches = await UsersRelationsModel.find({ tenant: user._id,relation:"match",status:"approved" })
       .populate({
         path: "apartment",
         populate: {
