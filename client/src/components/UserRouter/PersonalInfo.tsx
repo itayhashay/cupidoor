@@ -1,4 +1,10 @@
-import { Button, Typography, Box, CircularProgress } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Box,
+  CircularProgress,
+  Skeleton,
+} from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import {
   PersonalInfoContainer,
@@ -9,7 +15,7 @@ import {
   LinksDividerLine,
   LinkIcon,
 } from "./styles";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, UserLink } from "../../types/user";
 import { PROFILE_PICTURES } from "../../utils/mock";
 import { randomNumber } from "../../utils/random";
@@ -21,12 +27,31 @@ import { convertFileToBase64 } from "../../utils/base64";
 import axiosPrivate from "../../utils/axiosPrivate";
 import useRefreshToken from "../../hooks/useRefreshToken";
 import { useSnackbar } from "../../context/SnackbarContext";
+import useAPI from "../../hooks/useAPI";
+import {
+  QuestionAnswer,
+  ServerQuestionAnswer,
+} from "../../types/questionAnswer";
+import { Question } from "../../types/question";
 
 const PersonalInfo = ({ user }: { user: User }) => {
   const [role, setRole] = useState("Tenant");
+  const [answers, setAnswers] = useState<ServerQuestionAnswer[]>(
+    [] as ServerQuestionAnswer[]
+  );
   const [isUploadingPicture, setIsUploadingPicture] = useState(false);
   const refresh = useRefreshToken();
-  const { snackBarState, setSnackBarState } = useSnackbar();
+  const { setSnackBarState } = useSnackbar();
+  const { getUserAnswers } = useAPI();
+
+  useEffect(() => {
+    const fetchUserAnswers = async () => {
+      const answers = await getUserAnswers();
+      setAnswers(answers);
+    };
+    fetchUserAnswers();
+  }, []);
+
   const handleRoleChange = (event: SelectChangeEvent) => {
     setRole(event.target.value as string);
   };
@@ -56,7 +81,7 @@ const PersonalInfo = ({ user }: { user: User }) => {
 
   const renderInfoLine = (fieldName: string, value: string, index: number) => {
     return (
-      <>
+      <Box key={fieldName}>
         <Box display="flex" flexDirection="row">
           <Typography
             width="30%"
@@ -76,25 +101,26 @@ const PersonalInfo = ({ user }: { user: User }) => {
           </Typography>
         </Box>
         {index + 1 !== USER_INFO_FIELDS.length && <DividerLine />}
-      </>
+      </Box>
     );
   };
 
   const renderQuestionLine = (
-    question: string,
-    answer: string,
+    role: string,
+    question: Question,
+    answer: number,
     index: number
   ) => {
     return (
-      <>
-        <Box display="flex" flexDirection="column">
+
+        <Box display="flex" flexDirection="column" key={question._id}>
           <Typography
             width="100%"
             color="#757575"
             fontWeight={700}
             fontSize="16px"
           >
-            {question}
+            {role === "tenant" ? question.tenant : question.landlord}
           </Typography>
           <Typography
             color="#757575"
@@ -102,11 +128,10 @@ const PersonalInfo = ({ user }: { user: User }) => {
             fontSize="16px"
             marginTop="5px"
           >
-            {answer}
+            {answer == 1 ? "Yes" : "No"}
           </Typography>
         </Box>
-        {index + 1 !== USER_INFO_FIELDS.length && <DividerLine />}
-      </>
+     
     );
   };
 
@@ -225,17 +250,26 @@ const PersonalInfo = ({ user }: { user: User }) => {
           </Box>
         </Frame>
         <Frame>
-          <Box
-            display="flex"
-            flexDirection="column"
-            width="70vh"
-            padding="0 35px"
-            margin="25px 0"
-          >
-            {QUESTIONS.map((question: string, index: number) =>
-              renderQuestionLine(question, "Yes", index)
-            )}
-          </Box>
+          {answers.length > 0 ? (
+            <Box
+              display="flex"
+              flexDirection="column"
+              width="70vh"
+              padding="0 35px"
+              margin="25px 0"
+            >
+              {answers.map((answer: ServerQuestionAnswer, index: number) =>
+                renderQuestionLine(
+                  user.role,
+                  answer.question,
+                  answer.answer,
+                  index
+                )
+              )}
+            </Box>
+          ) : (
+            <Skeleton height={440}></Skeleton>
+          )}
         </Frame>
       </Col>
     </PersonalInfoContainer>

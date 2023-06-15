@@ -4,7 +4,7 @@ import { MatchData } from "../types/matchData";
 import { User } from "../types/user";
 import { NewApartment } from "../components/AddProperty/types";
 import { Apartment } from "../types/apartment";
-import { QuestionAnswer } from "../types/questionAnswer";
+import { QuestionAnswer, ServerQuestionAnswer } from "../types/questionAnswer";
 import useAxiosPrivate from "./useAxiosPrivate";
 
 const useAPI = () => {
@@ -103,6 +103,12 @@ const useAPI = () => {
     return response.data;
   };
 
+  const getUserAnswers = async(): Promise<ServerQuestionAnswer[]>=>{
+
+    const response = await axiosPrivate.get(config.api.routes.userAnswer);
+    return response.data;
+  }
+
   return {
     getTenantMatches,
     setUserAnswers,
@@ -113,6 +119,7 @@ const useAPI = () => {
     getUserLikedApartments,
     toggleTenantLike,
     getApartmentById,
+    getUserAnswers
   };
 };
 

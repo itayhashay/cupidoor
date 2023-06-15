@@ -18,7 +18,7 @@ router.get('/:id', async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
-    const userAnswers = await userAnswerService.getUserAnswers();
+    const userAnswers = await userAnswerService.getUserAnswers(req.user);
     res.status(OK).json(userAnswers);
   } catch (err) {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });

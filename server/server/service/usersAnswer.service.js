@@ -33,9 +33,9 @@ const createUserAnswer = async (userAnswerData,user) => {
   }
 }
 
-const getUserAnswers = async () => {
+const getUserAnswers = async (user) => {
   try {
-    return await UserAnswer.find().populate('question user');
+    return await UserAnswer.find({user:user._id}).populate('question');
   } catch (err) {
     throw new Error('Error getting user answers: ' + err.message);
   }
