@@ -25,12 +25,13 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res,next) => {
   try {
-    const userAnswer = await userAnswerService.createUserAnswer(req.body);
+    const userAnswer = await userAnswerService.createUserAnswer(req.body,req.user);
     res.status(CREATED).json(userAnswer);
   } catch (err) {
-    res.status(BAD_REQUEST).json({ error: err.message });
+    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 });
 

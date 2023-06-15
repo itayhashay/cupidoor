@@ -23,13 +23,15 @@ import {
 import { useEffect, useState } from "react";
 import AnswerForm from "./AnswerForm";
 import PriorityForm from "./PriorityForm";
-import { getTenantMatches, setUserAnswers } from "../../utils/api";
 import { Card, Divider } from "@mui/material";
 import { USER_ROUTES } from "../UserRouter/constants";
 import { useAuth } from "../../context/AuthContext";
 import { Question } from "../../types/question";
 import { AxiosResponse } from "axios";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAPI from "../../hooks/useAPI";
+import { QuestionAnswer } from "../../types/questionAnswer";
+import { useSnackbar } from "../../context/SnackbarContext";
 
 function ColorlibStepIcon(props: StepIconProps) {
   const { active, completed, className } = props;
@@ -57,31 +59,49 @@ export default function QuestionsStepper({
 }: {
   displayHouses: Function;
 }) {
-  const { user } = useAuth();
+  const { user, fetchUser } = useAuth();
   const [questions, setQuestions] = useState<Question[]>([] as Question[]);
   const [activeStep, setActiveStep] = useState<number>(0);
-  const [answers, setAnswers] = useState<number[]>([-1, -1, -1, -1, -1]);
-  const [priority, setPriorities] = useState<number[]>([0, 0, 0, 0, 0]);
+  const [answers, setAnswers] = useState<QuestionAnswer[]>(
+    [] as QuestionAnswer[]
+  );
   const axiosPrivate = useAxiosPrivate();
+  const { setUserAnswers, getTenantMatches } = useAPI();
+  const { setSnackBarState } = useSnackbar();
   useEffect(() => {
     const fetchQuestions = async () => {
       const response: AxiosResponse = await axiosPrivate.get("/question");
       const questions: Question[] = response.data;
       setQuestions(questions);
+      const answersArray: QuestionAnswer[] = [];
+      for (let question of questions) {
+        answersArray.push({ questionId: question._id, value: -1, priority: 0 });
+      }
+      setAnswers(answersArray);
     };
     fetchQuestions();
   }, []);
 
-  const setAnswer = (index: number, value: number) => {
-    const newAnswers = [...answers]; // create a new copy of the array
-    newAnswers[index] = value; // update the element at the specified index
-    setAnswers(newAnswers); // update the state with the new array
+  const setAnswer = (questionId: string, value: number) => {
+    setAnswers((prevState) => {
+      return prevState.map((answer) => {
+        if (answer.questionId === questionId) {
+          return { ...answer, value: value };
+        }
+        return answer;
+      });
+    });
   };
 
-  const setPriority = (index: number, value: number) => {
-    const newPriorities = [...priority]; // create a new copy of the array
-    newPriorities[index] = value; // update the element at the specified index
-    setPriorities(newPriorities); // update the state with the new array
+  const setPriority = (questionId: string, value: number) => {
+    setAnswers((prevState) => {
+      return prevState.map((answer) => {
+        if (answer.questionId === questionId) {
+          return { ...answer, priority: value };
+        }
+        return answer;
+      });
+    });
   };
 
   const handleNext = () => {
@@ -99,22 +119,22 @@ export default function QuestionsStepper({
   };
 
   const handleSubmit = async () => {
-    console.log({
-      answers,
-      priority,
-    });
+    const submitResponse: AxiosResponse = await setUserAnswers(answers);
+    if (submitResponse.status === 201) {
+      await fetchUser();
+      const res = await getTenantMatches(answers);
 
-    const submitResponse = await setUserAnswers({ answers, priority });
-
-    const res = await getTenantMatches({
-      answers,
-      priority,
-    });
-
-    // TODO: Convert to Apartment type and show the screen.
-    // If all Selected -> move to home page
-    console.log(res);
-    displayHouses(res);
+      // TODO: Convert to Apartment type and show the screen.
+      // If all Selected -> move to home page
+      console.log(res);
+      displayHouses(res);
+    } else {
+      setSnackBarState({
+        message: "Couldn't submit answers, please try again!",
+        severity: "error",
+        show: true,
+      });
+    }
   };
 
   const handleReset = () => {
@@ -123,7 +143,7 @@ export default function QuestionsStepper({
 
   const isLastStep = activeStep === QUESTIONS.length - 1;
   if (user?.answeredQuestions) {
-    return <Navigate to={"/all-apartments"}></Navigate>;
+    return <Navigate to={"/home/all-apartments"}></Navigate>;
   } else {
     return questions.length == 0 ? null : (
       <Box sx={{ display: "flex", justifyContent: "center" }} mt={4}>
@@ -147,13 +167,13 @@ export default function QuestionsStepper({
                 questionId={questions[activeStep]._id}
                 content={questions[activeStep].tenant}
                 setAnswer={setAnswer}
-                value={answers[activeStep]}
+                value={answers[activeStep].value}
               />
               <PriorityForm
                 content=""
                 questionId={questions[activeStep]._id}
                 setAnswer={setPriority}
-                value={priority[activeStep]}
+                value={answers[activeStep].priority}
               />
               <Box
                 sx={{
@@ -171,18 +191,14 @@ export default function QuestionsStepper({
                   Back
                 </Button>
                 {isLastStep ? (
-                  <Link
-                    className="navbar-link"
-                    to={`/home/${USER_ROUTES.ALL_APARTMENTS}`}
+                  <Button
+                    variant="contained"
+                    type="button"
+                    onClick={handleSubmit}
+                    sx={{ mt: 1, mr: 1 }}
                   >
-                    <Button
-                      variant="contained"
-                      onClick={handleSubmit}
-                      sx={{ mt: 1, mr: 1 }}
-                    >
-                      {"Find My Home!"}
-                    </Button>{" "}
-                  </Link>
+                    {"Find My Home!"}
+                  </Button>
                 ) : (
                   <Button
                     variant="contained"

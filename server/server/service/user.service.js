@@ -37,6 +37,14 @@ const getUser = async (id) => {
   }
 };
 
+const getUserData = async(id)=>{
+  try {
+    return await User.findById(id).select("-password -salt -refreshToken").exec();
+  } catch (err) {
+    throw new Error("Error getting user: " + err.message);
+  }
+}
+
 const getUsersForChat = async (id) => {
   try {
     const users = await User.findById(id, ["_id", "name", "avatar"]).exec();
@@ -125,4 +133,5 @@ module.exports = {
   getUserPhoto,
   uploadUserPhoto,
   getUsersForChat,
+  getUserData
 };

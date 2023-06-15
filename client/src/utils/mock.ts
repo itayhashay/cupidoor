@@ -20,7 +20,7 @@ export const LANDLORD_MOCK: User = {
     role: "both",
     phone: "0525915998",
     dateOfBirth: new Date(),
-    answerdQuestions: false
+    answeredQuestions: false
 }
 
 export const TANENT_MOCK: User = {
@@ -65,7 +65,7 @@ export const TANENT_MOCK: User = {
             link: "https://twitter.com/rothmar"
         }
     ],
-    answerdQuestions: false
+    answeredQuestions: false
 }
 
 export const HOUSES: Apartment[] = [
@@ -143,7 +143,7 @@ export const USER_INIT: User = {
     role: "tenant",
     phone: "",
     dateOfBirth: new Date(),
-    answerdQuestions: false
+    answeredQuestions: false
 };
 
 export const HOUSE_INIT: Apartment = {

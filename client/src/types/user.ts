@@ -28,7 +28,7 @@ export type User = {
   jobTitle?: string;
   familiarity?: string;
   isLandlord?: boolean;
-  answerdQuestions? : boolean;
+  answeredQuestions? : boolean;
   role: UserTypes;
   linkes?: UserLink[];
 };
