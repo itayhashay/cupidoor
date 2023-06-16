@@ -1,58 +1,43 @@
 import {
-  Button,
   Typography,
   Box,
-  CircularProgress,
-  Skeleton,
-  Container,
   Grid,
   Avatar,
   Paper,
-  Divider,
-  Icon,
   Tabs,
   Tab,
   Drawer,
   Tooltip,
+  IconButton,
+  Button,
+  CircularProgress,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import {
-  PersonalInfoContainer,
   ProfilePicture,
   ProfilePictureContainer,
-  Frame,
-  Col,
   LinksDividerLine,
   LinkIcon,
-  ProfileSectionTitle,
-  ProfilePersonalDetailsTitleContainer,
-  ProfilePersonalDetailsTitleLabel,
-  ProfilePersonalDetailsValue,
 } from "./styles";
 import { useState, useEffect } from "react";
 import { User, UserLink } from "../../types/user";
-import { PROFILE_PICTURES } from "../../utils/mock";
-import { randomNumber } from "../../utils/random";
 import { DividerLine } from "../Navbar/styles";
 import { LINK_TO_ICON, USER_INFO_FIELDS, UserField } from "../../utils/user";
 import ProfileStepper from "./ProfileStepper";
-import { QUESTIONS } from "../QuestionsStepper/constant";
 import { convertFileToBase64 } from "../../utils/base64";
 import axiosPrivate from "../../utils/axiosPrivate";
 import useRefreshToken from "../../hooks/useRefreshToken";
 import { useSnackbar } from "../../context/SnackbarContext";
 import useAPI from "../../hooks/useAPI";
-import {
-  QuestionAnswer,
-  ServerQuestionAnswer,
-} from "../../types/questionAnswer";
-import { Question } from "../../types/question";
+import { ServerQuestionAnswer } from "../../types/questionAnswer";
 import SecurityIcon from "@mui/icons-material/Security";
 import PersonIcon from "@mui/icons-material/Person";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import PersonalDetails from "./PersonalDetails";
 import PersonalInfoAnswers from "./PersonalInfoAnswers";
 import { useConfirmationModal } from "../../context/ConfirmationModalContext";
+import { Edit, Edit as EditIcon, Height } from "@mui/icons-material";
+import { useAuth } from "../../context/AuthContext";
 
 const PersonalInfo = ({ user }: { user: User }) => {
   const [role, setRole] = useState("Tenant");
@@ -66,6 +51,7 @@ const PersonalInfo = ({ user }: { user: User }) => {
   const { setSnackBarState } = useSnackbar();
   const { getUserAnswers } = useAPI();
   const { showConfirmationModal } = useConfirmationModal();
+  const { updateUser } = useAuth();
   useEffect(() => {
     const fetchUserAnswers = async () => {
       const answers = await getUserAnswers();
@@ -84,7 +70,7 @@ const PersonalInfo = ({ user }: { user: User }) => {
   ) => {
     if (isEditMode) {
       const response = await showConfirmationModal({
-        title:"Are you sure you want to continue?",
+        title: "Are you sure you want to continue?",
         message: "Your changes will be discarded!",
         severity: "error",
         show: true,
@@ -95,7 +81,7 @@ const PersonalInfo = ({ user }: { user: User }) => {
     setCurrentTab(newValue);
   };
 
-  const handleEditMode = (flag:boolean) => {
+  const handleEditMode = (flag: boolean) => {
     setIsEditMode(flag);
   };
 
@@ -104,14 +90,12 @@ const PersonalInfo = ({ user }: { user: User }) => {
   };
 
   const uploadProfilePicture = async (event: React.SyntheticEvent) => {
+    const target: any = event.target;
+    if (!target.files[0]) return;
     setIsUploadingPicture(true);
-    const base64 = await convertFileToBase64((event.target as any).files[0]);
+    const base64 = await convertFileToBase64(target.files[0]);
     try {
-      const response = await axiosPrivate.put(`/user/${user._id}`, {
-        ...user,
-        avatar: base64,
-      });
-      await refresh();
+      const response = await updateUser({ ...user, avatar: base64 });
       setIsUploadingPicture(false);
     } catch (ex) {
       setSnackBarState({
@@ -176,7 +160,35 @@ const PersonalInfo = ({ user }: { user: User }) => {
   return (
     <Box bgcolor={"#e4e3e8"} padding={3} height={"100%"} overflow={"auto"}>
       <Box sx={{ width: { xs: "80%", xl: "50%" } }} margin={"auto"}>
-        <Box component={Paper} elevation={4} display={"flex"} width={"100%"}>
+        <Box
+          component={Paper}
+          elevation={4}
+          display={"flex"}
+          width={"100%"}
+          position={"relative"}
+        >
+          {isUploadingPicture && (
+            <Box
+              position={"absolute"}
+              width={"100%"}
+              height={"100%"}
+              bgcolor={"#8080808f"}
+              zIndex={2}
+            >
+              <CircularProgress
+                title=""
+                size={120}
+                sx={{
+                  position: "absolute",
+                  left: 0,
+                  bottom: 0,
+                  top: 0,
+                  right: 0,
+                  margin: "auto",
+                }}
+              ></CircularProgress>
+            </Box>
+          )}
           <Drawer
             sx={{
               pt: 1,
@@ -214,12 +226,45 @@ const PersonalInfo = ({ user }: { user: User }) => {
                 textAlign={"center"}
               >
                 <div style={{ position: "relative", top: "105px" }}>
-                  <Box display={"flex"} justifyContent={"center"}>
+                  <Box
+                    display={"flex"}
+                    justifyContent={"center"}
+                    position={"relative"}
+                  >
                     <Avatar
                       src={user.avatar}
                       sx={{ ...ProfilePicture }}
                       style={{ border: "3px solid white" }}
                     ></Avatar>
+                    {!isEditMode && (
+                      <IconButton
+                        component="label"
+                        sx={{
+                          position: "absolute",
+                          bottom: 0,
+                          zIndex: 1,
+                          right: 15,
+                          borderRadius: 9999,
+                          minWidth: 30,
+                          width: 30,
+                          height: 30,
+                          padding: 0,
+                        }}
+                        color="primary"
+                      >
+                        <Avatar sx={{ bgcolor: "primary.main" }}>
+                          <EditIcon></EditIcon>
+                        </Avatar>
+                        <input
+                          id="avatar"
+                          name="avatar"
+                          hidden
+                          accept="image/*"
+                          type="file"
+                          onChange={uploadProfilePicture}
+                        />
+                      </IconButton>
+                    )}
                   </Box>
 
                   <div>
@@ -230,9 +275,6 @@ const PersonalInfo = ({ user }: { user: User }) => {
                     >
                       {user.name}
                     </Typography>
-                    {/* <Typography variant="caption" fontSize={"1.1em"} ml={3}>
-                    {user.email}
-                  </Typography> */}
                   </div>
                 </div>
               </Box>

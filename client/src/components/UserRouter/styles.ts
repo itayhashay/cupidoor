@@ -3,6 +3,8 @@ import { styled as styledMui } from "@mui/material/styles";
 import StepConnector, {
   stepConnectorClasses,
 } from "@mui/material/StepConnector";
+import { Badge } from "@mui/material";
+import { BadgeProps } from "@mui/material";
 
 const profilePictureDimensions = {
   height: "150px",
@@ -180,3 +182,10 @@ export const ProfilePersonalDetailsValue = {
   // fontWeight:"bold",
   color:"black"
 }
+
+export const StyledBadgeEditIcon = styled(Badge)<BadgeProps>(({theme})=>({
+  '& .MuiBadge-badge': {
+    right: 0,
+    bottom: 0,
+  },
+}))

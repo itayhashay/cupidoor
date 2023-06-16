@@ -101,7 +101,7 @@ const AuthService = {
         //If we didn't find the user, the token might be hacked.
         if (!foundUser) {
           await _resetRefreshToken(decoded.email);
-          throw new Error("Unauthorized");
+          throw new Error("User not found: Unauthorized");
         } else {
           const newRefreshTokenArray = foundUser.refreshToken.filter(
             (token) => token !== refreshToken

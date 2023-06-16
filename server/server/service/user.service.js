@@ -88,6 +88,9 @@ const updateUser = async (id, userData) => {
     if (userData.role != null) {
       user.role = userData.role;
     }
+    if(userData.phone != null){
+      user.phone = userData.phone;
+    }
     if(userData.description != null){
       user.description = userData.description;
     }

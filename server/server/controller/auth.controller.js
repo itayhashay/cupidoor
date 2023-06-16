@@ -26,7 +26,7 @@ const AuthController = {
       );
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 2*24 * 60 * 60 * 1000,
       });
       res.status(OK).json({ accessToken, user });
     } catch (ex) {
@@ -56,7 +56,7 @@ const AuthController = {
         await AuthService.handleRefreshToken(refreshToken);
       res.cookie("jwt", newRefreshToken, {
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 100,
+        maxAge: 2*24 * 60 * 60 * 1000,
       });
       return res.json({ user, accessToken });
     } catch (ex) {
