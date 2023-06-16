@@ -23,6 +23,7 @@ export type AuthContextType = {
   signUpUser: (user: User) => void;
   signOutUser: () => void;
   fetchUser: () => void;
+  updateUser:()=>void;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -35,6 +36,7 @@ const AuthContext = createContext<AuthContextType>({
   signUpUser: () => {},
   signOutUser: () => {},
   fetchUser: () => {},
+  updateUser:()=>{}
 });
 
 export default AuthContext;
@@ -110,6 +112,14 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
     } catch (ex) {}
   };
 
+  const updateUser = async ()=>{
+    try{
+      const response = await axiosPrivate.put("/user");
+    }catch(ex){
+
+    }
+  }
+
   const fetchUser = async () => {
     const response = await axiosPrivate.get("/user");
     const userData: User = response.data;
@@ -117,6 +127,8 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
       return { ...prevState, ...userData };
     });
   };
+
+
 
   const contextData: AuthContextType = {
     user,
@@ -128,6 +140,7 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
     signUpUser: signUpUser,
     signOutUser: signOutUser,
     fetchUser: fetchUser,
+    updateUser:updateUser
   };
 
   return (

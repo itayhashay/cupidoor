@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   Grid,
   Icon,
@@ -26,6 +27,7 @@ import { useCallback, useMemo, useState } from "react";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import { useAuth } from "../../context/AuthContext";
 export type AccountField = {
   name: string;
   path: string;
@@ -35,11 +37,13 @@ export type AccountField = {
 };
 
 const FieldComponent = ({
+  disabled,
   field,
   value,
   isReadOnly,
   handleFieldChange,
 }: {
+  disabled: boolean;
   field: AccountField;
   value: string;
   isReadOnly: boolean;
@@ -64,6 +68,7 @@ const FieldComponent = ({
             return (
               <TextField
                 key={field.path}
+                disabled={disabled}
                 sx={{ width: 210 }}
                 value={value}
                 name={field.name}
@@ -78,6 +83,7 @@ const FieldComponent = ({
           if (field.type === "select") {
             return (
               <Select
+                disabled={disabled}
                 key={field.path}
                 value={value}
                 name={field.name}
@@ -155,8 +161,11 @@ const PersonalDetails = ({
       },
     ];
   }, []);
+const {updateUser} = useAuth();
+  const handleSaveClick = async () => {
+    setIsLoading(true);
 
-  const handleSaveClick = () => {};
+  };
 
   const handleFieldChange = (fieldName: string, value: string) => {
     setUserDetails((prevState) => {
@@ -204,6 +213,7 @@ const PersonalDetails = ({
           {accountFields.map((field) => {
             return (
               <FieldComponent
+                disabled={isLoading}
                 field={field}
                 value={userDetails[field.path]}
                 isReadOnly={isEditMode}
@@ -218,6 +228,7 @@ const PersonalDetails = ({
               <Box display={"flex"} justifyContent={"flex-end"}>
                 <Box display={"flex"}>
                   <Button
+                    disabled={isLoading}
                     sx={{ mr: 2 }}
                     variant="contained"
                     onClick={handleCancelClick}
@@ -228,7 +239,14 @@ const PersonalDetails = ({
                     Cancel
                   </Button>
                   <Button
-                    startIcon={<CheckIcon></CheckIcon>}
+                    disabled={isLoading}
+                    startIcon={
+                      isLoading ? (
+                        <CircularProgress size={14}></CircularProgress>
+                      ) : (
+                        <CheckIcon></CheckIcon>
+                      )
+                    }
                     variant="contained"
                     fullWidth
                     onClick={handleSaveClick}
