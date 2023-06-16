@@ -9,6 +9,7 @@ import ApartmentDetails from "../ApartmentDetails";
 import UserRouter from "../UserRouter";
 import Landing from "../Landing/Landing";
 import { HOUSES } from "../../utils/mock";
+import PrerequisiteRoute from "./PrerequisiteRoute";
 
 // Will Change!!!!
 let tmpApartments: any = [];
@@ -29,7 +30,9 @@ const appRoutes = [
     path: "/home/*",
     element: (
       <ProtectedRoute>
-        <HomeRouter apartments={[]} />
+        <PrerequisiteRoute>
+          <HomeRouter apartments={[]} />
+        </PrerequisiteRoute>
       </ProtectedRoute>
     ),
   },
@@ -37,7 +40,9 @@ const appRoutes = [
     path: "/apartment/:id",
     element: (
       <ProtectedRoute>
-        <ApartmentDetails />
+        <PrerequisiteRoute>
+          <ApartmentDetails />
+        </PrerequisiteRoute>
       </ProtectedRoute>
     ),
   },
@@ -45,7 +50,9 @@ const appRoutes = [
     path: "/user/*",
     element: (
       <ProtectedRoute>
-        <UserRouter />
+        <PrerequisiteRoute>
+          <UserRouter />
+        </PrerequisiteRoute>
       </ProtectedRoute>
     ),
   },

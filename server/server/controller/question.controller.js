@@ -26,6 +26,7 @@ const questionService = require("../service/question.service");
 
 // module.exports = QuestionsController;
 
+
 router.post("/", async (req, res) => {
   try {
     const question = await questionService.createQuestion(req.body);

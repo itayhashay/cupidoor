@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  answerdQuestions: {
+  answeredQuestions: {
     type: Boolean,
     default: false,
     required: false,

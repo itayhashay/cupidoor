@@ -14,14 +14,14 @@ export const QUESTIONS: string[] = [
   "Is the relationship between landlord and tenant important to you?",
 ];
 
-
 export const ANSWERS_MAP: Record<string, number> = {
   yes: 1,
   no: 0,
 };
 
 export type FormProps = {
-  activeStep: number;
+  questionId: string;
+  content: string;
   setAnswer: Function;
   value: number;
 };

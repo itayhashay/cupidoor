@@ -18,19 +18,20 @@ router.get('/:id', async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
-    const userAnswers = await userAnswerService.getUserAnswers();
+    const userAnswers = await userAnswerService.getUserAnswers(req.user);
     res.status(OK).json(userAnswers);
   } catch (err) {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res,next) => {
   try {
-    const userAnswer = await userAnswerService.createUserAnswer(req.body);
+    const userAnswer = await userAnswerService.createUserAnswer(req.body,req.user);
     res.status(CREATED).json(userAnswer);
   } catch (err) {
-    res.status(BAD_REQUEST).json({ error: err.message });
+    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 });
 

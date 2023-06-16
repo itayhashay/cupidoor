@@ -2,7 +2,7 @@
   "api": {
     "baseUrl": "http://localhost:2308",
     "routes": {
-      "userAnswer":"user-answer",
+      "userAnswer":"/user-answer",
       "match": "/match",
       "signIn": "/signIn",
       "signUp": "/signUp",

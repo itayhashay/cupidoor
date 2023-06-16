@@ -50,12 +50,12 @@ function IconContainer(props: IconContainerProps) {
   return <span {...other}>{customIcons[value].icon}</span>;
 }
 
-export default function PriorityForm({activeStep, setAnswer, value} : FormProps) {
+export default function PriorityForm({questionId,content, setAnswer, value} : FormProps) {
     const [selectedPriority, setSelectedPriority] = useState<number | null>(value);
 
     useEffect(() => {
         setSelectedPriority(value);
-    }, [activeStep, value]);
+    }, [questionId, value]);
 
   return (
     <Box
@@ -72,7 +72,7 @@ export default function PriorityForm({activeStep, setAnswer, value} : FormProps)
             name="highlight-selected-only"
             value={selectedPriority}
             onChange={(_event, newValue) => {
-                setAnswer(activeStep, newValue);
+                setAnswer(questionId, newValue);
             }}
             IconContainerComponent={IconContainer}
             getLabelText={(value: number) => customIcons[value].label}

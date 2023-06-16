@@ -42,7 +42,7 @@ export const PROFILE_STEPS = (user: User) => [
         description: "Answering lifestyle questions can find better matches for you.",
         icon: QuestionsIcon,
         validCheck: () => {
-            return user.isFilledAllQ;
+            return user.answeredQuestions;
         }
     },
     {

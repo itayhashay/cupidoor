@@ -36,9 +36,9 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import SquareFootIcon from "@mui/icons-material/SquareFoot";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import StairsIcon from "@mui/icons-material/Stairs";
-import { getUserLikedApartments, toggleTenantLike } from "../../utils/api";
 import { getUserId } from "../../utils/localStorage";
 import { randomNumber } from "../../utils/random";
+import useAPI from "../../hooks/useAPI";
 
 const HouseCard = ({
   houseData,
@@ -51,6 +51,7 @@ const HouseCard = ({
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [matchColor, setMatchColor] = useState<string>("");
   const match: number = randomNumber(0, 100);
+  const {getUserLikedApartments, toggleTenantLike} = useAPI();
   
   const fetchLikedApartments = async (userId: string) => {
     const likes: any[] = await getUserLikedApartments(userId);

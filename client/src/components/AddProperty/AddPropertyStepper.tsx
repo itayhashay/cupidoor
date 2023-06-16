@@ -7,7 +7,7 @@ import UploadsForm from './UploadsForm';
 import CupidoorSpinner from '../CupidoorSpinner';
 import { NewApartment } from './types';
 import { DEFAULT_NEW_APARTMENT_DATA, STEPS } from './constants';
-import { addApartment } from '../../utils/api';
+import useAPI from '../../hooks/useAPI';
 import { AxiosResponse } from 'axios';
 import { convertFilePondImagesToBase64 } from '../../utils/base64';
 import { getUserId } from '../../utils/localStorage';
@@ -18,7 +18,7 @@ const AddPropertyStepper = ({handleClose} : {handleClose: () => void}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newApartmentData, setNewApartmentData] = useState<NewApartment>(DEFAULT_NEW_APARTMENT_DATA);
   const navigate = useNavigate();
-
+  const {addApartment} = useAPI();
   const saveChangesOnNext = (values: any) => {
     setNewApartmentData((prev: NewApartment) => { 
       return {...prev, ...values} 

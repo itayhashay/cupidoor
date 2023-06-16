@@ -6,10 +6,10 @@ import {
   useEffect,
 } from "react";
 import { User } from "../types/user";
-import { signIn, signUp } from "../utils/api";
 import { AxiosError, AxiosResponse } from "axios";
 import { CupidAxiosError } from "../types/cupidAxiosError";
-import axiosPrivate from "../utils/axiosPrivate";
+import useAPI from "../hooks/useAPI";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 type Props = { children: React.ReactNode };
 
@@ -22,6 +22,8 @@ export type AuthContextType = {
   signInUser: (email: string, password: string) => void;
   signUpUser: (user: User) => void;
   signOutUser: () => void;
+  fetchUser: () => void;
+  updateUser:()=>void;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -33,6 +35,8 @@ const AuthContext = createContext<AuthContextType>({
   signInUser: () => {},
   signUpUser: () => {},
   signOutUser: () => {},
+  fetchUser: () => {},
+  updateUser:()=>{}
 });
 
 export default AuthContext;
@@ -45,7 +49,8 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
-
+  const { signIn, signUp } = useAPI();
+  const axiosPrivate = useAxiosPrivate();
   // Games yet not finished - storing the user in local storage, adv will be the cookie
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -89,7 +94,7 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   const signUpUser = async (user: User) => {
     const response: AxiosResponse | AxiosError = await signUp(user);
     if (response.status == 200) {
-      await signInUser(user.email,user.password);
+      await signInUser(user.email, user.password);
       return { success: true };
     }
     const error: AxiosError = response as AxiosError;
@@ -98,17 +103,32 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   };
 
   const signOutUser = async () => {
-    try{
-      await axiosPrivate.get('/signOut');
+    try {
+      await axiosPrivate.get("/signOut");
       localStorage.removeItem("user");
       localStorage.removeItem("accessToken");
       setUser(null);
       setAccessToken(null);
+    } catch (ex) {}
+  };
+
+  const updateUser = async ()=>{
+    try{
+      const response = await axiosPrivate.put("/user");
     }catch(ex){
 
     }
-    
+  }
+
+  const fetchUser = async () => {
+    const response = await axiosPrivate.get("/user");
+    const userData: User = response.data;
+    setUser((prevState) => {
+      return { ...prevState, ...userData };
+    });
   };
+
+
 
   const contextData: AuthContextType = {
     user,
@@ -119,6 +139,8 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
     signInUser: signInUser,
     signUpUser: signUpUser,
     signOutUser: signOutUser,
+    fetchUser: fetchUser,
+    updateUser:updateUser
   };
 
   return (

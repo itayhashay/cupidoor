@@ -4,16 +4,15 @@ import GenericHousesList from "../GenericHousesList";
 import AddHomeOutlinedIcon from '@mui/icons-material/AddHomeOutlined';
 import AddProperty from "../AddProperty";
 import { useEffect, useState } from "react";
-import { getUserLikedApartments, getUserProperties } from "../../utils/api";
 import { getUserId } from "../../utils/localStorage";
 import { Apartment } from "../../types/apartment";
-import { getApartmentById } from "../../utils/api";
+import useAPI from "../../hooks/useAPI";
 import CupidoorSpinner from "../CupidoorSpinner";
 
 const LikedApartments = () => {
     const [likedApartments, setLikedApartments] = useState<Apartment[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
+    const {getUserLikedApartments,getApartmentById,getUserProperties} = useAPI();
     const fetchLikedApartments = async () => {
         const userId = getUserId();
         console.log("START FETCHING");

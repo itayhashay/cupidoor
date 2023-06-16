@@ -3,7 +3,7 @@ import GenericHousesList from "../GenericHousesList";
 import AddHomeOutlinedIcon from '@mui/icons-material/AddHomeOutlined';
 import AddProperty from "../AddProperty";
 import { useEffect, useState } from "react";
-import { getUserProperties } from "../../utils/api";
+import useAPI from "../../hooks/useAPI";
 import { getUserId } from "../../utils/localStorage";
 import { Apartment } from "../../types/apartment";
 import CupidoorSpinner from "../CupidoorSpinner";
@@ -12,7 +12,7 @@ const MyProperties = () => {
     const [open, setOpen] = useState(false);
     const [myApartments, setMyApartments] = useState<Apartment[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
+    const {getUserProperties} = useAPI();
     const fetchUserProperties = async () => {
         const userId = getUserId();
         const userProperties: Apartment[] = await getUserProperties(userId);

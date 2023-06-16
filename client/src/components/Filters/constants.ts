@@ -1,13 +1,13 @@
 import { SliderProps } from "../../types/filters";
 
 const FILTERS_NAMES = {
-    MATCH_PRECENT: "match-precent",
-    PRICE: "price",
-    ROOMS: "rooms",
-    SQUARE_METER: "square-meter",
-    FLOOR: "floor",
-    BALCONY: "balcony",
-    PARKING: "parking",
+    MATCH_PRECENT: "Match Percent:",
+    PRICE: "Price Range:",
+    ROOMS: "Rooms:",
+    SQUARE_METER: "Square Meters:",
+    FLOOR: "Floor:",
+    BALCONY: "Balconies:",
+    PARKING: "Parkings:",
   };
 
   export const DEFAULT_FILTERS = {

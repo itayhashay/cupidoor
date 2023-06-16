@@ -69,7 +69,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
     phone: string;
     role: string;
     description?: string;
-    answerdQuestions?: boolean;
+    answeredQuestions?: boolean;
   }) => {
     if(!base64Image)return;
     let userRole: UserTypes = values.role as UserTypes;
@@ -82,8 +82,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
       phone,
       age,
       avatar:base64Image,
-      role: userRole,
-      isFilledAllQ: false,
+      role: userRole
     });
     if (response.success) {
       setSnackBarState({

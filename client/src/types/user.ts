@@ -20,6 +20,7 @@ export type User = {
   lastName: string;
   name?:string;
   email: string;
+  description?:string;
   password: string;
   avatar?: string;
   phone: string;
@@ -28,7 +29,7 @@ export type User = {
   jobTitle?: string;
   familiarity?: string;
   isLandlord?: boolean;
-  isFilledAllQ: boolean;
+  answeredQuestions? : boolean;
   role: UserTypes;
   linkes?: UserLink[];
 };

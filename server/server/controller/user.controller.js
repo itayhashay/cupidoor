@@ -8,6 +8,7 @@ const {
   NO_CONTENT,
   INTERNAL_SERVER_ERROR,
 } = require("http-status-codes");
+const verifyToken = require("../middlewares/verifyToken");
 
 router.post("/", async (req, res) => {
   try {
@@ -20,17 +21,27 @@ router.post("/", async (req, res) => {
 });
 
 
-router.get("/", async (req, res) => {
+router.get("/all",[verifyToken], async (req, res,next) => {
   try {
     const users = await userService.getUsers();
     res.status(OK).json(users);
   } catch (err) {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
-    next(ex);
+    next(err);
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get("/",[verifyToken], async (req, res,next) => {
+  try {
+    const user = await userService.getUserData(req.user._id);
+    res.status(OK).json(user);
+  } catch (err) {
+    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
+  }
+});
+
+router.get('/:id', async (req, res,next) => {
   try {
     const user = await userService.getUser(req.params.id);
     if (!user) {
@@ -40,27 +51,27 @@ router.get('/:id', async (req, res) => {
     }
   } catch (err) {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
-    next(ex);
+    next(err);
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res,next) => {
   try {
     const user = await userService.updateUser(req.params.id, req.body);
     res.status(OK).json(user);
   } catch (err) {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
-    next(ex);
+    next(err);
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res,next) => {
   try {
     await userService.deleteUser(req.params.id);
     res.status(NO_CONTENT).send();
   } catch (err) {
     res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
-    next(ex);
+    next(err);
   }
 });
 

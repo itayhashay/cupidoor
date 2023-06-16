@@ -10,7 +10,11 @@ const verifyToken = async function (req, res, next) {
 
   try {
     const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
-    req.user = await UserService.getUserByEmail(decodedToken.email);
+    const user = await UserService.getUser(decodedToken.id);
+    if(!user){
+      return res.status(403).json({ error: "Not Authorized!" });
+    }
+    req.user = user;
     next();
   } catch (ex) {
     return res.status(403).json({ error: "Invalid token!" });
