@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import LikedApartments from "../UserRouter/LikedApartments";
+import CupidoorSpinner from "../CupidoorSpinner";
 const HomeRouter = ({ apartments }: { apartments: Apartment[] }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [ap,setAp] = useState<Apartment[]>([] as Apartment[]);
@@ -26,19 +27,7 @@ const HomeRouter = ({ apartments }: { apartments: Apartment[] }) => {
   return (
     <Container>
       {isLoading ? (
-        <CircularProgress
-          sx={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            margin: "auto",
-            width: "50vw",
-            height: "50vh",
-          }}
-          size={80}
-        ></CircularProgress>
+        <CupidoorSpinner></CupidoorSpinner>
       ) : (
         <ContentSection>
           <Sidebar />

@@ -3,6 +3,7 @@ import {
   Button,
   CircularProgress,
   Divider,
+  FormControl,
   FormHelperText,
   Grid,
   Icon,
@@ -25,7 +26,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import BadgeIcon from "@mui/icons-material/Badge";
 import PhoneIcon from "@mui/icons-material/Phone";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { useCallback, useMemo, useState,useEffect } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -142,7 +143,7 @@ const PersonalDetails = ({
     initialValues: { ...userDetails },
     validationSchema: userDetailsScheme,
     onSubmit: (values) => {
-      handleSaveClick(values)
+      handleSaveClick(values);
     },
   });
   const accountFields: AccountField[] = useMemo(() => {
@@ -191,15 +192,15 @@ const PersonalDetails = ({
     ];
   }, []);
 
-  useEffect(()=>{
-    setUserDetails({...user});
-  },[user])
+  useEffect(() => {
+    setUserDetails({ ...user });
+  }, [user]);
   const setIsEditMode = (flag: boolean) => {
     _setIsEditMode(flag);
     handleEditMode(flag);
   };
 
-  const handleSaveClick = async (newUserDetails:User) => {
+  const handleSaveClick = async (newUserDetails: User) => {
     setIsLoading(true);
     try {
       await updateUser(newUserDetails);
@@ -256,34 +257,40 @@ const PersonalDetails = ({
             )}
             <Typography sx={{ ...ProfileSectionTitle }}>About me</Typography>
             {isEditMode ? (
-              <TextField
-                id="description"
-                name="description"
-                multiline
-                rows={5}
-                value={formik.values.description}
+              <FormControl
+                fullWidth
                 error={
                   formik.touched.description &&
                   Boolean(formik.errors.description)
                 }
-                helperText={
-                  <Box display={"flex"} justifyContent={"space-between"}>
-                    <FormHelperText color={"error"}>
-                      {formik.touched.description && formik.errors.description}
-                    </FormHelperText>
-                    <FormHelperText>
-                      {formik.values.description?.trim().split(/\s+/).length}/
-                      {MAX_WORD_COUNT}
-                    </FormHelperText>
-                  </Box>
-                }
-                onChange={(event: React.ChangeEvent<any>) => {
-                  formik.handleChange(event);
-                  formik.validateField("description");
-                  formik.setFieldTouched("description");
-                }}
-                fullWidth
-              ></TextField>
+              >
+                <TextField
+                  id="description"
+                  name="description"
+                  multiline
+                  rows={5}
+                  value={formik.values.description}
+                  error={
+                    formik.touched.description &&
+                    Boolean(formik.errors.description)
+                  }
+                  onChange={(event: React.ChangeEvent<any>) => {
+                    formik.handleChange(event);
+                    formik.validateField("description");
+                    formik.setFieldTouched("description");
+                  }}
+                  fullWidth
+                ></TextField>
+                <Box display={"flex"} justifyContent={"space-between"}>
+                  <FormHelperText color={"error"}>
+                    {formik.touched.description && formik.errors.description}
+                  </FormHelperText>
+                  <FormHelperText>
+                    {formik.values.description?.trim().split(/\s+/).length}/
+                    {MAX_WORD_COUNT}
+                  </FormHelperText>
+                </Box>
+              </FormControl>
             ) : (
               <Typography whiteSpace={"pre-line"}>
                 {userDetails.description}

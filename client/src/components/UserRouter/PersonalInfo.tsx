@@ -38,6 +38,7 @@ import PersonalInfoAnswers from "./PersonalInfoAnswers";
 import { useConfirmationModal } from "../../context/ConfirmationModalContext";
 import { Edit, Edit as EditIcon, Height } from "@mui/icons-material";
 import { useAuth } from "../../context/AuthContext";
+import CupidoorSpinner from "../CupidoorSpinner";
 
 const PersonalInfo = ({ user }: { user: User }) => {
   const [role, setRole] = useState("Tenant");
@@ -168,26 +169,7 @@ const PersonalInfo = ({ user }: { user: User }) => {
           position={"relative"}
         >
           {isUploadingPicture && (
-            <Box
-              position={"absolute"}
-              width={"100%"}
-              height={"100%"}
-              bgcolor={"#8080808f"}
-              zIndex={2}
-            >
-              <CircularProgress
-                title=""
-                size={120}
-                sx={{
-                  position: "absolute",
-                  left: 0,
-                  bottom: 0,
-                  top: 0,
-                  right: 0,
-                  margin: "auto",
-                }}
-              ></CircularProgress>
-            </Box>
+        <CupidoorSpinner></CupidoorSpinner>
           )}
           <Drawer
             sx={{
