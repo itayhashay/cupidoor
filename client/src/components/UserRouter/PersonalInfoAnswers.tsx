@@ -27,12 +27,7 @@ const PersonalInfoAnswers = ({
         >
           {role === "tenant" ? question.tenant : question.landlord}
         </Typography>
-        <Typography
-          color="black"
-          fontWeight={"bold"}
-          fontSize="16px"
-          marginTop="5px"
-        >
+        <Typography color="black" fontWeight={"bold"} fontSize={"1em"} my={1}>
           {answer == 1 ? "Yes" : "No"}
         </Typography>
         <Divider></Divider>

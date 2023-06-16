@@ -53,11 +53,11 @@ const HouseCard = ({
   const match: number = randomNumber(0, 100);
   const {getUserLikedApartments, toggleTenantLike} = useAPI();
   
-  const fetchLikedApartments = async (userId: string) => {
-    const likes: any[] = await getUserLikedApartments(userId);
-    const apartmentsIds: string[] = likes.map(like => like.apartment);
-    return apartmentsIds;
-  }
+  // const fetchLikedApartments = async (userId: string) => {
+  //   const likes: any[] = await getUserLikedApartments(userId);
+  //   const apartmentsIds: string[] = likes.map(like => like.apartment);
+  //   return apartmentsIds;
+  // }
 
   useEffect(() => {
     const color: string = precentToColor(match);
@@ -66,9 +66,9 @@ const HouseCard = ({
     const apartmentId: string = houseData._id;
     const userId: string = getUserId();
 
-    fetchLikedApartments(userId).then((likedApartmentsIds: string[]) => {
-      setIsFavorite(likedApartmentsIds.includes(apartmentId));
-    })
+    // fetchLikedApartments(userId).then((likedApartmentsIds: string[]) => {
+    //   setIsFavorite(likedApartmentsIds.includes(apartmentId));
+    // })
   }, [houseData]);
 
   const handleClickFavorite = async (

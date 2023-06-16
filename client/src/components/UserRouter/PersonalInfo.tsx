@@ -95,8 +95,8 @@ const PersonalInfo = ({ user }: { user: User }) => {
     setCurrentTab(newValue);
   };
 
-  const handleEditMode = () => {
-    setIsEditMode(true);
+  const handleEditMode = (flag:boolean) => {
+    setIsEditMode(flag);
   };
 
   const openLink = (url: string) => {
@@ -266,119 +266,6 @@ const PersonalInfo = ({ user }: { user: User }) => {
       </Box>
     </Box>
   );
-  // return (
-  //   <PersonalInfoContainer>
-  //     <Col>
-  //       <Frame>
-  //         <ProfilePictureContainer>
-  //           <ProfilePicture alt="" src={user?.avatar} />
-  //           <Typography
-  //             variant="h5"
-  //             width="100%"
-  //             color="#4f4f4f"
-  //             textAlign="center"
-  //           >
-  //             {`${user.firstName} ${user.lastName}`}
-  //           </Typography>
-  //           <Typography
-  //             variant="body1"
-  //             width="100%"
-  //             color="#757575"
-  //             textAlign="center"
-  //             fontWeight={400}
-  //             margin="5px 0"
-  //           >
-  //             {user.jobTitle}
-  //           </Typography>
-  //           <LinksDividerLine />
-  //           <Typography
-  //             variant="body1"
-  //             width="100%"
-  //             color="#757575"
-  //             textAlign="center"
-  //             fontSize="14px"
-  //             fontWeight={500}
-  //             margin="10px 0"
-  //           >
-  //             {user.familiarity}
-  //           </Typography>
-  //           <Box display="flex" justifyContent="center" marginTop="15px">
-  //             <Button color="primary" variant="outlined" component="label">
-  //               {isUploadingPicture ? (
-  //                 <CircularProgress></CircularProgress>
-  //               ) : (
-  //                 "Edit Profile Picture"
-  //               )}
-  //               <input
-  //                 hidden
-  //                 accept="image/*"
-  //                 multiple
-  //                 type="file"
-  //                 onChange={uploadProfilePicture}
-  //               />
-  //             </Button>
-  //           </Box>
-  //         </ProfilePictureContainer>
-  //       </Frame>
-  //       <Frame>
-  //         {user.linkes?.map((link: UserLink, index: number) =>
-  //           renderLinkLine(link, index)
-  //         )}
-  //       </Frame>
-  //     </Col>
-  //     <Col>
-  //       <Frame>
-  //         <Box
-  //           display="flex"
-  //           flexDirection="column"
-  //           width="70vh"
-  //           padding="0 35px"
-  //           margin="25px 0"
-  //         >
-  //           <Typography variant="h6" fontWeight={300}>
-  //             Complete Your Profile
-  //           </Typography>
-  //           <ProfileStepper user={user} />
-  //         </Box>
-  //       </Frame>
-  //       <Frame>
-  //         <Box
-  //           display="flex"
-  //           flexDirection="column"
-  //           width="70vh"
-  //           padding="0 35px"
-  //           margin="25px 0"
-  //         >
-  //           {USER_INFO_FIELDS.map((field: UserField, index: number) =>
-  //             renderInfoLine(field.fieldName, user[field.fieldValue], index)
-  //           )}
-  //         </Box>
-  //       </Frame>
-  //       <Frame>
-  //         {answers.length > 0 ? (
-  //           <Box
-  //             display="flex"
-  //             flexDirection="column"
-  //             width="70vh"
-  //             padding="0 35px"
-  //             margin="25px 0"
-  //           >
-  //             {answers.map((answer: ServerQuestionAnswer, index: number) =>
-  //               renderQuestionLine(
-  //                 user.role,
-  //                 answer.question,
-  //                 answer.answer,
-  //                 index
-  //               )
-  //             )}
-  //           </Box>
-  //         ) : (
-  //           <Skeleton height={440}></Skeleton>
-  //         )}
-  //       </Frame>
-  //     </Col>
-  //   </PersonalInfoContainer>
-  // );
 };
 
 export default PersonalInfo;

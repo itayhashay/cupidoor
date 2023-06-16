@@ -14,7 +14,6 @@ const AuthController = {
     try {
       res.status(OK).json(await AuthService.signUp(userDetails));
     } catch (ex) {
-      res.status(INTERNAL_SERVER_ERROR).json({ error: ex.message });
       next(ex);
     }
   },
@@ -31,7 +30,6 @@ const AuthController = {
       });
       res.status(OK).json({ accessToken, user });
     } catch (ex) {
-      res.status(INTERNAL_SERVER_ERROR).json({ error: ex.message });
       next(ex);
     }
   },
@@ -62,7 +60,7 @@ const AuthController = {
       });
       return res.json({ user, accessToken });
     } catch (ex) {
-      res.status(401).json({ success: false, error: ex.message });
+      ex.status = 401;
       next(ex);
     }
   },

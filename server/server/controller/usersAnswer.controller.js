@@ -3,7 +3,7 @@ const router = express.Router();
 const userAnswerService = require('../service/usersAnswer.service');
 const { CREATED, OK, NOT_FOUND, NO_CONTENT, INTERNAL_SERVER_ERROR } = require('http-status-codes');
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req,res,next) => {
   try {
     const userAnswer = await userAnswerService.getUserAnswer(req.params.id);
     if (!userAnswer) {
@@ -12,16 +12,16 @@ router.get('/:id', async (req, res) => {
       res.status(OK).json(userAnswer);
     }
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', async (req,res,next) => {
   try {
     const userAnswers = await userAnswerService.getUserAnswers(req.user);
     res.status(OK).json(userAnswers);
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 });
 
@@ -30,26 +30,25 @@ router.post('/', async (req, res,next) => {
     const userAnswer = await userAnswerService.createUserAnswer(req.body,req.user);
     res.status(CREATED).json(userAnswer);
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
     next(err);
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req,res,next) => {
   try {
     const userAnswer = await userAnswerService.updateUserAnswer(req.params.id, req.body);
     res.status(OK).json(userAnswer);
   } catch (err) {
-    res.status(BAD_REQUEST).json({ error: err.message });
+    next(err);
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req,res,next) => {
   try {
     await userAnswerService.deleteUserAnswer(req.params.id);
     res.status(NO_CONTENT).send();
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 });
 

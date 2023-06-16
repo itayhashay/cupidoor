@@ -4,36 +4,36 @@ const apartmentService = require('../service/apartment.service');
 const { CREATED, OK, NOT_FOUND, NO_CONTENT, INTERNAL_SERVER_ERROR } = require('http-status-codes');
 
 // Create apartment
-router.post('/', async (req, res) => {
+router.post('/', async (req,res,next) => {
   try {
     const apartment = await apartmentService.createApartment(req.body);
     res.status(CREATED).json(apartment);
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 });
 
-router.get('/landlord/:userId', async (req, res) => {
+router.get('/landlord/:userId', async (req,res,next) => {
   try {
     const apartments = await apartmentService.getApartmentsByUser(req.params.userId);
     res.status(OK).json(apartments);
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 })
 
 // Get all apartments
-router.get('/', async (req, res) => {
+router.get('/', async (req,res,next) => {
   try {
     const apartments = await apartmentService.getApartments();
     res.status(OK).json(apartments);
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 });
 
 // Get apartment by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req,res,next) => {
   try {
     const apartment = await apartmentService.getApartment(req.params.id);
     if (!apartment) {
@@ -42,12 +42,12 @@ router.get('/:id', async (req, res) => {
       res.status(OK).json(apartment);
     }
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 });
 
 // Update apartment
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req,res,next) => {
   try {
     const apartment = await apartmentService.updateApartment(req.params.id, req.body);
     if (!apartment) {
@@ -61,7 +61,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete apartment
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req,res,next) => {
   try {
     const apartment = await apartmentService.deleteApartment(req.params.id);
     if (!apartment) {
@@ -70,7 +70,7 @@ router.delete('/:id', async (req, res) => {
       res.status(NO_CONTENT).send();
     }
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 });
 

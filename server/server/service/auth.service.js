@@ -47,7 +47,8 @@ const AuthService = {
 
     const refreshToken = jwt.sign(
       { id: user._id, email: user.email },
-      process.env.REFRESH_TOKEN_SECRET
+      process.env.REFRESH_TOKEN_SECRET,
+      {expiresIn:"360d"}
     );
 
     let newRefreshTokenArray = user.refreshToken;
@@ -97,7 +98,6 @@ const AuthService = {
       process.env.REFRESH_TOKEN_SECRET,
       async (err, decoded) => {
         const foundUser = await UserModel.findOne({ refreshToken }).exec();
-
         //If we didn't find the user, the token might be hacked.
         if (!foundUser) {
           await _resetRefreshToken(decoded.email);

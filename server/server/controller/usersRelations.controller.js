@@ -9,8 +9,7 @@ router.get('/tenant/likes/:tenantId', async (req, res,next) => {
         const likes = await usersRelationsService.getLikesByTenantId(req.params.tenantId);
         res.status(OK).json(likes);
     } catch (err) {
-        res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
-        next(err)
+        next(err);
     }
 });
 
@@ -20,8 +19,7 @@ router.get('/tenant/matches/:tenantId', async (req, res,next) => {
         const matches = await usersRelationsService.getMatchesByTenantId(req.params.tenantId);
         res.status(OK).json(matches);
     } catch (err) {
-        res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
-        next(err)
+        next(err);
     }
 });
 
@@ -31,8 +29,7 @@ router.get('/apartment/likes/:apartmentId', async (req, res,next) => {
         const likes = await usersRelationsService.getLikesByApartmentId(req.params.apartmentId);
         res.status(OK).json(likes);
     } catch (err) {
-        res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
-        next(err)
+        next(err);
     }
 });
 
@@ -42,8 +39,7 @@ router.get('/apartment/matches/:apartmentId', async (req, res,next) => {
         const matches = await usersRelationsService.getMatchesByApartmentId(req.params.apartmentId);
         res.status(OK).json(matches);
     } catch (err) {
-        res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
-        next(err)
+        next(err);
     }
 });
 
@@ -56,8 +52,7 @@ router.post('/tenant/like/:apartmentId', async (req, res,next) => {
         else
             res.status(NO_CONTENT).send();
     } catch (err) {
-        res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
-        next(err)
+        next(err);
     }
 });
 
@@ -67,8 +62,7 @@ router.post('/apartment/match/:tenantId', async (req, res,next) => {
         const match = await usersRelationsService.matchTenant(req.params.tenantId, req.body.apartmentId);
         res.status(OK).json(match);
     } catch (err) {
-        res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
-        next(err)
+        next(err);
     }
 });
 
@@ -78,8 +72,7 @@ router.post('/apartment/decline/:tenantId', async (req, res,next) => {
         const match = await usersRelationsService.declineTenet(req.params.tenantId, req.body.apartmentId);
         res.status(OK).json(match);
     } catch (err) {
-        res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
-        next(err)
+        next(err);
     }
 });
 
