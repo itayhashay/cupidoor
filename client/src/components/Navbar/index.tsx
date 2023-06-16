@@ -1,4 +1,4 @@
-import { AppBar, Box, Toolbar, Button, Grid, Menu } from "@mui/material";
+import { AppBar, Box, Toolbar, Button, Grid, Menu, CssBaseline } from "@mui/material";
 import { Avatar, Typography, MenuItem } from "@mui/material";
 import { UserSection, linkStyles } from "./styles";
 import { useEffect, useState } from "react";
@@ -59,7 +59,7 @@ export const Navbar = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, position: "sticky", top: "0", zIndex: "100" }}>
+    <Box sx={{ flexGrow: 1, position: "sticky", top: "0", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <AppBar
         sx={{
           position: "static",

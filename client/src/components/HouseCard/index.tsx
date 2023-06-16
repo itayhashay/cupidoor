@@ -155,7 +155,7 @@ const HouseCard = ({
         <Grid container padding={1}>
           <Grid item xs>
             <Box display={"flex"} alignItems={"center"}>
-              <MeetingRoomIcon color="primary"></MeetingRoomIcon>
+              <MeetingRoomIcon color="secondary"></MeetingRoomIcon>
               <Typography ml={0.5} variant="subtitle2" color={"GrayText"}>
                 {houseData.rooms} rooms
               </Typography>
@@ -163,7 +163,7 @@ const HouseCard = ({
           </Grid>
           <Grid item xs>
             <Box display={"flex"} alignItems={"center"}>
-              <SquareFootIcon color="primary"></SquareFootIcon>
+              <SquareFootIcon color="secondary"></SquareFootIcon>
               <Typography ml={0.5} variant="subtitle2" color={"GrayText"}>
                 {houseData.squareMeter}
               </Typography>
@@ -179,7 +179,7 @@ const HouseCard = ({
           </Grid>
           <Grid item>
             <Box display={"flex"} alignItems={"center"}>
-              <StairsIcon color="primary"></StairsIcon>
+              <StairsIcon color="secondary"></StairsIcon>
               <Typography ml={0.5} variant="subtitle2" color={"GrayText"}>
                 Floor {houseData.floor}
               </Typography>
