@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import config from "../config.json";
 import { MatchData } from "../types/matchData";
 import { User } from "../types/user";
@@ -29,7 +29,7 @@ const useAPI = () => {
   };
 
   const signIn = async (email: string, password: string) => {
-    const response = await axios(
+    const response = await axiosPrivate(
       config.api.routes.signIn,
       {
         data: { email, password },
