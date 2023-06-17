@@ -41,6 +41,7 @@ export const CupidThemeContextProvider: React.FC<Props> = ({ children }) => {
         light: "#488A99",
         dark: "#242444",
         contrastText: "white",
+        
       },
       secondary: {
         main: "#64748B",

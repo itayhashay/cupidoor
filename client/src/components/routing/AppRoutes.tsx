@@ -14,7 +14,7 @@ import PrerequisiteRoute from "./PrerequisiteRoute";
 let tmpApartments: any = [];
 
 const appRoutes = [
-  { path: "/", element: <Landing /> },
+  { path: "/", element: <Landing />},
   { path: "/signIn", element: <LandingPage /> },
   { path: "/Mainfeed", element: <MainFeed /> },
   {
@@ -30,7 +30,7 @@ const appRoutes = [
     element: (
       <ProtectedRoute>
         <PrerequisiteRoute>
-          <HomeRouter apartments={[]} />
+          <HomeRouter />
         </PrerequisiteRoute>
       </ProtectedRoute>
     ),

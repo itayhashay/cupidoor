@@ -4,12 +4,17 @@ const scoreSchema = new mongoose.Schema({
   tenant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    autopopulate: { select: "-password" },
+    autopopulate: { select: "-password -salt -refreshToken" },
   },
   apartment: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Apartment",
     autopopulate: true,
+  },
+  landlord:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    autopopulate: { select: "-password -salt -refreshToken" },
   },
   score: {
     type: Number,

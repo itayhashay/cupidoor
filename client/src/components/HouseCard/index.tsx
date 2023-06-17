@@ -38,10 +38,10 @@ const HouseCard = ({
   houseData: Apartment;
   isMyProperties: boolean;
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [matchColor, setMatchColor] = useState<string>('');
-  const match: number = randomNumber(0, 100);
+  
   const { getUserLikedApartments, toggleTenantLike } = useAPI();
 
   // const fetchLikedApartments = async (userId: string) => {
@@ -51,7 +51,7 @@ const HouseCard = ({
   // }
 
   useEffect(() => {
-    const color: string = precentToColor(match);
+    const color: string = precentToColor(houseData.match || 0);
     setMatchColor(color);
 
     const apartmentId: string = houseData._id;
@@ -73,16 +73,17 @@ const HouseCard = ({
   return (
     <Link to={`/apartment/${houseData._id}`}>
       <Card sx={cardStyles}>
-        {isLoading ? (
+        {isLoading && (
           <Skeleton animation='wave' variant='rectangular' width={'100%'} height={220} />
-        ) : (
-          <CardMedia
-            component='img'
-            height='220'
-            image={houseData.images[0] && houseData.images[0].url}
-            alt='Paella dish'
-          />
         )}
+        <CardMedia
+          component='img'
+          height='220'
+          sx={{ display: isLoading ? 'none' : 'block' }}
+          image={houseData.images[0] ? houseData.images[0].url : '/apartmentPlaceholder.png'}
+          onLoad={() => setIsLoading(false)}
+        />
+
         <Tooltip
           title={`${houseData.user.firstName} ${houseData.user.lastName}`}
           placement='bottom'
@@ -100,9 +101,9 @@ const HouseCard = ({
           </Fab>
         )}
         {!isMyProperties ? (
-          <Typography sx={{ ...MatchLabelStyles, color: matchColor }}>{`${match}% ${
-            match === 100 ? 'Perfect' : ''
-          } Match${match === 100 ? '!' : ''}`}</Typography>
+          <Typography sx={{ ...MatchLabelStyles, color: matchColor }}>{`${houseData.match}% ${
+            houseData.match === 100 ? 'Perfect' : ''
+          } Match${houseData.match === 100 ? '!' : ''}`}</Typography>
         ) : (
           <Typography
             sx={{ ...MatchLabelStyles, color: 'rgba(0, 0, 0, 0.6)' }}
@@ -176,7 +177,7 @@ const HouseCard = ({
               <Box display={'flex'} justifyContent={'center'} bgcolor={'primary.dark'} paddingY={1}>
                 <Icon></Icon>
                 <Typography textAlign={'center'} fontWeight={'bold'} color={'white'} fontSize={16}>
-                  ₪{houseData.cost}
+                  ₪{houseData.price}
                 </Typography>
               </Box>
             </>

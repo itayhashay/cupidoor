@@ -82,34 +82,12 @@ const RangeSlider = ({
         />
       </Box>
       <Box display={"flex"} justifyContent={"space-between"}>
-        <TextField
-          variant={"filled"}
-          hiddenLabel
-          value={value[0]}
-          size="small"
-          inputProps={{
-            step: 10,
-            min: 0,
-            max: 100,
-            style: { fontSize: 12, fontWeight: "bold" },
-            type: "number",
-            "aria-labelledby": "input-slider",
-          }}
-        />
-        <TextField
-          hiddenLabel
-          variant={"filled"}
-          value={value[1]}
-          size="small"
-          inputProps={{
-            step: 10,
-            min: 0,
-            max: 100,
-            style: { fontSize: 12, fontWeight: "bold" },
-            type: "number",
-            "aria-labelledby": "input-slider",
-          }}
-        />
+    <Typography variant="caption" color="black" fontWeight={"bold"}>
+    {value[0]}
+    </Typography>
+    <Typography variant="caption" color="black" fontWeight={"bold"}>
+    {value[1]}
+    </Typography>
       </Box>
     </Box>
   );
