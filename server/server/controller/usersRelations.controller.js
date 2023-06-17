@@ -4,9 +4,9 @@ const usersRelationsService = require('../service/usersRelations.service');
 const { CREATED, OK, NO_CONTENT, INTERNAL_SERVER_ERROR } = require('http-status-codes');
 
 // Get all likes of tenant
-router.get('/tenant/likes/:tenantId', async (req, res,next) => {
+router.get('/tenant/likes/', async (req, res,next) => {
     try {
-        const likes = await usersRelationsService.getLikesByTenantId(req.params.tenantId);
+        const likes = await usersRelationsService.getLikesByTenantId(req.user._id);
         res.status(OK).json(likes);
     } catch (err) {
         next(err);
@@ -46,7 +46,7 @@ router.get('/apartment/matches/:apartmentId', async (req, res,next) => {
 // Get from params apartment ID and from body tenant ID and create a like/unlike
 router.post('/tenant/like/:apartmentId', async (req, res,next) => {
     try {
-        const like = await usersRelationsService.likeApartment(req.body.tenantId, req.params.apartmentId);
+        const like = await usersRelationsService.likeApartment(req.user._id, req.params.apartmentId);
         if (like)
             res.status(CREATED).json(like);
         else

@@ -3,6 +3,7 @@ const Storage = require("./firebase-storage.service");
 const match = require("../model/match");
 const UserAnswer = require("../model/userAnswer.model");
 const Score = require("../model/score.model");
+const ScoreService = require("./score.service");
 const createApartment = async (apartmentData) => {
   try {
     let base64Images = apartmentData.images;
@@ -40,23 +41,15 @@ const getApartments = async (user) => {
     await _scoreMissingApartments(user);
     console.timeEnd("missing_score");
     console.time("apartments_find");
-    const apartmentsPromise = Apartment.find({ user: { $ne: user._id } })
+    const apartments = await Apartment.find({ user: { $ne: user._id } })
       .populate("user", "firstName lastName avatar")
       .lean()
       .exec();
-    const scoresPromise = Score.find(
-      { tenant: user._id },
-      { apartment: 1, score: 1 }
-    ).lean();
-    const [apartments, scores] = await Promise.all([
-      apartmentsPromise,
-      scoresPromise,
-    ]);
 
     console.timeEnd("apartments_find");
 
     console.time("get_scores");
-    const data = await _getApartmentsScoresOptimized(apartments, scores);
+    const data = await ScoreService.getApartmentsScores(user._id, apartments);
     console.timeEnd("get_scores");
 
     return data;
@@ -67,12 +60,18 @@ const getApartments = async (user) => {
 
 const getApartment = async (id) => {
   try {
-    const apartment = await Apartment.findById(id)
+    const apartmentPromise = Apartment.findById(id)
       .populate("user", "-password -salt -refreshToken -email -createdAt")
       .lean()
       .exec();
-    const data = await _getApartmentsScores([apartment]);
-    return data[0];
+    const scorePromise = Score.findOne({ apartment: id }).select({ score: 1 });
+
+    const [apartment, score] = await Promise.all([
+      apartmentPromise,
+      scorePromise,
+    ]);
+
+    return { ...apartment, match: score.score };
   } catch (err) {
     throw new Error("Error getting apartment: " + err.message);
   }
@@ -224,44 +223,6 @@ const _scoreMissingApartments = async (user) => {
     );
   }
   return Promise.all(promises);
-};
-
-const _getApartmentsScores = (apartments) => {
-  const promises = [];
-  for (let apartment of apartments) {
-    promises.push(
-      new Promise(async (resolve) => {
-        Score.findOne({ apartment: apartment._id })
-          .select({ score: 1 })
-          .lean()
-          .then((score) => {
-            resolve({
-              ...apartment,
-              match: score.score,
-            });
-          });
-      })
-    );
-  }
-
-  return Promise.all(promises);
-};
-
-const _getApartmentsScoresOptimized = (apartments, scores) => {
-  const apartmentToScore = {};
-  const apartmentsMatches = [];
-  for (let score of scores) {
-    apartmentToScore[score.apartment] = score.score;
-  }
-
-  for (let apartment of apartments) {
-    apartmentsMatches.push({
-      ...apartment,
-      match: apartmentToScore[apartment._id],
-    });
-  }
-
-  return apartmentsMatches;
 };
 
 module.exports = {
