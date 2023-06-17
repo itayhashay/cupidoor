@@ -258,9 +258,15 @@ const Sidebar = () => {
                     </Link>
                   </Tooltip>
                   <Tooltip title='Apply Filters'>
-                    <IconButton onClick={applyFilters} color='primary' disabled={filterCount == 0}>
-                      <CheckOutlined></CheckOutlined>
-                    </IconButton>
+                    <span>
+                      <IconButton
+                        onClick={applyFilters}
+                        color='primary'
+                        disabled={filterCount == 0}
+                      >
+                        <CheckOutlined></CheckOutlined>
+                      </IconButton>
+                    </span>
                   </Tooltip>
                 </Box>
                 <Typography

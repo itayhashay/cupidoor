@@ -32,6 +32,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAPI from "../../hooks/useAPI";
 import { QuestionAnswer } from "../../types/questionAnswer";
 import { useSnackbar } from "../../context/SnackbarContext";
+import CupidoorSpinner from "../CupidoorSpinner";
 
 function ColorlibStepIcon(props: StepIconProps) {
   const { active, completed, className } = props;
@@ -68,8 +69,10 @@ export default function QuestionsStepper({
   const axiosPrivate = useAxiosPrivate();
   const { setUserAnswers, getTenantMatches } = useAPI();
   const { setSnackBarState } = useSnackbar();
+  const [isLoading,setIsLoading] = useState(true);
   useEffect(() => {
     const fetchQuestions = async () => {
+      setIsLoading(true);
       const response: AxiosResponse = await axiosPrivate.get("/question");
       const questions: Question[] = response.data;
       setQuestions(questions);
@@ -78,6 +81,7 @@ export default function QuestionsStepper({
         answersArray.push({ questionId: question._id, value: -1, priority: 0 });
       }
       setAnswers(answersArray);
+      setIsLoading(false);
     };
     fetchQuestions();
   }, []);
@@ -119,6 +123,7 @@ export default function QuestionsStepper({
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     const submitResponse: AxiosResponse = await setUserAnswers(answers);
     if (submitResponse.status === 201) {
       await fetchUser();
@@ -135,6 +140,7 @@ export default function QuestionsStepper({
         show: true,
       });
     }
+    setIsLoading(false);
   };
 
   const handleReset = () => {
@@ -145,7 +151,7 @@ export default function QuestionsStepper({
   if (user?.answeredQuestions) {
     return <Navigate to={"/home/all-apartments"}></Navigate>;
   } else {
-    return questions.length == 0 ? null : (
+    return isLoading ? <CupidoorSpinner></CupidoorSpinner> : (
       <Box sx={{ display: "flex", justifyContent: "center" }} mt={4}>
         <Card sx={{ width: "60%", borderRadius: "24px" }}>
           <Stack sx={{ width: "100%" }} spacing={3}>
@@ -165,7 +171,7 @@ export default function QuestionsStepper({
             <QuestionFormSection>
               <AnswerForm
                 questionId={questions[activeStep]._id}
-                content={questions[activeStep].tenant}
+                content={user?.role === "tenant" ? questions[activeStep].tenant : questions[activeStep].landlord }
                 setAnswer={setAnswer}
                 value={answers[activeStep].value}
               />

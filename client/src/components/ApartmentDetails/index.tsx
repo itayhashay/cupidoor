@@ -32,7 +32,7 @@ const ApartmentDetails = () => {
   }, [params.id]);
 
   useEffect(() => {
-    const color: string = precentToColor(apartmentInfo?.match);
+    const color: string = precentToColor(apartmentInfo?.match || 0);
     setMatchColor(color);
   }, [apartmentInfo]);
 

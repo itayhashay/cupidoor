@@ -41,7 +41,7 @@ const HouseCard = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [matchColor, setMatchColor] = useState<string>('');
-  const match: number = randomNumber(0, 100);
+  
   const { getUserLikedApartments, toggleTenantLike } = useAPI();
 
   // const fetchLikedApartments = async (userId: string) => {
@@ -51,7 +51,7 @@ const HouseCard = ({
   // }
 
   useEffect(() => {
-    const color: string = precentToColor(match);
+    const color: string = precentToColor(houseData.match || 0);
     setMatchColor(color);
 
     const apartmentId: string = houseData._id;
@@ -101,9 +101,9 @@ const HouseCard = ({
           </Fab>
         )}
         {!isMyProperties ? (
-          <Typography sx={{ ...MatchLabelStyles, color: matchColor }}>{`${match}% ${
-            match === 100 ? 'Perfect' : ''
-          } Match${match === 100 ? '!' : ''}`}</Typography>
+          <Typography sx={{ ...MatchLabelStyles, color: matchColor }}>{`${houseData.match}% ${
+            houseData.match === 100 ? 'Perfect' : ''
+          } Match${houseData.match === 100 ? '!' : ''}`}</Typography>
         ) : (
           <Typography
             sx={{ ...MatchLabelStyles, color: 'rgba(0, 0, 0, 0.6)' }}

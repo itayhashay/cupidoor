@@ -38,4 +38,5 @@ export type Apartment = {
   totalPrice: number;
   images: ServerApartmentImages[];
   createdAt: Date;
+  match?:number;
 };
