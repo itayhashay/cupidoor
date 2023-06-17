@@ -150,11 +150,10 @@ const Sidebar = () => {
   // TODO: How to display life style filters?
   return (
     <>
-      <CssBaseline />
       <Drawer
         variant="permanent"
         open={open}
-        sx={{ maxHeight: "91vh", overflow: "auto", position: "relative" }}
+        sx={{ overflow: "auto", position: "relative" }}
       >
         <DrawerHeader
           sx={{

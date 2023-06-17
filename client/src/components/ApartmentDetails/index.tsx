@@ -43,7 +43,7 @@ const ApartmentDetails = () => {
       <Grid container component={Paper} elevation={3} position='relative'>
         <Grid item xs={12}>
           <ImageContainer className='apartment-gallery'>
-            <ImagesGallery images={apartmentInfo.images}/>
+            <ImagesGallery images={apartmentInfo.images} />
           </ImageContainer>
         </Grid>
         <Grid item xs={12} padding={5}>
@@ -53,14 +53,23 @@ const ApartmentDetails = () => {
               <Box mt={1}>
                 <ApartmentProperties apartmentInfo={apartmentInfo}></ApartmentProperties>
               </Box>
-              <Box display={'flex'} alignItems={'center'} mb={2} mt={1}>
-                <LocationOnIcon></LocationOnIcon>
-                <Typography variant='body1' fontWeight={'bold'} ml={1} fontSize={20}>
-                  {apartmentInfo.city},{apartmentInfo.street} {apartmentInfo.houseNumber}
-                </Typography>
+              <Box
+                display={'flex'}
+                alignItems={'center'}
+                mb={2}
+                mt={1}
+                justifyContent={'space-between'}
+              >
+                <Box display={'flex'}>
+                  <LocationOnIcon></LocationOnIcon>
+                  <Typography variant='body1' fontWeight={'bold'} ml={1} fontSize={20}>
+                    {apartmentInfo.city},{apartmentInfo.street} {apartmentInfo.houseNumber}
+                  </Typography>
+                </Box>
+
                 <Box
-                  ml={3}
-                  width={56}
+                mx={1}
+                  width={66}
                   height={56}
                   alignItems={'center'}
                   justifyContent={'center'}

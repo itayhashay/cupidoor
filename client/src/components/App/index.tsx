@@ -1,22 +1,21 @@
-import { Container, ContentSection } from "./styles";
-import Navbar from "../Navbar";
-import { useState } from "react";
-import MainRouter from "../routing/MainRouter";
-import CupidChat from "../Chat";
-import { useAuth } from "../../context/AuthContext";
-import { ThemeProvider, createTheme } from "@mui/material";
+import Navbar from '../Navbar';
+import MainRouter from '../routing/MainRouter';
+import CupidChat from '../Chat';
+import { useAuth } from '../../context/AuthContext';
+import { Box, CssBaseline } from '@mui/material';
 
 const App = () => {
-  const [houses, setHouses] = useState<any[]>([]);
   const { user } = useAuth();
   return (
-    <Container>
+    <>
+      <CssBaseline />
       <Navbar />
-      <ContentSection>
-        <MainRouter />
-      </ContentSection>
+      <Box height={"calc(100vh - 64px)"} overflow={"auto"}>
+      <MainRouter />
       {user && <CupidChat></CupidChat>}
-    </Container>
+      </Box>
+      
+    </>
   );
 };
 

@@ -10,4 +10,5 @@ export const ContentSection = styled.div`
   height: calc(100% - 64px);
   display: flex;
   flex-direction: column;
+  overflow:auto;
 `;
