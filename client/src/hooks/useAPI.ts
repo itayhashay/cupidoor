@@ -9,12 +9,9 @@ import useAxiosPrivate from "./useAxiosPrivate";
 
 const useAPI = () => {
   const axiosPrivate = useAxiosPrivate();
-  
+
   const getTenantMatches = async (data: QuestionAnswer[]) => {
-    const response = await axiosPrivate.post(
-      config.api.routes.match,
-      data
-    );
+    const response = await axiosPrivate.post(config.api.routes.match, data);
 
     return response.data;
   };
@@ -29,14 +26,11 @@ const useAPI = () => {
   };
 
   const signIn = async (email: string, password: string) => {
-    const response = await axiosPrivate(
-      config.api.routes.signIn,
-      {
-        data: { email, password },
-        method: "POST",
-        withCredentials: true,
-      }
-    );
+    const response = await axiosPrivate(config.api.routes.signIn, {
+      data: { email, password },
+      method: "POST",
+      withCredentials: true,
+    });
     return response;
   };
 
@@ -103,11 +97,15 @@ const useAPI = () => {
     return response.data;
   };
 
-  const getUserAnswers = async(): Promise<ServerQuestionAnswer[]>=>{
-
+  const getUserAnswers = async (): Promise<ServerQuestionAnswer[]> => {
     const response = await axiosPrivate.get(config.api.routes.userAnswer);
     return response.data;
-  }
+  };
+
+  const getAllUsers = async () => {
+    const response = await axiosPrivate.get(config.api.routes.users);
+    return response.data;
+  };
 
   return {
     getTenantMatches,
@@ -119,7 +117,8 @@ const useAPI = () => {
     getUserLikedApartments,
     toggleTenantLike,
     getApartmentById,
-    getUserAnswers
+    getUserAnswers,
+    getAllUsers,
   };
 };
 

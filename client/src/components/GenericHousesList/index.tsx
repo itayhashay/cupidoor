@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import Sidebar, { FilterStateValue, FiltersStateType } from "../Sidebar";
+import { Chip, Box, Grid, Stack } from "@mui/material";
+import { Apartment } from "../../types/apartment";
 import HouseCard from "../HouseCard";
 import Spinner from "../Spinner";
-import { Apartment } from "../../types/apartment";
-import Sidebar, {  FilterStateValue, FiltersStateType } from "../Sidebar";
-import Box from "@mui/material/Box";
-import { useLocation, useNavigate } from "react-router-dom";
 import { DEFAULT_FILTERS } from "../Filters/constants";
 import {
   BasicFilters,
@@ -12,7 +12,6 @@ import {
   filtersToUrl,
   queryToFilters,
 } from "../../utils/filters";
-import { Chip, Container, Grid, Stack } from "@mui/material";
 import { Filter } from "../../types/filters";
 
 const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
@@ -21,8 +20,7 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
   const [isPageHome, setIsHomePage] = useState(false);
   const [isMyProperties, setIsMyProperties] = useState(false);
   const [filtersAmount, setFiltersAmount] = useState<number>(0);
-  const [filters, setFilters] =
-    useState<FiltersStateType>(DEFAULT_FILTERS);
+  const [filters, setFilters] = useState<FiltersStateType>(DEFAULT_FILTERS);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -34,8 +32,7 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
       setFilters(DEFAULT_FILTERS);
       return;
     }
-    const enabledFilters: FiltersStateType =
-      queryToFilters(queryString);
+    const enabledFilters: FiltersStateType = queryToFilters(queryString);
     const newFilters: FiltersStateType = { ...enabledFilters };
 
     setFilters(newFilters);
@@ -66,15 +63,13 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
     }
   }, [apartments]);
 
-  const updateUrl = (
-    filters: FiltersStateType
-  ) => {
+  const updateUrl = (filters: FiltersStateType) => {
     const url = filtersToUrl(filters);
     navigate(url);
   };
 
   const handleDeleteFilter = (filterKey: string) => () => {
-    let newFilters: FiltersStateType ={
+    let newFilters: FiltersStateType = {
       ...filters,
       [filterKey]: null,
     };
@@ -83,9 +78,8 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
   };
 
   const renderFilters = () => {
-    const sliderFiltersLabels = []
-    const booleanFiltersLabels = []
-    
+    const sliderFiltersLabels = [];
+    const booleanFiltersLabels = [];
 
     for (const [key, value] of Object.entries(filters)) {
       if (value) {
@@ -97,7 +91,9 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
           label: (
             <span>
               <b>{currFilter?.displayName}</b>
-              {typeof value === "boolean" ? value :` from ${value[0]} to ${value[1]}`}
+              {typeof value === "boolean"
+                ? value
+                : ` from ${value[0]} to ${value[1]}`}
             </span>
           ),
         });

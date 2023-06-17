@@ -10,7 +10,8 @@
       "getApartment": "/apartment",
       "getLandloard": "/apartment/landlord",
       "getLikedApartments": "/users-relations/tenant/likes",
-      "toggleTenantLike": "/users-relations/tenant/like"
+      "toggleTenantLike": "/users-relations/tenant/like",
+      "users": "/user/all"
     }
   }
 }
