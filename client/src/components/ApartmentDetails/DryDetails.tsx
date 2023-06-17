@@ -34,7 +34,7 @@ const DryDetails = ({
           <Box display={"flex"} alignItems={"center"}>
             <SquareFootIcon color="primary"></SquareFootIcon>
             <Typography ml={0.5} variant="subtitle2" color={"GrayText"}>
-              {apartmentInfo.squareMeter}
+              {apartmentInfo.houseArea}
             </Typography>
             <Typography
               variant="body1"
@@ -58,7 +58,7 @@ const DryDetails = ({
           <Box display={"flex"} alignItems={"center"}>
             <BalconyIcon color="primary"></BalconyIcon>
             <Typography ml={0.5} variant="subtitle2" color={"GrayText"}>
-              {apartmentInfo.balcony} Balconies
+              {apartmentInfo.balconies} Balconies
             </Typography>
           </Box>
         </Grid>

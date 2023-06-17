@@ -13,6 +13,7 @@ import {
 import { VolumeUp } from "@mui/icons-material";
 
 const RangeSlider = ({
+  displayName,
   filterName,
   minDistance,
   minValue,
@@ -66,7 +67,7 @@ const RangeSlider = ({
     <Box>
       <Box>
         <Typography gutterBottom fontWeight={"bold"}>
-          {filterName}
+          {displayName}
         </Typography>
         <Slider
           size="small"

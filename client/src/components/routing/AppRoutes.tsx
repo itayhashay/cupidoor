@@ -8,7 +8,6 @@ import HomeRouter from "../HomeRouter";
 import ApartmentDetails from "../ApartmentDetails";
 import UserRouter from "../UserRouter";
 import Landing from "../Landing/Landing";
-import { HOUSES } from "../../utils/mock";
 import PrerequisiteRoute from "./PrerequisiteRoute";
 
 // Will Change!!!!

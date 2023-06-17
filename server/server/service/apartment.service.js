@@ -16,7 +16,7 @@ const createApartment = async (apartmentData) => {
 
 const getApartmentsByUser = async (userId) => {
   try {
-    return await Apartment.find({user: userId}).populate('user', '-password');
+    return await Apartment.find({user: userId}).populate('user', '-password -salt -refreshToken -email -createdAt');
   } catch (err) {
     throw new Error('Error getting apartments: ' + err.message);
   }
@@ -24,7 +24,7 @@ const getApartmentsByUser = async (userId) => {
 
 const getApartments = async () => {
   try {
-    return await Apartment.find().populate('user', '-password');
+    return await Apartment.find().populate('user', '-password -salt -refreshToken -email -createdAt');
   } catch (err) {
     throw new Error('Error getting apartments: ' + err.message);
   }
@@ -32,7 +32,7 @@ const getApartments = async () => {
 
 const getApartment = async (id) => {
   try {
-    return await Apartment.findById(id).populate('user', '-password');
+    return await Apartment.findById(id).populate('user', '-password -salt -refreshToken -email -createdAt');
   } catch (err) {
     throw new Error('Error getting apartment: ' + err.message);
   }

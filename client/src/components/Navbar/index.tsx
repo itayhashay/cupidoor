@@ -120,7 +120,7 @@ export const Navbar = () => {
                       <Link to={"/user/personal-info"}></Link>
                       <Avatar
                         id="avatar-menu-button"
-                        alt={user.name}
+                        alt={user.firstName}
                         src={user?.avatar}
                         sx={{ cursor: "pointer" }}
                         onClick={handleMenuClick}

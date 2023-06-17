@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import HouseCard from "../HouseCard";
 import Spinner from "../Spinner";
 import { Apartment } from "../../types/apartment";
-import { HOUSES } from "../../utils/mock";
-import Sidebar from "../Sidebar";
+import Sidebar, {  FilterStateValue, FiltersStateType } from "../Sidebar";
 import Box from "@mui/material/Box";
 import { useLocation, useNavigate } from "react-router-dom";
 import { DEFAULT_FILTERS } from "../Filters/constants";
@@ -22,9 +21,8 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
   const [isPageHome, setIsHomePage] = useState(false);
   const [isMyProperties, setIsMyProperties] = useState(false);
   const [filtersAmount, setFiltersAmount] = useState<number>(0);
-  const [filters, setFilters] = useState<{ [x: string]: number[] | null }>(
-    DEFAULT_FILTERS
-  );
+  const [filters, setFilters] =
+    useState<FiltersStateType>(DEFAULT_FILTERS);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -36,17 +34,17 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
       setFilters(DEFAULT_FILTERS);
       return;
     }
-    const enabledFilters: { [x: string]: number[] | null } =
+    const enabledFilters: FiltersStateType =
       queryToFilters(queryString);
-    const newFilters: { [x: string]: number[] | null } = { ...enabledFilters };
+    const newFilters: FiltersStateType = { ...enabledFilters };
 
     setFilters(newFilters);
   }, [location]);
 
   const getAmountOfFilters = (): number => {
-    const filtersValues: (number[] | null)[] = Object.values(filters);
+    const filtersValues: FilterStateValue[] = Object.values(filters);
     const enabledFiltersValues = filtersValues.filter(
-      (filter: number[] | null) => filter !== null
+      (filter: FilterStateValue) => filter !== null
     );
     return enabledFiltersValues.length;
   };
@@ -68,33 +66,38 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
     }
   }, [apartments]);
 
-  const updateUrl = (newFilters: { [x: string]: number[] | null }) => {
-    const url = filtersToUrl(newFilters);
+  const updateUrl = (
+    filters: FiltersStateType
+  ) => {
+    const url = filtersToUrl(filters);
     navigate(url);
   };
 
   const handleDeleteFilter = (filterKey: string) => () => {
-    const newFilters: { [x: string]: number[] | null } = {
+    let newFilters: FiltersStateType ={
       ...filters,
       [filterKey]: null,
     };
+
     updateUrl(newFilters);
   };
 
   const renderFilters = () => {
-    const filterLabels = [];
+    const sliderFiltersLabels = []
+    const booleanFiltersLabels = []
+    
 
     for (const [key, value] of Object.entries(filters)) {
       if (value) {
         const currFilter: Filter | undefined = BasicFilters.find(
           (filter) => filter.props.filterName === key
         );
-        filterLabels.push({
+        sliderFiltersLabels.push({
           id: key,
           label: (
             <span>
               <b>{currFilter?.displayName}</b>
-              {` from ${value[0]} to ${value[1]}`}
+              {typeof value === "boolean" ? value :` from ${value[0]} to ${value[1]}`}
             </span>
           ),
         });
@@ -103,7 +106,7 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
 
     return (
       <Stack direction="row" spacing={1}>
-        {filterLabels.map((filter, index) => (
+        {sliderFiltersLabels.map((filter, index) => (
           <Chip
             key={index}
             label={filter.label}
@@ -147,12 +150,19 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
               {renderFilters()}
             </Box>
 
-
             <Box>
               <Grid container spacing={4} padding={2}>
                 {houses.map((house, index) => {
                   return (
-                    <Grid item xs={6} sm={6} md={6} lg={4} xl={3}  key={house._id}>
+                    <Grid
+                      item
+                      xs={6}
+                      sm={6}
+                      md={6}
+                      lg={4}
+                      xl={3}
+                      key={house._id}
+                    >
                       <HouseCard
                         houseData={house}
                         isMyProperties={isMyProperties}

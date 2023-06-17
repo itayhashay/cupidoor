@@ -1,5 +1,5 @@
 import { Apartment } from "../../types/apartment";
-import { HOUSES, LIKED_APARTMENTS } from "../../utils/mock";
+import {LIKED_APARTMENTS } from "../../utils/mock";
 import Sidebar from "../Sidebar";
 import { Route, Routes } from "react-router-dom";
 import { Container, ContentSection } from "./styles";
@@ -34,7 +34,7 @@ const HomeRouter = ({ apartments }: { apartments: Apartment[] }) => {
           <Routes>
             <Route
               path={`/${USER_ROUTES.ALL_APARTMENTS}`}
-              element={<GenericHousesList apartments={HOUSES} />}
+              element={<GenericHousesList apartments={ap} />}
             ></Route>
             <Route
               path={`/${USER_ROUTES.LIKED_APARTMENTS}`}

@@ -255,7 +255,7 @@ const PersonalInfo = ({ user }: { user: User }) => {
                       fontWeight={"bold"}
                       fontSize={"1.5em"}
                     >
-                      {user.name}
+                      {`${user.firstName} ${user.lastName}`}
                     </Typography>
                   </div>
                 </div>

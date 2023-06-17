@@ -1,5 +1,4 @@
 import { Box, Button, Fab, Typography } from "@mui/material";
-import { LANDLORD_PROPERTIES, LIKED_APARTMENTS } from "../../utils/mock";
 import GenericHousesList from "../GenericHousesList";
 import AddHomeOutlinedIcon from '@mui/icons-material/AddHomeOutlined';
 import AddProperty from "../AddProperty";
