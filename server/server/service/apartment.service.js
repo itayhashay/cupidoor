@@ -36,17 +36,29 @@ const getApartmentsByUser = async (userId) => {
 
 const getApartments = async (user) => {
   try {
-    console.log("Entered The Function");
+    console.time("missing_score");
     await _scoreMissingApartments(user);
-    console.log("Filled Missing Scores");
-
-    const apartments = await Apartment.find()
-      .populate("user", "-password -salt -refreshToken -email -createdAt")
+    console.timeEnd("missing_score");
+    console.time("apartments_find");
+    const apartmentsPromise = Apartment.find({ user: { $ne: user._id } })
+      .populate("user", "firstName lastName avatar")
+      .lean()
       .exec();
+    const scoresPromise = Score.find(
+      { tenant: user._id },
+      { apartment: 1, score: 1 }
+    ).lean();
+    const [apartments, scores] = await Promise.all([
+      apartmentsPromise,
+      scoresPromise,
+    ]);
 
-    const data = await _getApartmentsScores(apartments);
+    console.timeEnd("apartments_find");
 
-    console.log("Finished");
+    console.time("get_scores");
+    const data = await _getApartmentsScoresOptimized(apartments, scores);
+    console.timeEnd("get_scores");
+
     return data;
   } catch (err) {
     throw new Error("Error getting apartments: " + err.message);
@@ -180,8 +192,11 @@ const _scoreMissingApartments = async (user) => {
     { $match: { Match: { $eq: [] } } },
   ]);
 
+  if (missingScoreApartments.length === 0) return;
+
   const userAnswers = await UserAnswer.find({ user: user._id })
     .populate("question")
+    .lean()
     .exec();
 
   const promises = [];
@@ -213,21 +228,40 @@ const _scoreMissingApartments = async (user) => {
 
 const _getApartmentsScores = (apartments) => {
   const promises = [];
-  console.log("Getting Appartments Scores");
   for (let apartment of apartments) {
     promises.push(
       new Promise(async (resolve) => {
-        Score.findOne({ apartment: apartment._id }).then((score) => {
-          resolve({
-            ...apartment.toJSON(),
-            match: score.score,
+        Score.findOne({ apartment: apartment._id })
+          .select({ score: 1 })
+          .lean()
+          .then((score) => {
+            resolve({
+              ...apartment,
+              match: score.score,
+            });
           });
-        });
       })
     );
   }
 
   return Promise.all(promises);
+};
+
+const _getApartmentsScoresOptimized = (apartments, scores) => {
+  const apartmentToScore = {};
+  const apartmentsMatches = [];
+  for (let score of scores) {
+    apartmentToScore[score.apartment] = score.score;
+  }
+
+  for (let apartment of apartments) {
+    apartmentsMatches.push({
+      ...apartment,
+      match: apartmentToScore[apartment._id],
+    });
+  }
+
+  return apartmentsMatches;
 };
 
 module.exports = {

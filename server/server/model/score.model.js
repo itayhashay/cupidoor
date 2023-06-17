@@ -3,18 +3,16 @@ const mongoose = require("mongoose");
 const scoreSchema = new mongoose.Schema({
   tenant: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    autopopulate: { select: "-password -salt -refreshToken" },
+    ref: "User"
   },
   apartment: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Apartment",
     autopopulate: true,
   },
-  landlord:{
+  landlord: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    autopopulate: { select: "-password -salt -refreshToken" },
+    ref: "User"
   },
   score: {
     type: Number,
@@ -24,7 +22,7 @@ const scoreSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-}).plugin(require("mongoose-autopopulate"));
+});
 
 const Score = mongoose.model("Score", scoreSchema);
 
