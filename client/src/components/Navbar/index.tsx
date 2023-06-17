@@ -86,8 +86,8 @@ export const Navbar = () => {
               </Typography>
             </Grid>
             <Grid item xs={1}></Grid>
-            <Grid item xs={4} display={'flex'} alignItems={'center'}></Grid>
-            <Grid item xs={1} display={'flex'} alignItems={'center'} justifyContent={"flex-end"}>
+         
+            <Grid item xs={2} display={'flex'} alignItems={'center'} justifyContent={"flex-end"}>
               {user ? (
                 <>
                   <Typography

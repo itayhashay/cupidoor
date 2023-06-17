@@ -67,10 +67,10 @@ const getApartments = async (user) => {
 
 const getApartment = async (id) => {
   try {
-    const apartment = await Apartment.findById(id).populate(
-      "user",
-      "-password -salt -refreshToken -email -createdAt"
-    );
+    const apartment = await Apartment.findById(id)
+      .populate("user", "-password -salt -refreshToken -email -createdAt")
+      .lean()
+      .exec();
     const data = await _getApartmentsScores([apartment]);
     return data[0];
   } catch (err) {
