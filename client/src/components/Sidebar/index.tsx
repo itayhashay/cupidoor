@@ -152,8 +152,9 @@ const Sidebar = () => {
     <>
       <Drawer
         variant="permanent"
+        anchor="left"
         open={open}
-        sx={{ overflow: "auto", position: "relative" }}
+        sx={{ overflow: "auto", position: "relative",maxHeight:"calc(100vh - 64px)" }}
       >
         <DrawerHeader
           sx={{

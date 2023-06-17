@@ -119,10 +119,10 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'row'
+            flexDirection: 'row',
           }}
         >
-          {isPageHome && <Sidebar />}
+          {/* {isPageHome && <Sidebar />} */}
           <Box>
             <Box
               sx={{

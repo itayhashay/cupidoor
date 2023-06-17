@@ -28,7 +28,6 @@ const HomeRouter = () => {
         <CupidoorSpinner></CupidoorSpinner>
       ) : (
         <Box display={'flex'}>
-          <Sidebar />
           <Box>
             <Routes>
               <Route

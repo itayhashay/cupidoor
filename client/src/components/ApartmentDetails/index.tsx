@@ -8,10 +8,9 @@ import { ImageContainer } from './styles';
 import ImagesGallery from './ImagesGallery';
 import { FavoriteBorder, PercentRounded } from '@mui/icons-material';
 import ApartmentProperties from './ApartmentProperties';
-import { green } from '@mui/material/colors';
 import { precentToColor } from '../../utils/colors';
-import { MatchLabelStyles } from '../HouseCard/styles';
 import useAPI from '../../hooks/useAPI';
+import CupidoorSpinner from '../CupidoorSpinner';
 
 const ApartmentDetails = () => {
   const [apartmentInfo, setApartmentInfo] = useState<Apartment | null>(null);
@@ -36,7 +35,7 @@ const ApartmentDetails = () => {
     setMatchColor(color);
   }, [apartmentInfo]);
 
-  if (!apartmentInfo) return null;
+  if (!apartmentInfo) return <CupidoorSpinner></CupidoorSpinner>;
   return (
     // TODO: Change last updated mock.
     <Container maxWidth='xl' sx={{ paddingY: 10 }}>
@@ -68,7 +67,7 @@ const ApartmentDetails = () => {
                 </Box>
 
                 <Box
-                mx={1}
+                  mx={1}
                   width={66}
                   height={56}
                   alignItems={'center'}
