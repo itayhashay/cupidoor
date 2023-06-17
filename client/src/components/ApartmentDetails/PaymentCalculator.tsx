@@ -1,52 +1,70 @@
-import Typography from "@mui/material/Typography";
-import { PaymentsCond } from "../../types/paymentsCond";
-import { PaymentProperty } from "./styles";
+import { Box, Divider, Grid, Typography } from '@mui/material';
+import { Apartment } from '../../types/apartment';
 
-const PaymentCalculator = (paymentsCond: PaymentsCond) => {
-    return (
-        <>
-        <PaymentProperty>
-            <Typography sx={{ fontWeight: '400', fontSize: '18px', marginRight: '8px'}}>
-                Rent:
+const PaymentCalculator = ({ apartmentInfo }: { apartmentInfo: Apartment }) => {
+  return (
+    <Grid item xs={12} padding={1}>
+      <Typography variant='h6'>Fees & Terms</Typography>
+      <Divider sx={{ my: 1 }}></Divider>
+      <Grid container padding={1} bgcolor={'#F5F5F5'} borderRadius={3} wrap='wrap' rowSpacing={1}>
+        <Grid item xs={12} sm={6}>
+          <Box>
+            <Typography variant='body2' fontWeight={'bold'} mb={0.1}>
+              Monthly rental:
             </Typography>
-            <Typography sx={{ fontWeight: '100'}}>
-                {paymentsCond.rent}₪
+            <Box display={'flex'}>
+              <Typography variant='caption' fontWeight={'bold'}>
+                ₪{apartmentInfo.price}
+              </Typography>
+              <Typography variant='caption' color={'GrayText'}>
+                /month
+              </Typography>
+            </Box>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Box>
+            <Typography variant='body2' fontWeight={'bold'}>
+              Committee:
             </Typography>
-        </PaymentProperty>
-        <PaymentProperty>
-            <Typography sx={{ fontWeight: '400', fontSize: '18px', marginRight: '8px'}}>
-                Property tax:
+            <Box display={'flex'}>
+              <Typography variant='caption'>₪{apartmentInfo.committee}</Typography>
+            </Box>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Box>
+            <Typography variant='body2' fontWeight={'bold'}>
+              Tax:
             </Typography>
-            <Typography sx={{ fontWeight: '100'}}>
-                {paymentsCond.propertyTax}₪
+            <Box display={'flex'}>
+              <Typography variant='caption'>₪{apartmentInfo.tax}</Typography>
+            </Box>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Box>
+            <Typography variant='body2' fontWeight={'bold'}>
+              Total Price:
             </Typography>
-        </PaymentProperty>
-        <PaymentProperty>
-            <Typography sx={{ fontWeight: '400', fontSize: '18px', marginRight: '8px'}}>
-                House committee:
+            <Box display={'flex'}>
+              <Typography variant='caption'>₪{apartmentInfo.totalPrice}</Typography>
+            </Box>
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Box>
+            <Typography variant='body2' fontWeight={'bolder'}>
+              Entrance date:
             </Typography>
-            <Typography sx={{ fontWeight: '100'}}>
-                {paymentsCond.houseCommittee}₪
+            <Typography variant='caption'>
+              {new Date(apartmentInfo.entranceDate).toLocaleDateString()}
             </Typography>
-        </PaymentProperty>
-        <PaymentProperty>
-            <Typography sx={{ fontWeight: '400', fontSize: '18px', marginRight: '8px'}}>
-                Number of payments:
-            </Typography>
-            <Typography sx={{ fontWeight: '100'}}>
-                {paymentsCond.numOfPayments}
-            </Typography>
-        </PaymentProperty>
-        <PaymentProperty>
-            <Typography sx={{ fontWeight: '400', fontSize: '18px', marginRight: '8px'}}>
-                Payment day:
-            </Typography>
-            <Typography sx={{ fontWeight: '100'}}>
-            {`Every ${paymentsCond.paymentDay}th of the month`}
-            </Typography>
-        </PaymentProperty>
-    </>
-    );
-}
- 
+          </Box>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+};
+
 export default PaymentCalculator;

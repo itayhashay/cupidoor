@@ -1,17 +1,20 @@
 import { Avatar, Box, Button, Container, Divider, Grid, Paper, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Apartment } from '../../types/apartment';
 import DryDetails from './DryDetails';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { ImageContainer } from './styles';
 import ImagesGallery from './ImagesGallery';
-import { FavoriteBorder, PercentRounded } from '@mui/icons-material';
+import { ExpandLess, ExpandMore, FavoriteBorder, PercentRounded } from '@mui/icons-material';
 import ApartmentFeatures from './ApartmentFeatures';
 import { precentToColor } from '../../utils/colors';
 import useAPI from '../../hooks/useAPI';
 import CupidoorSpinner from '../CupidoorSpinner';
 import LandlordSection from './LandlordSection';
+import ApartmentDescription from './ApartmentDescription';
+import PaymentCalculator from './PaymentCalculator';
+import { MatchLabelStyles } from '../HouseCard/styles';
 
 const ApartmentDetails = () => {
   const [apartmentInfo, setApartmentInfo] = useState<Apartment | null>(null);
@@ -69,96 +72,53 @@ const ApartmentDetails = () => {
                   <Box mt={1}>
                     <ApartmentFeatures apartmentInfo={apartmentInfo}></ApartmentFeatures>
                   </Box>
-                  <Box
-                    display={'flex'}
-                    alignItems={'center'}
-                    mb={2}
-                    mt={1}
-                    justifyContent={'space-between'}
-                  >
-                    <Box
-                      mx={1}
-                      width={66}
-                      height={56}
-                      alignItems={'center'}
-                      justifyContent={'center'}
-                      display={'flex'}
-                      borderRadius={500}
-                      bgcolor={matchColor}
-                      component={Paper}
-                      elevation={6}
-                    >
-                      <Typography
-                        textAlign={'center'}
-                        fontWeight={'bold'}
-                        fontSize={18}
-                        sx={{
-                          color: 'white',
-                        }}
-                      >
-                        {apartmentInfo.match}%
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} padding={1}>
-                  <Typography variant='h6'>Details</Typography>
-                  <Divider sx={{ my: 1 }}></Divider>
-                  <Box mb={1}>
-                    <Typography variant='subtitle1' fontWeight={'bold'} mr={1}>
-                      Property Condition:
-                    </Typography>
-                    <Typography variant='body2'>{apartmentInfo.propertyCondition}</Typography>
-                  </Box>
-                  <Box>
-                    <Typography variant='subtitle1' fontWeight={'bold'} mr={1}>
-                      Description:
-                    </Typography>
-                    <Typography variant='body2'>{apartmentInfo.description}</Typography>
-                  </Box>
                 </Grid>
               </Grid>
             </Grid>
+            <ApartmentDescription apartmentInfo={apartmentInfo}></ApartmentDescription>
           </Grid>
         </Grid>
 
         <Grid item xs={4}>
-          <Box mb={2} padding={1} height={'100%'} display={'flex'} flexDirection={'column'}>
-            <LandlordSection landlord={apartmentInfo.user}></LandlordSection>
-
-            <Box mt={'auto'}>
-              <Typography variant='h6'>Fees & Terms</Typography>
-              <Divider></Divider>
-              <Box padding={2} display={'flex'} justifyContent={'space-between'}>
-                <Box>
-                  <Typography variant='body2'>Monthly rental:</Typography>
-                  <Box display={'flex'} alignItems={'end'} padding={1}>
-                    <Typography fontWeight={'bold'}>₪{apartmentInfo.totalPrice}</Typography>
-                    <Typography color={'GrayText'}>/month</Typography>
-                  </Box>
-                </Box>
-                <Box>
-                  <Typography variant='body1' fontWeight={'bolder'}>
-                    Entrance date:
-                  </Typography>
-                  <Box display={'flex'} alignItems={'end'}>
-                    <Typography fontWeight={'bold'} padding={1}>
-                      {new Date(apartmentInfo.entranceDate).toLocaleDateString()}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
-
-              <Button
-                fullWidth
-                variant='contained'
-                size='large'
-                endIcon={<FavoriteBorder></FavoriteBorder>}
-              >
-                Like
-              </Button>
+          <Grid container>
+            <Grid item xs={12} padding={1}>
+              <LandlordSection landlord={apartmentInfo.user}></LandlordSection>
+            </Grid>
+            <Grid item xs={12} padding={1}>
+              <PaymentCalculator apartmentInfo={apartmentInfo}></PaymentCalculator>
+            </Grid>
+          </Grid>
+          {/* <Grid item xs={12}>
+            <Box display={'flex'} justifyContent={'center'}>
+              <Avatar sx={{ bgcolor: matchColor, height: 60, width: 60 }}>
+                <Typography>{apartmentInfo.match}%</Typography>
+              </Avatar>
             </Box>
-          </Box>
+          </Grid> */}
+          <Grid item xs={12} padding={1} position={'relative'}>
+            <Typography
+              sx={{
+                ...MatchLabelStyles,
+                top: 15,
+                right: 10,
+                border: '1px solid #CECECE',
+                borderRadius: 0,
+                zIndex: 1,
+                transform: 'rotate(323deg)',
+                color: matchColor,
+              }}
+            >{`${apartmentInfo.match}% ${apartmentInfo.match === 100 ? 'Perfect' : ''} Match${
+              apartmentInfo.match === 100 ? '!' : ''
+            }`}</Typography>
+            <Button
+              fullWidth
+              variant='contained'
+              size='large'
+              endIcon={<FavoriteBorder></FavoriteBorder>}
+            >
+              Like
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </Container>

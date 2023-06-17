@@ -52,6 +52,7 @@ const ImagesGallery = ({ images }: { images: ServerApartmentImages[] }) => {
     <ImageGallery
       items={imagesArray}
       showFullscreenButton={false}
+      showThumbnails={false}
       showPlayButton={false}
       showIndex={true}
       renderLeftNav={(onClick, disabled) => (
