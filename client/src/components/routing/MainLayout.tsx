@@ -10,7 +10,7 @@ const MainLayout = () => {
   const location = useLocation();
   const [showSideBar, setShowSideBar] = useState(false);
   useEffect(() => {
-    if (location.pathname === '/home/all-apartments') {
+    if (location.pathname.includes('/home')) {
       setShowSideBar(true);
     } else {
       setShowSideBar(false);

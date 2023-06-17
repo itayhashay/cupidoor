@@ -1,12 +1,12 @@
 import _ from 'lodash';
 
-import RoomsIcon from '../icons/aparment/rooms.png';
-import FloorIcon from '../icons/aparment/floor.png';
-import Mr2Icon from '../icons/aparment/mr.png';
-import ParkingIcon from '../icons/aparment/parking.png';
-import BalconyIcon from '../icons/aparment/balcony.png';
-import PriceIcon from '../icons/aparment/shekel.png';
-import PrecentIcon from '../icons/aparment/percentage.png';
+import RoomsIcon from '../icons/apartment/rooms.png';
+import FloorIcon from '../icons/apartment/floor.png';
+import Mr2Icon from '../icons/apartment/mr.png';
+import ParkingIcon from '../icons/apartment/parking.png';
+import BalconyIcon from '../icons/apartment/balcony.png';
+import PriceIcon from '../icons/apartment/shekel.png';
+import PrecentIcon from '../icons/apartment/percentage.png';
 
 import PetIcon from '../icons/lifeStyle/pet.png';
 import SmokeIcon from '../icons/lifeStyle/smoke.png';

@@ -1,4 +1,15 @@
-import { AppBar, Box, Toolbar, Button, Grid, Menu, CssBaseline, Container, Tabs, Tab } from '@mui/material';
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Button,
+  Grid,
+  Menu,
+  CssBaseline,
+  Container,
+  Tabs,
+  Tab,
+} from '@mui/material';
 import { Avatar, Typography, MenuItem } from '@mui/material';
 import { UserSection, linkStyles } from './styles';
 import { useEffect, useState } from 'react';
@@ -9,7 +20,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Logo from '../../icons/logo.svg';
 import LogoWhite from '../../icons/logo-white.svg';
-import CupidoorLogo from './CupidoorLogo';
 
 export const Navbar = () => {
   const { user, setUser, signOutUser } = useAuth();
@@ -59,70 +69,74 @@ export const Navbar = () => {
   };
 
   return (
-    <Box flexGrow={1} position={"sticky"}>
-      <AppBar position='static' sx={{bgcolor:"white"}} elevation={10}>
+    <Box flexGrow={1} position={'sticky'}>
+      <AppBar position='static' sx={{ bgcolor: 'primary.light' }} elevation={10}>
         <Toolbar>
-          <CupidoorLogo sx={{ fontSize: 64 }}></CupidoorLogo>
-          <Typography variant='h6' ml={1}>
-            Cupidoor
-          </Typography>
-          <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>
-           <Tabs value={0}>
-            <Tab sx={{color:"white"}} label="Home"></Tab>
-            <Tab sx={{color:"white"}} label="Liked Properties"></Tab>
-            <Tab sx={{color:"white"}} label="My Properties"></Tab>
-           </Tabs>
-          </Box>
-          <Box flexGrow={1}></Box>
-          <Box display={'flex'} alignItems={'center'} justifyContent={'flex-end'}>
-            {user ? (
-              <>
-                <Typography
-                  variant='h6'
-                  sx={{ marginRight: '16px' }}
-                >{`Hello ${user.firstName}`}</Typography>
-                <Link to={'/user/personal-info'}></Link>
-                <Avatar
-                  id='avatar-menu-button'
-                  alt={user.firstName}
-                  src={user?.avatar}
-                  sx={{ cursor: 'pointer' }}
-                  onClick={handleMenuClick}
+          <Grid container justifyContent={'space-between'}>
+            <Grid item xs={1} display={'flex'} alignItems={'center'}>
+              <Link to={`/home/${USER_ROUTES.ALL_APARTMENTS}`}>
+                <img
+                  src={location.pathname === '/' ? Logo : LogoWhite}
+                  alt='logo'
+                  style={{ height: '4rem', marginRight: '2px', cursor: 'pointer' }}
                 />
-                <Menu
-                  id='avatar-menu'
-                  aria-labelledby='avatar-menu-button'
-                  anchorEl={anchorEl}
-                  open={isMenuOpen}
-                  onClose={handleMenuClose}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                  }}
-                >
-                  <MenuItem onClick={handleAccountNavigation} sx={{ mb: 1 }}>
-                    <AccountCircleIcon sx={{ mr: 1 }}></AccountCircleIcon> Account
-                  </MenuItem>
-                  <MenuItem onClick={handleSignOut}>
-                    <LogoutIcon sx={{ mr: 1 }}></LogoutIcon>
-                    Sign Out
-                  </MenuItem>
-                </Menu>
-              </>
-            ) : (
-              <>
-                <Button sx={linkStyles}>
-                  <Typography component={Link} to={'/signIn'} sx={{ color: 'white' }}>
-                    Sign In
-                  </Typography>
-                </Button>
-              </>
-            )}
-          </Box>
+              </Link>
+              <Typography variant='h6' ml={1}>
+                Cupidoor
+              </Typography>
+            </Grid>
+            <Grid item xs={1}></Grid>
+            <Grid item xs={4} display={'flex'} alignItems={'center'}></Grid>
+            <Grid item xs={1} display={'flex'} alignItems={'center'} justifyContent={"flex-end"}>
+              {user ? (
+                <>
+                  <Typography
+                    variant='h6'
+                    sx={{ marginRight: '16px' }}
+                  >{`Hello ${user.firstName}`}</Typography>
+                  <Link to={'/user/personal-info'}></Link>
+                  <Avatar
+                    id='avatar-menu-button'
+                    alt={user.firstName}
+                    src={user?.avatar}
+                    sx={{ cursor: 'pointer' }}
+                    onClick={handleMenuClick}
+                  />
+                  <Menu
+                    id='avatar-menu'
+                    aria-labelledby='avatar-menu-button'
+                    anchorEl={anchorEl}
+                    open={isMenuOpen}
+                    onClose={handleMenuClose}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'left',
+                    }}
+                  >
+                    <MenuItem onClick={handleAccountNavigation} sx={{ mb: 1 }}>
+                      <AccountCircleIcon sx={{ mr: 1 }}></AccountCircleIcon> Account
+                    </MenuItem>
+                    <MenuItem onClick={handleSignOut}>
+                      <LogoutIcon sx={{ mr: 1 }}></LogoutIcon>
+                      Sign Out
+                    </MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <>
+                  <Button sx={linkStyles}>
+                    <Typography component={Link} to={'/signIn'} sx={{ color: 'white' }}>
+                      Sign In
+                    </Typography>
+                  </Button>
+                </>
+              )}
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
     </Box>

@@ -38,7 +38,7 @@ const HouseCard = ({
   houseData: Apartment;
   isMyProperties: boolean;
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [matchColor, setMatchColor] = useState<string>('');
   const match: number = randomNumber(0, 100);
@@ -73,16 +73,17 @@ const HouseCard = ({
   return (
     <Link to={`/apartment/${houseData._id}`}>
       <Card sx={cardStyles}>
-        {isLoading ? (
+        {isLoading && (
           <Skeleton animation='wave' variant='rectangular' width={'100%'} height={220} />
-        ) : (
-          <CardMedia
-            component='img'
-            height='220'
-            image={houseData.images[0] && houseData.images[0].url}
-            alt='Paella dish'
-          />
         )}
+        <CardMedia
+          component='img'
+          height='220'
+          sx={{ display: isLoading ? 'none' : 'block' }}
+          image={houseData.images[0] ? houseData.images[0].url : '/apartmentPlaceholder.png'}
+          onLoad={() => setIsLoading(false)}
+        />
+
         <Tooltip
           title={`${houseData.user.firstName} ${houseData.user.lastName}`}
           placement='bottom'
@@ -176,7 +177,7 @@ const HouseCard = ({
               <Box display={'flex'} justifyContent={'center'} bgcolor={'primary.dark'} paddingY={1}>
                 <Icon></Icon>
                 <Typography textAlign={'center'} fontWeight={'bold'} color={'white'} fontSize={16}>
-                  ₪{houseData.cost}
+                  ₪{houseData.price}
                 </Typography>
               </Box>
             </>

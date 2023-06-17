@@ -152,7 +152,15 @@ export const StepIconConnector = styledMui(StepConnector)(({ theme }) => ({
 }));
 
 export const ProfilePictureContainer = {
-  backgroundImage: "url(https://img.freepik.com/premium-photo/handdrawn-black-white-sketch-real-estate-concept_250469-8960.jpg?w=2000)",
+  backgroundImage: "url(/profilePictureBackground.avif)",
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  mb:"60px"
+};
+
+export const LandlordPictureContainer = {
+  backgroundImage: "url(/landlordBackground.webp)",
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
   backgroundPosition: "center",

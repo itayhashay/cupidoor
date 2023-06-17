@@ -12,7 +12,7 @@ type ApartmentPropertiesProps = {
   apartmentInfo: Apartment;
   isBasicData?: boolean;
 };
-const ApartmentProperties = ({
+const ApartmentFeatures = ({
   apartmentInfo,
   isBasicData = false,
 }: ApartmentPropertiesProps) => {
@@ -22,11 +22,12 @@ const ApartmentProperties = ({
       borderRadius={3}
       padding={1}
       bgcolor={"#F5F5F5"}
+      wrap="wrap"
       sx={{ pointerEvents: "none" }}
     >
       {PropertyFeaturesFilters.map((feature) => {
         return (
-          <Grid item xs={4} key={feature.filterName}>
+          <Grid item xs={12} sm={6} md={4}  key={feature.filterName} >
             <FormControlLabel
               control={
                 <Checkbox
@@ -42,4 +43,4 @@ const ApartmentProperties = ({
   );
 };
 
-export default ApartmentProperties;
+export default ApartmentFeatures;

@@ -11,7 +11,7 @@ export type Apartment = {
   _id: string;
   user: User;
   description: string;
-  propertyCondition: PaymentsCond;
+  propertyCondition: string;
   city: string;
   street: string;
   houseNumber: number;
