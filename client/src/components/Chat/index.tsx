@@ -122,7 +122,7 @@ const CupidChat: React.FC = () => {
   useEffect(() => {
     const fetchConversation = async () => {
       const response: AxiosResponse<ChatConversationAxiosResponse> =
-        await axiosPrivate.get(`http://localhost:2308/chat/${conversationId}`);
+        await axiosPrivate.get(`${config.api.baseUrl}/chat/${conversationId}`);
       const { messages } = response.data;
       const contact = contacts.filter(
         (contact) => contact.conversationId === conversationId
