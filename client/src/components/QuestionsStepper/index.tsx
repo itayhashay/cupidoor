@@ -1,5 +1,4 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
 import Stepper from "@mui/material/Stepper";
@@ -21,12 +20,19 @@ import {
   ColorlibStepIconRoot,
   QuestionFormSection,
 } from "./styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AnswerForm from "./AnswerForm";
 import PriorityForm from "./PriorityForm";
-import { getTenantMatches, setUserAnswers } from "../../utils/api";
 import { Card, Divider } from "@mui/material";
 import { USER_ROUTES } from "../UserRouter/constants";
+import { useAuth } from "../../context/AuthContext";
+import { Question } from "../../types/question";
+import { AxiosResponse } from "axios";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAPI from "../../hooks/useAPI";
+import { QuestionAnswer } from "../../types/questionAnswer";
+import { useSnackbar } from "../../context/SnackbarContext";
+import CupidoorSpinner from "../CupidoorSpinner";
 
 function ColorlibStepIcon(props: StepIconProps) {
   const { active, completed, className } = props;
@@ -54,20 +60,52 @@ export default function QuestionsStepper({
 }: {
   displayHouses: Function;
 }) {
+  const { user, fetchUser } = useAuth();
+  const [questions, setQuestions] = useState<Question[]>([] as Question[]);
   const [activeStep, setActiveStep] = useState<number>(0);
-  const [answers, setAnswers] = useState<number[]>([-1, -1, -1, -1, -1]);
-  const [priority, setPriorities] = useState<number[]>([0, 0, 0, 0, 0]);
+  const [answers, setAnswers] = useState<QuestionAnswer[]>(
+    [] as QuestionAnswer[]
+  );
+  const axiosPrivate = useAxiosPrivate();
+  const { setUserAnswers, getTenantMatches } = useAPI();
+  const { setSnackBarState } = useSnackbar();
+  const [isLoading,setIsLoading] = useState(true);
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      setIsLoading(true);
+      const response: AxiosResponse = await axiosPrivate.get("/question");
+      const questions: Question[] = response.data;
+      setQuestions(questions);
+      const answersArray: QuestionAnswer[] = [];
+      for (let question of questions) {
+        answersArray.push({ questionId: question._id, value: -1, priority: 0 });
+      }
+      setAnswers(answersArray);
+      setIsLoading(false);
+    };
+    fetchQuestions();
+  }, []);
 
-  const setAnswer = (index: number, value: number) => {
-    const newAnswers = [...answers]; // create a new copy of the array
-    newAnswers[index] = value; // update the element at the specified index
-    setAnswers(newAnswers); // update the state with the new array
+  const setAnswer = (questionId: string, value: number) => {
+    setAnswers((prevState) => {
+      return prevState.map((answer) => {
+        if (answer.questionId === questionId) {
+          return { ...answer, value: value };
+        }
+        return answer;
+      });
+    });
   };
 
-  const setPriority = (index: number, value: number) => {
-    const newPriorities = [...priority]; // create a new copy of the array
-    newPriorities[index] = value; // update the element at the specified index
-    setPriorities(newPriorities); // update the state with the new array
+  const setPriority = (questionId: string, value: number) => {
+    setAnswers((prevState) => {
+      return prevState.map((answer) => {
+        if (answer.questionId === questionId) {
+          return { ...answer, priority: value };
+        }
+        return answer;
+      });
+    });
   };
 
   const handleNext = () => {
@@ -85,22 +123,24 @@ export default function QuestionsStepper({
   };
 
   const handleSubmit = async () => {
-    console.log({
-      answers,
-      priority,
-    });
+    setIsLoading(true);
+    const submitResponse: AxiosResponse = await setUserAnswers(answers);
+    if (submitResponse.status === 201) {
+      await fetchUser();
+      const res = await getTenantMatches(answers);
 
-    const submitResponse = await setUserAnswers({answers,priority});
-
-    const res = await getTenantMatches({
-      answers,
-      priority,
-    });
-
-    // TODO: Convert to Apartment type and show the screen.
-    // If all Selected -> move to home page
-    console.log(res);
-    displayHouses(res);
+      // TODO: Convert to Apartment type and show the screen.
+      // If all Selected -> move to home page
+      console.log(res);
+      displayHouses(res);
+    } else {
+      setSnackBarState({
+        message: "Couldn't submit answers, please try again!",
+        severity: "error",
+        show: true,
+      });
+    }
+    setIsLoading(false);
   };
 
   const handleReset = () => {
@@ -108,72 +148,77 @@ export default function QuestionsStepper({
   };
 
   const isLastStep = activeStep === QUESTIONS.length - 1;
-  return (
-    <Box sx={{ display: "flex", justifyContent: "center" }} mt={4}>
-      <Card sx={{ width: "60%", borderRadius: "24px" }}>
-        <Stack sx={{ width: "100%" }} spacing={3}>
-          <Stepper
-            sx={{ marginTop: "24px" }}
-            alternativeLabel
-            activeStep={activeStep}
-            connector={<ColorlibConnector />}
-          >
-            {QUESTIONS.map((label, index) => (
-              <Step key={index}>
-                <StepLabel StepIconComponent={ColorlibStepIcon}></StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <Divider />
-          <QuestionFormSection>
-            <AnswerForm
+  if (user?.answeredQuestions) {
+    return <Navigate to={"/home/all-apartments"}></Navigate>;
+  } else {
+    return isLoading ? <CupidoorSpinner></CupidoorSpinner> : (
+      <Box sx={{ display: "flex", justifyContent: "center" }} mt={4}>
+        <Card sx={{ width: "60%", borderRadius: "24px" }}>
+          <Stack sx={{ width: "100%" }} spacing={3}>
+            <Stepper
+              sx={{ marginTop: "24px" }}
+              alternativeLabel
               activeStep={activeStep}
-              setAnswer={setAnswer}
-              value={answers[activeStep]}
-            />
-            <PriorityForm
-              activeStep={activeStep}
-              setAnswer={setPriority}
-              value={priority[activeStep]}
-            />
-            <Box
-              sx={{
-                mb: 2,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              connector={<ColorlibConnector />}
             >
-              <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mt: 1, mr: 2 }}
+              {questions.map((question, index) => (
+                <Step key={index}>
+                  <StepLabel StepIconComponent={ColorlibStepIcon}></StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            <Divider />
+            <QuestionFormSection>
+              <AnswerForm
+                questionId={questions[activeStep]._id}
+                content={user?.role === "tenant" ? questions[activeStep].tenant : questions[activeStep].landlord }
+                setAnswer={setAnswer}
+                value={answers[activeStep].value}
+              />
+              <PriorityForm
+                content=""
+                questionId={questions[activeStep]._id}
+                setAnswer={setPriority}
+                value={answers[activeStep].priority}
+              />
+              <Box
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                Back
-              </Button>
-              {isLastStep ? (
-                <Link className="navbar-link" to={`/home/${USER_ROUTES.ALL_APARTMENTS}`}>
+                <Button
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  sx={{ mt: 1, mr: 2 }}
+                >
+                  Back
+                </Button>
+                {isLastStep ? (
                   <Button
                     variant="contained"
+                    type="button"
                     onClick={handleSubmit}
                     sx={{ mt: 1, mr: 1 }}
                   >
                     {"Find My Home!"}
-                  </Button>{" "}
-                </Link>
-              ) : (
-                <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  sx={{ mt: 1, mr: 1 }}
-                >
-                  {"Next"}
-                </Button>
-              )}
-            </Box>
-          </QuestionFormSection>
-        </Stack>
-      </Card>
-    </Box>
-  );
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    onClick={handleNext}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    {"Next"}
+                  </Button>
+                )}
+              </Box>
+            </QuestionFormSection>
+          </Stack>
+        </Card>
+      </Box>
+    );
+  }
 }

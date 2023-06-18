@@ -1,8 +1,8 @@
 const http = require("http");
-const server = http.createServer();
+// const server = http.createServer();
 const chalk = require("chalk");
 const { Server } = require("socket.io");
-const initializeChat = () => {
+const initializeChat = (server) => {
   const io = new Server(server, {
     cors: {
       origin: "*",
@@ -25,9 +25,6 @@ const initializeChat = () => {
     return users.find((user) => user.userId === userId);
   };
 
-  server.listen(process.env.CHAT_PORT, () => {
-    console.log("Chat server listening on port: "+process.env.CHAT_PORT);
-  });
 
   io.on("connection", async (socket) => {
     //Retrieve the user id

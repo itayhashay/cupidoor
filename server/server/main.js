@@ -30,16 +30,17 @@ const startServer = async () => {
   try {
     console.log(chalk.yellow("\nTrying to connect to mongoDB"));
     await mongoose.connect(process.env.MONGOURI);
-    initializeChat();
+    
     console.log(chalk.green("MongoDB connected successfully"));
   } catch (ex) {
     console.error(ex.message);
     console.log(chalk.red(ex.stack));
   }
 
-  app.listen(2308, () => {
+  const server = app.listen(2308, () => {
     console.log(chalk.green(`\nServer listening on port: ${PORT}\n`));
   });
+  initializeChat(server);
 };
 
 startServer();

@@ -1,34 +1,90 @@
-import { Button, Typography, Box, CircularProgress } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Grid,
+  Avatar,
+  Paper,
+  Tabs,
+  Tab,
+  Drawer,
+  Tooltip,
+  IconButton,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import {
-  PersonalInfoContainer,
   ProfilePicture,
   ProfilePictureContainer,
-  Frame,
-  Col,
   LinksDividerLine,
   LinkIcon,
 } from "./styles";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, UserLink } from "../../types/user";
-import { PROFILE_PICTURES } from "../../utils/mock";
-import { randomNumber } from "../../utils/random";
 import { DividerLine } from "../Navbar/styles";
 import { LINK_TO_ICON, USER_INFO_FIELDS, UserField } from "../../utils/user";
 import ProfileStepper from "./ProfileStepper";
-import { QUESTIONS } from "../QuestionsStepper/constant";
 import { convertFileToBase64 } from "../../utils/base64";
 import axiosPrivate from "../../utils/axiosPrivate";
 import useRefreshToken from "../../hooks/useRefreshToken";
 import { useSnackbar } from "../../context/SnackbarContext";
+import useAPI from "../../hooks/useAPI";
+import { ServerQuestionAnswer } from "../../types/questionAnswer";
+import SecurityIcon from "@mui/icons-material/Security";
+import PersonIcon from "@mui/icons-material/Person";
+import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import PersonalDetails from "./PersonalDetails";
+import PersonalInfoAnswers from "./PersonalInfoAnswers";
+import { useConfirmationModal } from "../../context/ConfirmationModalContext";
+import { Edit, Edit as EditIcon, Height } from "@mui/icons-material";
+import { useAuth } from "../../context/AuthContext";
+import CupidoorSpinner from "../CupidoorSpinner";
+import PersonalSecurity from "./PersonalSecurity";
 
 const PersonalInfo = ({ user }: { user: User }) => {
   const [role, setRole] = useState("Tenant");
+  const [answers, setAnswers] = useState<ServerQuestionAnswer[]>(
+    [] as ServerQuestionAnswer[]
+  );
+  const [currentTab, setCurrentTab] = useState(0);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [isUploadingPicture, setIsUploadingPicture] = useState(false);
   const refresh = useRefreshToken();
-  const { snackBarState, setSnackBarState } = useSnackbar();
+  const { setSnackBarState } = useSnackbar();
+  const { getUserAnswers } = useAPI();
+  const { showConfirmationModal } = useConfirmationModal();
+  const { updateUser } = useAuth();
+  useEffect(() => {
+    const fetchUserAnswers = async () => {
+      const answers = await getUserAnswers();
+      setAnswers(answers);
+    };
+    fetchUserAnswers();
+  }, []);
+
   const handleRoleChange = (event: SelectChangeEvent) => {
     setRole(event.target.value as string);
+  };
+
+  const handleTabChange = async (
+    event: React.SyntheticEvent,
+    newValue: number
+  ) => {
+    if (isEditMode) {
+      const response = await showConfirmationModal({
+        title: "Are you sure you want to continue?",
+        message: "Your changes will be discarded!",
+        severity: "error",
+        show: true,
+      });
+      if (response == false) return;
+      setIsEditMode(false);
+    }
+    setCurrentTab(newValue);
+  };
+
+  const handleEditMode = (flag: boolean) => {
+    setIsEditMode(flag);
   };
 
   const openLink = (url: string) => {
@@ -36,14 +92,12 @@ const PersonalInfo = ({ user }: { user: User }) => {
   };
 
   const uploadProfilePicture = async (event: React.SyntheticEvent) => {
+    const target: any = event.target;
+    if (!target.files[0]) return;
     setIsUploadingPicture(true);
-    const base64 = await convertFileToBase64((event.target as any).files[0]);
+    const base64 = await convertFileToBase64(target.files[0]);
     try {
-      const response = await axiosPrivate.put(`/user/${user._id}`, {
-        ...user,
-        avatar: base64,
-      });
-      await refresh();
+      const response = await updateUser({ ...user, avatar: base64 });
       setIsUploadingPicture(false);
     } catch (ex) {
       setSnackBarState({
@@ -56,7 +110,7 @@ const PersonalInfo = ({ user }: { user: User }) => {
 
   const renderInfoLine = (fieldName: string, value: string, index: number) => {
     return (
-      <>
+      <Box key={fieldName}>
         <Box display="flex" flexDirection="row">
           <Typography
             width="30%"
@@ -76,37 +130,7 @@ const PersonalInfo = ({ user }: { user: User }) => {
           </Typography>
         </Box>
         {index + 1 !== USER_INFO_FIELDS.length && <DividerLine />}
-      </>
-    );
-  };
-
-  const renderQuestionLine = (
-    question: string,
-    answer: string,
-    index: number
-  ) => {
-    return (
-      <>
-        <Box display="flex" flexDirection="column">
-          <Typography
-            width="100%"
-            color="#757575"
-            fontWeight={700}
-            fontSize="16px"
-          >
-            {question}
-          </Typography>
-          <Typography
-            color="#757575"
-            fontWeight={400}
-            fontSize="16px"
-            marginTop="5px"
-          >
-            {answer}
-          </Typography>
-        </Box>
-        {index + 1 !== USER_INFO_FIELDS.length && <DividerLine />}
-      </>
+      </Box>
     );
   };
 
@@ -135,110 +159,139 @@ const PersonalInfo = ({ user }: { user: User }) => {
       </>
     );
   };
-
   return (
-    <PersonalInfoContainer>
-      <Col>
-        <Frame>
-          <ProfilePictureContainer>
-            <ProfilePicture alt="" src={user?.avatar} />
-            <Typography
-              variant="h5"
-              width="100%"
-              color="#4f4f4f"
-              textAlign="center"
-            >
-              {`${user.firstName} ${user.lastName}`}
-            </Typography>
-            <Typography
-              variant="body1"
-              width="100%"
-              color="#757575"
-              textAlign="center"
-              fontWeight={400}
-              margin="5px 0"
-            >
-              {user.jobTitle}
-            </Typography>
-            <LinksDividerLine />
-            <Typography
-              variant="body1"
-              width="100%"
-              color="#757575"
-              textAlign="center"
-              fontSize="14px"
-              fontWeight={500}
-              margin="10px 0"
-            >
-              {user.familiarity}
-            </Typography>
-            <Box display="flex" justifyContent="center" marginTop="15px">
-              <Button color="primary" variant="outlined" component="label">
-                {isUploadingPicture ? (
-                  <CircularProgress></CircularProgress>
-                ) : (
-                  "Edit Profile Picture"
-                )}
-                <input
-                  hidden
-                  accept="image/*"
-                  multiple
-                  type="file"
-                  onChange={uploadProfilePicture}
-                />
-              </Button>
-            </Box>
-          </ProfilePictureContainer>
-        </Frame>
-        <Frame>
-          {user.linkes?.map((link: UserLink, index: number) =>
-            renderLinkLine(link, index)
+    <Box bgcolor={"#e4e3e8"} padding={3} height={"100%"} overflow={"auto"}>
+      <Box sx={{ width: { xs: "80%", xl: "50%" } }} margin={"auto"}>
+        <Box
+          component={Paper}
+          elevation={4}
+          display={"flex"}
+          width={"100%"}
+          position={"relative"}
+        >
+          {isUploadingPicture && (
+        <CupidoorSpinner></CupidoorSpinner>
           )}
-        </Frame>
-      </Col>
-      <Col>
-        <Frame>
-          <Box
-            display="flex"
-            flexDirection="column"
-            width="70vh"
-            padding="0 35px"
-            margin="25px 0"
+          <Drawer
+            sx={{
+              pt: 1,
+              flexShrink: 0,
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+              },
+            }}
+            variant="permanent"
+            anchor="left"
           >
-            <Typography variant="h6" fontWeight={300}>
-              Complete Your Profile
-            </Typography>
-            <ProfileStepper user={user} />
-          </Box>
-        </Frame>
-        <Frame>
-          <Box
-            display="flex"
-            flexDirection="column"
-            width="70vh"
-            padding="0 35px"
-            margin="25px 0"
-          >
-            {USER_INFO_FIELDS.map((field: UserField, index: number) =>
-              renderInfoLine(field.fieldName, user[field.fieldValue], index)
-            )}
-          </Box>
-        </Frame>
-        <Frame>
-          <Box
-            display="flex"
-            flexDirection="column"
-            width="70vh"
-            padding="0 35px"
-            margin="25px 0"
-          >
-            {QUESTIONS.map((question: string, index: number) =>
-              renderQuestionLine(question, "Yes", index)
-            )}
-          </Box>
-        </Frame>
-      </Col>
-    </PersonalInfoContainer>
+            <Tabs
+              orientation="vertical"
+              value={currentTab}
+              onChange={handleTabChange}
+            >
+              <Tooltip title="Personal Details" placement="right">
+                <Tab icon={<PersonIcon></PersonIcon>}></Tab>
+              </Tooltip>
+              <Tooltip title="Questions" placement="right">
+                <Tab icon={<QuestionAnswerIcon></QuestionAnswerIcon>}></Tab>
+              </Tooltip>
+              <Tooltip title="Security" placement="right">
+                <Tab icon={<SecurityIcon></SecurityIcon>}></Tab>
+              </Tooltip>
+            </Tabs>
+          </Drawer>
+
+          <Grid container spacing={3} px={2} width={"100%"}>
+            <Grid item xs={12}>
+              <Box
+                display={"flex"}
+                sx={{ ...ProfilePictureContainer }}
+                justifyContent={"center"}
+                textAlign={"center"}
+              >
+                <div style={{ position: "relative", top: "105px" }}>
+                  <Box
+                    display={"flex"}
+                    justifyContent={"center"}
+                    position={"relative"}
+                  >
+                    <Avatar
+                      src={user.avatar}
+                      sx={{ ...ProfilePicture }}
+                      style={{ border: "3px solid white" }}
+                    ></Avatar>
+                    {!isEditMode && (
+                      <IconButton
+                        component="label"
+                        sx={{
+                          position: "absolute",
+                          bottom: 0,
+                          zIndex: 1,
+                          right: 15,
+                          borderRadius: 9999,
+                          minWidth: 30,
+                          width: 30,
+                          height: 30,
+                          padding: 0,
+                        }}
+                        color="primary"
+                      >
+                        <Avatar sx={{ bgcolor: "primary.main" }}>
+                          <EditIcon></EditIcon>
+                        </Avatar>
+                        <input
+                          id="avatar"
+                          name="avatar"
+                          hidden
+                          accept="image/*"
+                          type="file"
+                          onChange={uploadProfilePicture}
+                        />
+                      </IconButton>
+                    )}
+                  </Box>
+
+                  <div>
+                    <Typography
+                      variant="body1"
+                      fontWeight={"bold"}
+                      fontSize={"1.5em"}
+                    >
+                      {`${user.firstName} ${user.lastName}`}
+                    </Typography>
+                  </div>
+                </div>
+              </Box>
+              <Box
+                display={"flex"}
+                alignItems={"center"}
+                justifyContent={"center"}
+              ></Box>
+            </Grid>
+            <Grid item xs={12}>
+              <ProfileStepper user={user} />
+            </Grid>
+            {(() => {
+              if (currentTab === 0)
+                return (
+                  <PersonalDetails
+                    user={user}
+                    handleEditMode={handleEditMode}
+                  ></PersonalDetails>
+                );
+              else if (currentTab === 1)
+                return (
+                  <PersonalInfoAnswers
+                    user={user}
+                    answers={answers}
+                  ></PersonalInfoAnswers>
+                );
+                else if(currentTab === 2)
+                return(<PersonalSecurity user={user} handleEditMode={handleEditMode}></PersonalSecurity>)
+            })()}
+          </Grid>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

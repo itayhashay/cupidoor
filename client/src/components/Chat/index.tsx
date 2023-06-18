@@ -10,6 +10,7 @@ import {
   Tabs,
   Tab,
   CircularProgress,
+  Fab,
 } from "@mui/material";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -25,11 +26,13 @@ import {
   ChatConversationProps,
   ChatUserType,
 } from "./types";
+import config from "../../config.json"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import ChatContact from "./chatContact";
 import { Socket, io } from "socket.io-client";
 import { AxiosResponse } from "axios";
 import ChatContactList from "./chatContactList";
+import CupidoorSpinner from "../CupidoorSpinner";
 
 const CupidChat: React.FC = () => {
   const { user } = useAuth();
@@ -53,7 +56,7 @@ const CupidChat: React.FC = () => {
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    socket.current = io("http://localhost:2309");
+    socket.current = io(`${config.api.baseUrl}`);
   }, []);
 
   useEffect(() => {
@@ -66,7 +69,7 @@ const CupidChat: React.FC = () => {
     });
 
     socket.current?.on("disconnect", () => {
-      socket.current = io("http://localhost:2309");
+      socket.current = io(`${config.api.baseUrl}`);
     });
   }, []);
 
@@ -119,7 +122,7 @@ const CupidChat: React.FC = () => {
   useEffect(() => {
     const fetchConversation = async () => {
       const response: AxiosResponse<ChatConversationAxiosResponse> =
-        await axiosPrivate.get(`http://localhost:2308/chat/${conversationId}`);
+        await axiosPrivate.get(`${config.api.baseUrl}/chat/${conversationId}`);
       const { messages } = response.data;
       const contact = contacts.filter(
         (contact) => contact.conversationId === conversationId
@@ -205,7 +208,8 @@ const CupidChat: React.FC = () => {
   return (
     <>
       {!isChatOpen && (
-        <Button
+        <Fab
+        color="secondary"
           onClick={handleChatClick}
           sx={{
             position: "absolute",
@@ -214,12 +218,11 @@ const CupidChat: React.FC = () => {
             borderRadius: 800,
             height: 60,
             width: 60,
-            zIndex:999999
+            zIndex: 999999,
           }}
-          variant="contained"
         >
           <ChatIcon></ChatIcon>
-        </Button>
+        </Fab>
       )}
 
       <Grid
@@ -243,7 +246,7 @@ const CupidChat: React.FC = () => {
           <Grid
             item
             xs={12}
-            sx={{ cursor: "pointer", bgcolor: "primary.dark" }}
+            sx={{ cursor: "pointer", bgcolor: "secondary.main" }}
             padding={1}
             onClick={handleChatClick}
           >
@@ -266,6 +269,8 @@ const CupidChat: React.FC = () => {
                 value={selectedTab}
                 onChange={handleTabChange}
                 variant="fullWidth"
+                textColor="secondary"
+                indicatorColor="secondary"
               >
                 <Tab icon={<HouseOutlined></HouseOutlined>}></Tab>
                 <Tab icon={<PersonOutlined></PersonOutlined>}></Tab>
@@ -274,21 +279,11 @@ const CupidChat: React.FC = () => {
           )}
 
           <Grid item xs={12} overflow={"auto"} height={"50vh"}>
-            <Grid container padding={1} height={"100%"}>
+            <Grid container padding={1} height={"100%"} position={"relative"}>
               {(() => {
                 if (isLoading) {
                   return (
-                    <CircularProgress
-                      size={70}
-                      sx={{
-                        position: "absolute",
-                        left: 0,
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        margin: "auto",
-                      }}
-                    ></CircularProgress>
+                    <CupidoorSpinner></CupidoorSpinner>
                   );
                 }
                 if (contacts.length <= 0) {

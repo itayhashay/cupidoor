@@ -17,7 +17,7 @@ const Navigator = () => {
     }, [location])
     
     const breadcrumbs = [
-      <Link to={USER_ROUTES.PERSONAL_INFO}>
+      <Link to={USER_ROUTES.PERSONAL_INFO} key={"PersonalInfo"}>
         <Button
           sx={{
             color: "#757575",
@@ -27,7 +27,7 @@ const Navigator = () => {
           Personal Info
         </Button>
       </Link>,
-      <Link to={USER_ROUTES.LIKED_APARTMENTS}>
+      <Link to={USER_ROUTES.LIKED_APARTMENTS} key={"LikedApartments"}>
         <Button
           sx={{
             color: "#757575",
@@ -37,10 +37,9 @@ const Navigator = () => {
           Liked Apartments
         </Button>
       </Link>,
-      <>
-        {
+        (
           // (User.role = 'both' || User.role = 'landlord') &&
-          <Link to={USER_ROUTES.MY_PROPERTIES}>
+          true && <Link to={USER_ROUTES.MY_PROPERTIES} key={"MyProperties"}>
             <Button
               sx={{
                 color: "#757575",
@@ -50,8 +49,7 @@ const Navigator = () => {
               My Apartments
             </Button>
           </Link>
-        }
-      </>,
+        )
     ];
 
     return (

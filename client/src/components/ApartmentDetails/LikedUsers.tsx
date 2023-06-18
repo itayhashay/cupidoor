@@ -1,7 +1,7 @@
 import { Avatar, AvatarGroup, Box } from "@mui/material";
 import { User } from "../../types/user";
 import { DividerLine } from "../HouseCard/styles";
-import { PROFILE_PICTURES, USER_NAMES } from "../../utils/mock";
+// import { PROFILE_PICTURES, USER_NAMES } from "../../utils/mock";
 import { randomNumber } from "../../utils/random";
 
 type LikedUsersProps = {users: User[]};
@@ -9,7 +9,7 @@ type LikedUsersProps = {users: User[]};
 const LikedUsers = ({users} : LikedUsersProps) => {
     return (
         <>
-        <DividerLine />
+        {/* <DividerLine />
         <Box display="flex" flexDirection="column" alignItems="center" sx={{maxHeight:"127px", overflowY:"auto", 
     padding: "10px"}}>
         <AvatarGroup max={4}>
@@ -20,7 +20,7 @@ const LikedUsers = ({users} : LikedUsersProps) => {
             })}
         </AvatarGroup>
             
-        </Box>
+        </Box> */}
         </>
     );
 }
