@@ -86,14 +86,18 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   };
 
   const signUpUser = async (user: User) => {
-    const response: AxiosResponse | AxiosError = await signUp(user);
-    if (response.status == 200) {
+    try{
+      const response: AxiosResponse | AxiosError = await signUp(user);
       await signInUser(user.email, user.password);
       return { success: true };
+    }catch(ex){
+      const error: AxiosError = ex as AxiosError;
+      const cupidError: CupidAxiosError = error.response?.data as CupidAxiosError;
+      return cupidError;  
     }
-    const error: AxiosError = response as AxiosError;
-    const cupidError: CupidAxiosError = error.response?.data as CupidAxiosError;
-    return cupidError;
+    
+    
+    
   };
 
   const signOutUser = async () => {

@@ -32,14 +32,8 @@ const useAPI = () => {
   };
 
   const signUp = async (user: User) => {
-    try {
-      const response: AxiosResponse = await axiosPrivate.post(config.api.routes.signUp, user);
-      return response;
-    } catch (ex: AxiosError | any) {
-      alert(ex);
-      console.log(ex);
-      return ex;
-    }
+    const response: AxiosResponse = await axiosPrivate.post(config.api.routes.signUp, user);
+    return response;
   };
 
   const addApartment = async (newApartment: NewApartment) => {
@@ -50,8 +44,6 @@ const useAPI = () => {
       );
       return response;
     } catch (ex: AxiosError | any) {
-      alert(ex);
-      console.log(ex);
       return ex;
     }
   };

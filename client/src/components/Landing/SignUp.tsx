@@ -19,6 +19,7 @@ import { UserTypes } from "../../types/user";
 import { useSnackbar } from "../../context/SnackbarContext";
 import { convertFileToBase64 } from "../../utils/base64";
 import { FileUploadOutlined } from "@mui/icons-material";
+import CupidoorSpinner from "../CupidoorSpinner";
 interface SignUpPageProps {
   onTogglePage: () => void;
 }
@@ -32,6 +33,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
   const [base64Image, setBase64Image] = useState<string | null>(null);
   const { signUpUser } = useAuth() as AuthContextType;
   const { snackBarState, setSnackBarState } = useSnackbar();
+  const [isLoading,setIsLoading] = useState(false);
   const [showAvatarError, setShowAvatarError] = useState(false);
 
   const handleFileChange = async (
@@ -39,6 +41,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
   ) => {
     const file = (event.target as any).files[0];
     try {
+      setIsLoading(true);
       const base64: string = await convertFileToBase64(file);
       setBase64Image(base64);
       setSelectedImage(base64);
@@ -48,6 +51,8 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
         message: "Couldn't upload image!",
         show: true,
       });
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -74,6 +79,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
     if(!base64Image)return;
     let userRole: UserTypes = values.role as UserTypes;
     const { firstName, lastName, email, password, phone, age } = values;
+    setIsLoading(true);
     const response: any = await signUpUser({
       firstName,
       lastName,
@@ -94,10 +100,11 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
     } else {
       setSnackBarState({
         severity: "error",
-        message: "Couldn't Sign You Up!",
+        message: response.error,
         show: true,
       });
     }
+    setIsLoading(false);
   };
 
   return (
@@ -118,7 +125,8 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
         {({ values, errors, touched, handleChange, handleSubmit }) => (
           <Container component="main" maxWidth="lg">
             <CssBaseline />
-            <Paper elevation={3}>
+          <Paper elevation={3}>
+          {isLoading ? <CupidoorSpinner></CupidoorSpinner> : 
               <Grid container >
                 <Grid item xs={6} padding={3}>
                   <Box
@@ -362,7 +370,9 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                   }}
                 ></Grid>
               </Grid>
+            }
             </Paper>
+
           </Container>
         )}
       </Formik>
