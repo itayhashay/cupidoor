@@ -56,7 +56,7 @@ const CupidChat: React.FC = () => {
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    socket.current = io(`${config.api.baseUrl}:${config.api.chatPort}`);
+    socket.current = io(`${config.api.baseUrl}`);
   }, []);
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const CupidChat: React.FC = () => {
     });
 
     socket.current?.on("disconnect", () => {
-      socket.current = io(`${config.api.baseUrl}:${config.api.chatPort}`);
+      socket.current = io(`${config.api.baseUrl}`);
     });
   }, []);
 
