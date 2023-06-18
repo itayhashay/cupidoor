@@ -1,4 +1,5 @@
+import { QuestionAnswer } from "./questionAnswer"
+
 export type MatchData = {
-    answers: number[], 
-    priority: number[]
+    answers: QuestionAnswer[]
 }

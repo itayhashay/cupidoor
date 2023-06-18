@@ -1,193 +1,144 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Apartment } from "../../types/apartment";
-import { HOUSES, HOUSE_INIT } from "../../utils/mock";
-import DryDetails from "./DryDetails";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { ImageContainer } from "./styles";
-import ImagesGallery from "./ImagesGallery";
-import { FavoriteBorder, PercentRounded } from "@mui/icons-material";
-import ApartmentProperties from "./ApartmentProperties";
-import { green } from "@mui/material/colors";
-import { precentToColor } from "../../utils/colors";
-import { MatchLabelStyles } from "../HouseCard/styles";
+import { Avatar, Box, Button, Container, Divider, Grid, Paper, Typography } from '@mui/material';
+import { useEffect, useState, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
+import { Apartment } from '../../types/apartment';
+import DryDetails from './DryDetails';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { ImageContainer } from './styles';
+import ImagesGallery from './ImagesGallery';
+import { ExpandLess, ExpandMore, FavoriteBorder, PercentRounded } from '@mui/icons-material';
+import ApartmentFeatures from './ApartmentFeatures';
+import { precentToColor } from '../../utils/colors';
+import useAPI from '../../hooks/useAPI';
+import CupidoorSpinner from '../CupidoorSpinner';
+import LandlordSection from './LandlordSection';
+import ApartmentDescription from './ApartmentDescription';
+import PaymentCalculator from './PaymentCalculator';
+import { MatchLabelStyles } from '../HouseCard/styles';
+import { getUserLikedApartmentsIds } from '../../utils/localStorage';
 
 const ApartmentDetails = () => {
-  const [apartmentInfo, setApartmentInfo] = useState<Apartment>(HOUSE_INIT);
-  const [matchColor, setMatchColor] = useState<string>("");
+  const [apartmentInfo, setApartmentInfo] = useState<Apartment | null>(null);
+  const [matchColor, setMatchColor] = useState<string>('');
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const { getUserLikedApartments, getApartmentById, toggleTenantLike } = useAPI();
   const params = useParams();
 
   useEffect(() => {
     const fetchApartmentData = async (id: string) => {
-      const apartmentData: Apartment | undefined = HOUSES.find(
-        (house) => house._id === id
-      );
-      return apartmentData || HOUSE_INIT;
+      const apartment: Apartment = await getApartmentById(id);
+      setApartmentInfo(apartment);
     };
 
-    const apartmentId: string = params.id || "";
+    const apartmentId: string = params.id || '';
 
-    if (apartmentId)
-      fetchApartmentData(apartmentId).then((apartment) =>
-        setApartmentInfo(apartment)
-      );
-    else console.log("error");
+    if (apartmentId) {
+      fetchApartmentData(apartmentId);
+      const userLikedApartments: string[] = getUserLikedApartmentsIds();
+      setIsFavorite(userLikedApartments.includes(apartmentId))
+    }
+    
+    else console.log('error');
   }, [params.id]);
 
   useEffect(() => {
-    const color: string = precentToColor(apartmentInfo.match);
+    const color: string = precentToColor(apartmentInfo?.match || 0);
     setMatchColor(color);
   }, [apartmentInfo]);
 
+  const fetchLikedApartments = async () => {
+    const likesApartments: any[] = await getUserLikedApartments();
+    return likesApartments;
+  }
+
+
+  const handleLikeClick = async (apartmentId: string, userId: string) => {
+    await toggleTenantLike(apartmentId, userId);
+    setIsFavorite((prev) => !prev);
+    fetchLikedApartments().then((likesApartments: any[]) => localStorage.setItem("userLikedApartments", JSON.stringify(likesApartments)));
+  };
+
+
+  if (!apartmentInfo) return <CupidoorSpinner></CupidoorSpinner>;
   return (
     // TODO: Change last updated mock.
-    <Container maxWidth="xl" sx={{ paddingY: 10 }}>
-      <Grid container component={Paper} elevation={3} position="relative">
-        <Grid item xs={12}>
-          <ImageContainer className="apartment-gallery">
-            <ImagesGallery />
-          </ImageContainer>
+    <Container maxWidth='xl' sx={{ paddingY: 10 }}>
+      <Grid container component={Paper} elevation={3}>
+        <Grid item xs={12} height={60} padding={2} width={'100%'} bgcolor={'primary.dark'}>
+          <Box display={'flex'} color={'white'} alignItems={'center'} height={'100%'}>
+            <LocationOnIcon></LocationOnIcon>
+            <Typography variant='h5' fontWeight={'bold'} ml={1}>
+              {apartmentInfo.city},{apartmentInfo.street} {apartmentInfo.houseNumber}
+            </Typography>
+          </Box>
         </Grid>
-        <Grid item xs={12} padding={5}>
-          <Grid container>
-            <Grid item md={7} xs={12} padding={1}>
-              <DryDetails apartmentInfo={apartmentInfo} />
-              <Box mt={1}>
-                <ApartmentProperties
-                  apartmentInfo={apartmentInfo}
-                ></ApartmentProperties>
-              </Box>
-              <Box display={"flex"} alignItems={"center"} mb={2} mt={1}>
-                <LocationOnIcon></LocationOnIcon>
-                <Typography
-                  variant="body1"
-                  fontWeight={"bold"}
-                  ml={1}
-                  fontSize={20}
-                >
-                  {apartmentInfo.address}
-                </Typography>
-                <Box
-                  ml={3}
-                  width={56}
-                  height={56}
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  display={"flex"}
-                  borderRadius={500}
-                  bgcolor={matchColor}
-                  component={Paper}
-                  elevation={6}
-                >
-                  <Typography
-                    textAlign={"center"}
-                    fontWeight={"bold"}
-                    fontSize={18}
-                    sx={{
-                      color: "white",
-                    }}
-                  >
-                    {apartmentInfo.match}%
-                  </Typography>
-                </Box>
-              </Box>
-              <Box display={"flex"} px={2}>
-                <Typography>
-                  <b>Description:</b> {apartmentInfo.description}
-                </Typography>
-              </Box>
+        <Grid item xs={8}>
+          <Grid container position='relative'>
+            <Grid item xs={12}>
+              <ImageContainer className='apartment-gallery'>
+                <ImagesGallery
+                  images={
+                    apartmentInfo.images[0]
+                      ? apartmentInfo.images
+                      : [{ name: '', _id: '', url: '/apartmentPlaceholder.png' }]
+                  }
+                />
+              </ImageContainer>
             </Grid>
-            <Grid item md={5} xs={12}>
-              <Box
-                padding={1}
-                height={"100%"}
-                display={"flex"}
-                flexDirection={"column"}
-              >
-                <Typography variant="h6">Contact Info</Typography>
-                <Box padding={2}>
-                  <Box display={"flex"} alignItems={"center"} mb={1}>
-                    <Avatar
-                      src={apartmentInfo.user.avatar}
-                      sx={{ width: 56, height: 56 }}
-                    ></Avatar>
-                    <Box ml={2}>
-                      <Typography
-                        variant="subtitle2"
-                        fontWeight={"bold"}
-                        lineHeight={0.5}
-                        fontSize={18}
-                      >
-                        {apartmentInfo.user.name}
-                      </Typography>
-                      <Typography variant="caption">Owner</Typography>
-                    </Box>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item xs={12} padding={1}>
+                  <DryDetails apartmentInfo={apartmentInfo} />
+                  <Box mt={1}>
+                    <ApartmentFeatures apartmentInfo={apartmentInfo}></ApartmentFeatures>
                   </Box>
-                  <Box padding={1}>
-                    <Typography variant="body2" fontSize={"16px"}>
-                      {apartmentInfo.user.description}
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box mt={"auto"} pb={3}>
-                  <Box pb={2} display={"flex"} justifyContent={"space-between"}>
-                    <div>
-                      <Typography
-                        variant="body1"
-                        fontWeight={"bolder"}
-                        fontSize={16}
-                      >
-                        Monthly rental:
-                      </Typography>
-                      <Box display={"flex"} alignItems={"end"} padding={1}>
-                        <Typography fontWeight={"bold"} fontSize={18}>
-                          ₪{apartmentInfo.cost}
-                        </Typography>
-                        <Typography color={"GrayText"} fontSize={14}>
-                          /month
-                        </Typography>
-                      </Box>
-                    </div>
-                    <div>
-                      <Typography
-                        variant="body1"
-                        fontWeight={"bolder"}
-                        fontSize={16}
-                      >
-                        Entrance date:
-                      </Typography>
-                      <Box display={"flex"} alignItems={"end"}>
-                        <Typography
-                          fontWeight={"bold"}
-                          fontSize={18}
-                          padding={1}
-                        >
-                          {apartmentInfo.entryDate.toLocaleDateString()}
-                        </Typography>
-                      </Box>
-                    </div>
-                  </Box>
+                </Grid>
+              </Grid>
+            </Grid>
+            <ApartmentDescription apartmentInfo={apartmentInfo}></ApartmentDescription>
+          </Grid>
+        </Grid>
 
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    size="large"
-                    endIcon={<FavoriteBorder></FavoriteBorder>}
-                  >
-                    Like
-                  </Button>
-                </Box>
-              </Box>
+        <Grid item xs={4}>
+          <Grid container>
+            <Grid item xs={12} padding={1}>
+              <LandlordSection landlord={apartmentInfo.user}></LandlordSection>
             </Grid>
+            <Grid item xs={12} padding={1}>
+              <PaymentCalculator apartmentInfo={apartmentInfo}></PaymentCalculator>
+            </Grid>
+          </Grid>
+          {/* <Grid item xs={12}>
+            <Box display={'flex'} justifyContent={'center'}>
+              <Avatar sx={{ bgcolor: matchColor, height: 60, width: 60 }}>
+                <Typography>{apartmentInfo.match}%</Typography>
+              </Avatar>
+            </Box>
+          </Grid> */}
+          <Grid item xs={12} padding={1} position={'relative'}>
+            <Typography
+              sx={{
+                ...MatchLabelStyles,
+                top: 15,
+                right: 10,
+                border: '1px solid #CECECE',
+                borderRadius: 0,
+                zIndex: 1,
+                transform: 'rotate(323deg)',
+                color: matchColor,
+              }}
+            >{`${apartmentInfo.match}% ${apartmentInfo.match === 100 ? 'Perfect' : ''} Match${
+              apartmentInfo.match === 100 ? '!' : ''
+            }`}</Typography>
+            <Button
+              onClick={() => handleLikeClick(apartmentInfo._id, String(apartmentInfo.user._id))}
+              fullWidth
+              variant={isFavorite ? 'outlined' : 'contained'}
+              size='large'
+              endIcon={<FavoriteBorder></FavoriteBorder>}
+            >
+              {isFavorite ? 'Liked' : 'Like'}
+            </Button>
           </Grid>
         </Grid>
       </Grid>

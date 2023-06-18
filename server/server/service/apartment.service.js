@@ -1,49 +1,90 @@
-const Apartment = require('../model/apartment.model');
-const Storage = require('./firebase-storage.service');
-
+const Apartment = require("../model/apartment.model");
+const Storage = require("./firebase-storage.service");
+const match = require("../model/match");
+const UserAnswer = require("../model/userAnswer.model");
+const Score = require("../model/score.model");
+const ScoreService = require("./score.service");
 const createApartment = async (apartmentData) => {
   try {
     let base64Images = apartmentData.images;
     apartmentData.images = [];
     const apartment = new Apartment(apartmentData);
     const newApartment = await apartment.save();
-    const imagesUrl = await Storage.uploadApartmentImages(newApartment._id.toString(),base64Images);
-    return await Apartment.findByIdAndUpdate(newApartment._id, { images: imagesUrl }, { populate: { path: 'user'}, returnOriginal: false})
+    const imagesUrl = await Storage.uploadApartmentImages(
+      newApartment._id.toString(),
+      base64Images
+    );
+    return await Apartment.findByIdAndUpdate(
+      newApartment._id,
+      { images: imagesUrl },
+      { populate: { path: "user" }, returnOriginal: false }
+    );
   } catch (err) {
-    throw new Error('Error creating apartment: ' + err.message);
+    throw new Error("Error creating apartment: " + err.message);
   }
 };
 
 const getApartmentsByUser = async (userId) => {
   try {
-    return await Apartment.find({user: userId}).populate('user', '-password');
+    return await Apartment.find({ user: userId }).populate(
+      "user",
+      "-password -salt -refreshToken -email -createdAt"
+    );
   } catch (err) {
-    throw new Error('Error getting apartments: ' + err.message);
+    throw new Error("Error getting apartments: " + err.message);
   }
 };
 
-const getApartments = async () => {
+const getApartments = async (user) => {
   try {
-    return await Apartment.find().populate('user', '-password');
+    console.time("missing_score");
+    await _scoreMissingApartments(user);
+    console.timeEnd("missing_score");
+    console.time("apartments_find");
+    const apartments = await Apartment.find({ user: { $ne: user._id } })
+      .populate("user", "firstName lastName avatar")
+      .lean()
+      .exec();
+
+    console.timeEnd("apartments_find");
+
+    console.time("get_scores");
+    const data = await ScoreService.getApartmentsScores(user._id, apartments);
+    console.timeEnd("get_scores");
+
+    return data;
   } catch (err) {
-    throw new Error('Error getting apartments: ' + err.message);
+    throw new Error("Error getting apartments: " + err.message);
   }
 };
 
 const getApartment = async (id) => {
   try {
-    return await Apartment.findById(id).populate('user', '-password');
+    const apartmentPromise = Apartment.findById(id)
+      .populate("user", "-password -salt -refreshToken -email -createdAt")
+      .lean()
+      .exec();
+    const scorePromise = Score.findOne({ apartment: id }).select({ score: 1 });
+
+    const [apartment, score] = await Promise.all([
+      apartmentPromise,
+      scorePromise,
+    ]);
+
+    return { ...apartment, match: score.score };
   } catch (err) {
-    throw new Error('Error getting apartment: ' + err.message);
+    throw new Error("Error getting apartment: " + err.message);
   }
 };
 
 const updateApartment = async (id, apartmentData) => {
   try {
     const apartment = await Apartment.findById(id);
-    let {newImages,removedImages} = apartmentData;
-    let updatedImagesArray = apartment.images.filter(image => !removedImages.includes(image.name));
-    let newSavedimages = await Storage.uploadApartmentImages(id, newImages)
+    let { newImages, removedImages } = apartmentData;
+    let updatedImagesArray = apartment.images.filter(
+      (image) => !removedImages.includes(image.name)
+    );
+    let newSavedimages = await Storage.uploadApartmentImages(id, newImages);
     apartment.images = [...updatedImagesArray, ...newSavedimages];
     if (apartmentData.description != null) {
       apartment.description = apartmentData.description;
@@ -125,7 +166,7 @@ const updateApartment = async (id, apartmentData) => {
     }
     return await apartment.save();
   } catch (err) {
-    throw new Error('Error updating apartment: ' + err.message);
+    throw new Error("Error updating apartment: " + err.message);
   }
 };
 
@@ -133,8 +174,58 @@ const deleteApartment = async (id) => {
   try {
     return await Apartment.findByIdAndRemove(id);
   } catch (err) {
-    throw new Error('Error deleting apartment: ' + err.message);
+    throw new Error("Error deleting apartment: " + err.message);
   }
+};
+
+const _scoreMissingApartments = async (user) => {
+  const missingScoreApartments = await Apartment.aggregate([
+    {
+      $lookup: {
+        from: "scores",
+        localField: "_id",
+        foreignField: "apartment",
+        as: "Match",
+      },
+    },
+    // { $match: { Match: { $eq: [] } } },
+    {
+      $match: { "Match.tenant": { $ne: user._id }, },
+    },
+  ]);
+
+  if (missingScoreApartments.length === 0) return;
+
+  const userAnswers = await UserAnswer.find({ user: user._id })
+    .populate("question")
+    .lean()
+    .exec();
+
+  const promises = [];
+  for (let apartment of missingScoreApartments) {
+    promises.push(
+      new Promise((resolve) => {
+        UserAnswer.find({
+          user: apartment.user._id,
+        })
+          .populate("question")
+          .exec()
+          .then((landLordAnswers) => {
+            const matchData = match(userAnswers, landLordAnswers);
+            const scoreData = Score.create({
+              apartment: apartment._id,
+              tenant: user._id,
+              landlord: apartment.user,
+              score: matchData,
+              updatedAt: Date.now(),
+            }).then(() => {
+              resolve();
+            });
+          });
+      })
+    );
+  }
+  return Promise.all(promises);
 };
 
 module.exports = {

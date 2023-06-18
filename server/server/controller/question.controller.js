@@ -26,25 +26,26 @@ const questionService = require("../service/question.service");
 
 // module.exports = QuestionsController;
 
-router.post("/", async (req, res) => {
+
+router.post("/", async (req,res,next) => {
   try {
     const question = await questionService.createQuestion(req.body);
     res.status(CREATED).json(question);
   } catch (err) {
-    res.status(BAD_REQUEST).json({ error: err.message });
+    next(err);
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", async (req,res,next) => {
   try {
     const questions = await questionService.getQuestions();
     res.status(OK).json(questions);
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req,res,next) => {
   try {
     const question = await questionService.getQuestion(req.params.id);
     if (!question) {
@@ -53,11 +54,11 @@ router.get("/:id", async (req, res) => {
       res.status(OK).json(question);
     }
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req,res,next) => {
   try {
     const updatedQuestion = await questionService.updateQuestion(
       req.params.id,
@@ -65,16 +66,16 @@ router.put("/:id", async (req, res) => {
     );
     res.status(OK).json(updatedQuestion);
   } catch (err) {
-    res.status(BAD_REQUEST).json({ error: err.message });
+    next(err);
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req,res,next) => {
   try {
     await questionService.deleteQuestion(req.params.id);
     res.status(NO_CONTENT).send();
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ error: err.message });
+    next(err);
   }
 });
 

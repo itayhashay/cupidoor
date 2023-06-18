@@ -8,6 +8,7 @@ const userAnswerSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required:true
   },
   answer: {
     type: String, // Can be boolean - is 0 or 1

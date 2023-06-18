@@ -1,30 +1,23 @@
-import Stack from "@mui/material/Stack";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import Box from "@mui/material/Box/Box";
-import { useMemo } from "react";
-import {
-  LinearProgress,
-  LinearProgressProps,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { StepIcon, StepIconConnector } from "./styles";
-import { PROFILE_STEPS } from "./constants";
-import { User } from "../../types/user";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
+import Stack from '@mui/material/Stack';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import Box from '@mui/material/Box/Box';
+import { useMemo } from 'react';
+import { LinearProgress, LinearProgressProps, Tooltip, Typography } from '@mui/material';
+import { StepIcon, StepIconConnector } from './styles';
+import { PROFILE_STEPS } from './constants';
+import { User } from '../../types/user';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
-function LinearProgressWithLabel(
-  props: LinearProgressProps & { value: number }
-) {
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Box sx={{ width: "100%", mr: 1 }}>
-        <LinearProgress variant="determinate" {...props} />
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ width: '100%', mr: 1 }}>
+        <LinearProgress variant='determinate' {...props} />
       </Box>
-      <Box sx={{ minWidth: 35 }} width="auto">
-        <Typography variant="body2" color="text.secondary">{`${Math.round(
-          props.value
+      <Box sx={{ minWidth: 35 }} width='auto'>
+        <Typography variant='body2' color='text.secondary'>{`${Math.round(
+          props.value,
         )}%`}</Typography>
       </Box>
     </Box>
@@ -33,14 +26,11 @@ function LinearProgressWithLabel(
 
 const renderInfoTooltip = (title: string) => {
   return (
-    <Tooltip
-      title={<span style={{ fontSize: "13px" }}>{title}</span>}
-      sx={{ fontSize: "16px" }}
-    >
+    <Tooltip title={<span style={{ fontSize: '13px' }}>{title}</span>} sx={{ fontSize: '16px' }}>
       <HelpOutlineOutlinedIcon
-        fontSize="small"
-        color="action"
-        sx={{ "&:hover": { cursor: "pointer" } }}
+        fontSize='small'
+        color='action'
+        sx={{ '&:hover': { cursor: 'pointer' } }}
       />
     </Tooltip>
   );
@@ -55,29 +45,26 @@ const ProfileStepper = ({ user }: { user: User }) => {
   }, [user]);
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }} mt={4}>
-      <Stack sx={{ width: "100%" }} spacing={3}>
+    <Box sx={{ display: 'flex', justifyContent: 'center' }} mt={4}>
+      <Stack sx={{ width: '100%' }} spacing={3}>
         <Stepper alternativeLabel connector={<StepIconConnector />}>
           {PROFILE_STEPS(user).map((step, index) => (
             <Step
               key={index}
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                height: "100%",
-                justifyContent: "space-between",
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                height: '100%',
+                justifyContent: 'space-between',
               }}
             >
-              <StepIcon
-                src={step.icon}
-                style={{ opacity: step.validCheck() ? 1 : 0.3 }}
-              />
+              <StepIcon src={step.icon} style={{ opacity: step.validCheck() ? 1 : 0.3 }} />
               <Typography
-                variant="body1"
-                textAlign="center"
-                margin="10px 0"
-                fontSize="14px"
+                variant='body1'
+                textAlign='center'
+                margin='10px 0'
+                fontSize='14px'
                 fontWeight={500}
               >
                 {step.name}
@@ -86,7 +73,7 @@ const ProfileStepper = ({ user }: { user: User }) => {
             </Step>
           ))}
         </Stepper>
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: '100%' }}>
           <LinearProgressWithLabel value={(done * 100) / 4} />
         </Box>
       </Stack>

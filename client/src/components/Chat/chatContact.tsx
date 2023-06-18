@@ -35,7 +35,7 @@ const ChatContact: React.FC<ChatContactProps> = ({
             </Typography>
           </Box>
         </Box>
-        <Badge badgeContent={contact.notifications} color="secondary">
+        <Badge badgeContent={contact.notifications} color="primary">
           <MailIcon color="action"></MailIcon>
         </Badge>
       </Box>

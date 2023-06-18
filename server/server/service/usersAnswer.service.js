@@ -1,17 +1,41 @@
 const UserAnswer = require('../model/userAnswer.model');
-
-const createUserAnswer = async (userAnswerData) => {
+const UserModel= require("../model/user.model");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
+const createUserAnswer = async (userAnswerData,user) => {
+  const session = await mongoose.startSession();
   try {
-    const userAnswer = new UserAnswer(userAnswerData);
-    return await userAnswer.save();
+    session.startTransaction();
+    for(let questionData of userAnswerData){
+      const {value : answer,priority,questionId} = questionData;
+      const answerObject = await UserAnswer.findOne({user:user._id,question:questionData._id}).exec();
+      if(answerObject){
+        await UserAnswer.findByIdAndUpdate(answerObject._id,{answer,priority});
+      }else{
+        const userAnswer = new UserAnswer({
+          user:user._id,
+          question:new ObjectId(questionId),
+          answer,
+          priority
+        });
+        await userAnswer.save();
+      }
+      
+    }
+    const userObject = await UserModel.findByIdAndUpdate(user._id,{answeredQuestions:true});
+    await session.commitTransaction();
+    return true;
   } catch (err) {
+    await session.abortTransaction();
     throw new Error('Error creating user answer: ' + err.message);
+  }finally{
+    await session.endSession();
   }
 }
 
-const getUserAnswers = async () => {
+const getUserAnswers = async (user) => {
   try {
-    return await UserAnswer.find().populate('question user');
+    return await UserAnswer.find({user:user._id}).populate('question');
   } catch (err) {
     throw new Error('Error getting user answers: ' + err.message);
   }

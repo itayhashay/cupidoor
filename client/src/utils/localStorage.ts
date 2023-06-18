@@ -6,3 +6,22 @@ export const getUserId = () => {
     }
     return "";
   }
+
+  export const getUserLikedApartments = () => {
+    const likedApartments: any = localStorage.getItem("userLikedApartments");
+    if(likedApartments) {
+      const userLikedApartments = JSON.parse(likedApartments);
+      return userLikedApartments;
+    }
+    return [];
+  }
+
+  export const getUserLikedApartmentsIds = () => {
+    const likedApartments: any = localStorage.getItem("userLikedApartments");
+    if(likedApartments) {
+      const userLikedApartments = JSON.parse(likedApartments);
+      const likedApartmentsIds: string[] = userLikedApartments.map((apartments: any) => apartments._id);
+      return likedApartmentsIds;
+    }
+    return [];
+  }

@@ -4,7 +4,7 @@ const isBase64 = require("is-base64");
 
 const createUser = async (userData) => {
   try {
-    if (userData.avatar && isBase64(userData.avatar,{ allowMime: true })) {
+    if (userData.avatar && isBase64(userData.avatar, { allowMime: true })) {
       userData.avatar = await storage.uploadProfilePhoto(
         userData.email,
         userData.avatar
@@ -32,6 +32,16 @@ const getUsers = async () => {
 const getUser = async (id) => {
   try {
     return await User.findById(id);
+  } catch (err) {
+    throw new Error("Error getting user: " + err.message);
+  }
+};
+
+const getUserData = async (id) => {
+  try {
+    return await User.findById(id)
+      .select("-password -salt -refreshToken")
+      .exec();
   } catch (err) {
     throw new Error("Error getting user: " + err.message);
   }
@@ -78,16 +88,26 @@ const updateUser = async (id, userData) => {
     if (userData.role != null) {
       user.role = userData.role;
     }
-    if (userData.avatar && isBase64(userData.avatar,{ allowMime: true })) {
+    if(userData.phone != null){
+      user.phone = userData.phone;
+    }
+    if(userData.description != null){
+      user.description = userData.description;
+    }
+    if(userData.jobTitle != null){
+      user.jobTitle = userData.jobTitle;
+    }
+    if (userData.avatar && isBase64(userData.avatar, { allowMime: true })) {
       userData.avatar = await storage.uploadProfilePhoto(
         userData.email,
         userData.avatar
       );
       user.avatar = userData.avatar;
     }
-    return await user.save();
+    await user.save();
+    return await User.findById(id).select("-password -salt -refreshToken");
   } catch (err) {
-    throw new Error("Error updating user: " + err.message);
+    throw err;
   }
 };
 
@@ -125,4 +145,5 @@ module.exports = {
   getUserPhoto,
   uploadUserPhoto,
   getUsersForChat,
+  getUserData,
 };

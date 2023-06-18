@@ -22,7 +22,6 @@ const ChatController = {
       const conversations = await ChatService.getConversations(req.user);
       return res.json({ conversations });
     } catch (ex) {
-      res.status(500).json({ error: ex.message });
       next(ex);
     }
   },
@@ -42,7 +41,6 @@ const ChatController = {
       // }
       return res.json({ ...conversation });
     } catch (ex) {
-      res.status(500).json({ error: ex.message });
       next(ex);
     }
   },
@@ -56,7 +54,6 @@ const ChatController = {
       );
       res.json({ success: true });
     } catch (ex) {
-      res.status(500).json({ error: ex.message });
       next(ex);
     }
   },

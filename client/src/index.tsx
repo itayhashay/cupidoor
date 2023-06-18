@@ -6,8 +6,10 @@ import App from "./components/App";
 import { AuthContextProvider } from "./context/AuthContext";
 import SnackbarCupid from "./components/Snackbar";
 import { SnackbarContextProvider } from "./context/SnackbarContext";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { ConfirmationModalContextProvider } from "./context/ConfirmationModalContext";
+import { CupidThemeContextProvider } from "./context/CupidThemeProvider";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -15,15 +17,19 @@ const root = ReactDOM.createRoot(
 
 root.render(
   // <React.StrictMode>
-    <AuthContextProvider>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <SnackbarContextProvider>
-          <Router>
-            <App />
-          </Router>
-          <SnackbarCupid />
-        </SnackbarContextProvider>
-      </LocalizationProvider>
-    </AuthContextProvider>
+  <AuthContextProvider>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <CupidThemeContextProvider>
+        <ConfirmationModalContextProvider>
+          <SnackbarContextProvider>
+            <Router>
+              <App />
+            </Router>
+            <SnackbarCupid />
+          </SnackbarContextProvider>
+        </ConfirmationModalContextProvider>
+      </CupidThemeContextProvider>
+    </LocalizationProvider>
+  </AuthContextProvider>
   // </React.StrictMode>
 );
