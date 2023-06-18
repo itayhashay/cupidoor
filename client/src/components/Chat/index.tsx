@@ -26,6 +26,7 @@ import {
   ChatConversationProps,
   ChatUserType,
 } from "./types";
+import config from "../../config.json"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import ChatContact from "./chatContact";
 import { Socket, io } from "socket.io-client";
@@ -55,7 +56,7 @@ const CupidChat: React.FC = () => {
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    socket.current = io("https://cupidoor-backend.onrender.com");
+    socket.current = io(`${config.api.baseUrl}:${config.api.chatPort}`);
   }, []);
 
   useEffect(() => {
@@ -68,7 +69,7 @@ const CupidChat: React.FC = () => {
     });
 
     socket.current?.on("disconnect", () => {
-      socket.current = io("https://cupidoor-backend.onrender.com");
+      socket.current = io(`${config.api.baseUrl}:${config.api.chatPort}`);
     });
   }, []);
 
