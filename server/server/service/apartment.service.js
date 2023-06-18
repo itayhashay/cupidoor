@@ -188,7 +188,10 @@ const _scoreMissingApartments = async (user) => {
         as: "Match",
       },
     },
-    { $match: { Match: { $eq: [] } } },
+    // { $match: { Match: { $eq: [] } } },
+    {
+      $match: { "Match.tenant": { $ne: user._id }, },
+    },
   ]);
 
   if (missingScoreApartments.length === 0) return;
