@@ -1,6 +1,6 @@
 {
   "api": {
-    "baseUrl": "http://localhost:2308",
+    "baseUrl": "https://cupidoor-backend.onrender.com:10000",
     "routes": {
       "userAnswer":"/user-answer",
       "match": "/match",

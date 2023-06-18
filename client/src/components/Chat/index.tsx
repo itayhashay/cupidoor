@@ -55,7 +55,7 @@ const CupidChat: React.FC = () => {
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    socket.current = io("http://localhost:2309");
+    socket.current = io("https://cupidoor-backend.onrender.com:2309");
   }, []);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const CupidChat: React.FC = () => {
     });
 
     socket.current?.on("disconnect", () => {
-      socket.current = io("http://localhost:2309");
+      socket.current = io("https://cupidoor-backend.onrender.com:2309");
     });
   }, []);
 
