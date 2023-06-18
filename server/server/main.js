@@ -14,7 +14,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://cupidoor-client.onrender.com",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );

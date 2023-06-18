@@ -1,5 +1,6 @@
 import axios from "axios";
-const BASE_URL = "https://cupidoor-backend.onrender.com";
+import config from "../config.json"
+const BASE_URL = config.api.baseUrl;
 
 export default axios.create({
   baseURL: BASE_URL,
