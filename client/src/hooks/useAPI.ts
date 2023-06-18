@@ -64,7 +64,6 @@ const useAPI = () => {
 
   const getUserLikedApartments = async (): Promise<any> => {
     const response = await axiosPrivate.get(`${config.api.routes.getLikedApartments}`);
-    console.log(response);
 
     return response.data;
   };

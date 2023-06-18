@@ -15,11 +15,13 @@ import LandlordSection from './LandlordSection';
 import ApartmentDescription from './ApartmentDescription';
 import PaymentCalculator from './PaymentCalculator';
 import { MatchLabelStyles } from '../HouseCard/styles';
+import { getUserLikedApartmentsIds } from '../../utils/localStorage';
 
 const ApartmentDetails = () => {
   const [apartmentInfo, setApartmentInfo] = useState<Apartment | null>(null);
   const [matchColor, setMatchColor] = useState<string>('');
-  const { getApartmentById } = useAPI();
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const { getUserLikedApartments, getApartmentById, toggleTenantLike } = useAPI();
   const params = useParams();
 
   useEffect(() => {
@@ -30,7 +32,12 @@ const ApartmentDetails = () => {
 
     const apartmentId: string = params.id || '';
 
-    if (apartmentId) fetchApartmentData(apartmentId);
+    if (apartmentId) {
+      fetchApartmentData(apartmentId);
+      const userLikedApartments: string[] = getUserLikedApartmentsIds();
+      setIsFavorite(userLikedApartments.includes(apartmentId))
+    }
+    
     else console.log('error');
   }, [params.id]);
 
@@ -38,6 +45,19 @@ const ApartmentDetails = () => {
     const color: string = precentToColor(apartmentInfo?.match || 0);
     setMatchColor(color);
   }, [apartmentInfo]);
+
+  const fetchLikedApartments = async () => {
+    const likesApartments: any[] = await getUserLikedApartments();
+    return likesApartments;
+  }
+
+
+  const handleLikeClick = async (apartmentId: string, userId: string) => {
+    await toggleTenantLike(apartmentId, userId);
+    setIsFavorite((prev) => !prev);
+    fetchLikedApartments().then((likesApartments: any[]) => localStorage.setItem("userLikedApartments", JSON.stringify(likesApartments)));
+  };
+
 
   if (!apartmentInfo) return <CupidoorSpinner></CupidoorSpinner>;
   return (
@@ -111,12 +131,13 @@ const ApartmentDetails = () => {
               apartmentInfo.match === 100 ? '!' : ''
             }`}</Typography>
             <Button
+              onClick={() => handleLikeClick(apartmentInfo._id, String(apartmentInfo.user._id))}
               fullWidth
-              variant='contained'
+              variant={isFavorite ? 'outlined' : 'contained'}
               size='large'
               endIcon={<FavoriteBorder></FavoriteBorder>}
             >
-              Like
+              {isFavorite ? 'Liked' : 'Like'}
             </Button>
           </Grid>
         </Grid>

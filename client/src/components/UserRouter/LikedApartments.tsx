@@ -25,7 +25,7 @@ const LikedApartments = () => {
   return isLoading ? (
     <CupidoorSpinner></CupidoorSpinner>
   ) : (
-    <Box sx={{ overflowY: 'auto', position: 'relative' }}>
+    <Box sx={{ overflowY: 'auto', position: 'relative', display: "flex", height:'100%' }}>
       <>
         {likedApartments.length > 0 ? (
           <GenericHousesList apartments={likedApartments} />
@@ -37,6 +37,7 @@ const LikedApartments = () => {
             justifyContent='space-between'
             alignItems='center'
             padding='0 45px'
+            marginBottom='auto'
           >
             <Box
               display='flex'

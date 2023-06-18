@@ -7,9 +7,9 @@ import AllApartments from '../UserRouter/AllApartments';
 const HomeRouter = () => {
   return (
     <>
-      <Box display={'flex'}>
+      <Box display={'flex'} height={'100%'}>
         <Box>
-          <Routes>
+        <Routes>
             <Route
               path={`/${USER_ROUTES.ALL_APARTMENTS}`}
               element={<AllApartments></AllApartments>}
