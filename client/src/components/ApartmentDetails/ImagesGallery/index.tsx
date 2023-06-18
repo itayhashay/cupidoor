@@ -1,7 +1,6 @@
 import ImageGallery, { ReactImageGalleryItem } from 'react-image-gallery';
 import './styles.scss';
 import './styles.css';
-import { HOUSES_IMAGES } from '../../../utils/mock';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Button } from '@mui/material';

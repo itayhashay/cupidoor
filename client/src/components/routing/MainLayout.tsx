@@ -24,7 +24,7 @@ const MainLayout = () => {
       <main>
         <Box height={'calc(100vh - 64px)'} overflow={'hidden'} display={'flex'}>
           {showSideBar && <Sidebar></Sidebar>}
-          <Box overflow={'auto'}>
+          <Box overflow={'auto'} bgcolor={"#DADADA"}>
             <Outlet />
           </Box>
         </Box>

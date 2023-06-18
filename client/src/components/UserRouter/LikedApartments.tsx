@@ -1,9 +1,6 @@
-import { Box, Button, Fab, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import GenericHousesList from '../GenericHousesList';
-import AddHomeOutlinedIcon from '@mui/icons-material/AddHomeOutlined';
-import AddProperty from '../AddProperty';
 import { useEffect, useState } from 'react';
-import { getUserId } from '../../utils/localStorage';
 import { Apartment } from '../../types/apartment';
 import useAPI from '../../hooks/useAPI';
 import CupidoorSpinner from '../CupidoorSpinner';

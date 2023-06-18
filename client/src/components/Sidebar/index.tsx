@@ -262,7 +262,7 @@ const Sidebar = () => {
                       <IconButton
                         onClick={applyFilters}
                         color='primary'
-                        disabled={filterCount == 0}
+                        // disabled={filterCount == 0}
                       >
                         <CheckOutlined></CheckOutlined>
                       </IconButton>

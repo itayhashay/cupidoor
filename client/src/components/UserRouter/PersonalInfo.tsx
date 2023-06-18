@@ -39,6 +39,7 @@ import { useConfirmationModal } from "../../context/ConfirmationModalContext";
 import { Edit, Edit as EditIcon, Height } from "@mui/icons-material";
 import { useAuth } from "../../context/AuthContext";
 import CupidoorSpinner from "../CupidoorSpinner";
+import PersonalSecurity from "./PersonalSecurity";
 
 const PersonalInfo = ({ user }: { user: User }) => {
   const [role, setRole] = useState("Tenant");
@@ -277,13 +278,15 @@ const PersonalInfo = ({ user }: { user: User }) => {
                     handleEditMode={handleEditMode}
                   ></PersonalDetails>
                 );
-              if (currentTab === 1)
+              else if (currentTab === 1)
                 return (
                   <PersonalInfoAnswers
                     user={user}
                     answers={answers}
                   ></PersonalInfoAnswers>
                 );
+                else if(currentTab === 2)
+                return(<PersonalSecurity user={user} handleEditMode={handleEditMode}></PersonalSecurity>)
             })()}
           </Grid>
         </Box>
