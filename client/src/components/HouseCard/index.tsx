@@ -27,7 +27,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import StairsIcon from '@mui/icons-material/Stairs';
-import { getUserId } from '../../utils/localStorage';
+import { getUserId, getUserLikedApartmentsIds } from '../../utils/localStorage';
 import { randomNumber } from '../../utils/random';
 import useAPI from '../../hooks/useAPI';
 
@@ -41,34 +41,35 @@ const HouseCard = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [matchColor, setMatchColor] = useState<string>('');
+  const [likedApartmentsIds, setLikedApartmentsIds] = useState<string[]>([]);
   
   const { getUserLikedApartments, toggleTenantLike } = useAPI();
 
-  const fetchLikedApartments = async (userId: string) => {
-    const likes: any[] = await getUserLikedApartments();
-    const apartmentsIds: string[] = likes.map(like => like.apartment);
-    return apartmentsIds;
-  }
+  useEffect(() => {
+    const userLikedApartments: string[] = getUserLikedApartmentsIds();
+    setLikedApartmentsIds(userLikedApartments);
+  }, []);
 
   useEffect(() => {
     console.log(houseData)
     const color: string = precentToColor(houseData.match || 0);
     setMatchColor(color);
 
-    const apartmentId: string = houseData._id;
-    const userId: string = getUserId();
+    setIsFavorite(likedApartmentsIds.includes(houseData._id))
+  }, [houseData, likedApartmentsIds]);
 
-    fetchLikedApartments(userId).then((likedApartmentsIds: string[]) => {
-      setIsFavorite(likedApartmentsIds.includes(apartmentId));
-    })
-  }, [houseData]);
+  const fetchLikedApartments = async () => {
+    const likesApartments: any[] = await getUserLikedApartments();
+    return likesApartments;
+  }
+
 
   const handleClickFavorite = async (event: Event | SyntheticEvent<Element, Event>) => {
     event.preventDefault();
 
     await toggleTenantLike(houseData._id, String(houseData.user._id));
-
-    setIsFavorite(!isFavorite);
+    setIsFavorite((prev) => !prev);
+    fetchLikedApartments().then((likesApartments: any[]) => localStorage.setItem("userLikedApartments", JSON.stringify(likesApartments)));
   };
 
   return (

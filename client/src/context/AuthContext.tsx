@@ -45,6 +45,9 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const { signIn, signUp } = useAPI();
   const axiosPrivate = useAxiosPrivate();
+
+  const { getUserLikedApartments } = useAPI();
+
   // Games yet not finished - storing the user in local storage, adv will be the cookie
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -61,9 +64,15 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
     }
   }, []);
 
+  const fetchLikedApartments =async () => {
+    const likesApartments: any[] = await getUserLikedApartments();
+    return likesApartments;
+  }
+
   useEffect(() => {
     if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(user));
+      fetchLikedApartments().then((likesApartments: any[]) => localStorage.setItem("userLikedApartments", JSON.stringify(likesApartments)))
     }
   }, [user]);
 
