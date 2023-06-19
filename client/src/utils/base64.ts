@@ -12,5 +12,5 @@ export function convertFileToBase64(file: File) : Promise<string> {
 }
 
 export const convertFilePondImagesToBase64 = (images: any[]): string[] => {
-  return images.map(image => image.getFileEncodeBase64String());
+  return images.map(image => `data:image/jpeg;base64,${image.getFileEncodeBase64String()}`);
 }
