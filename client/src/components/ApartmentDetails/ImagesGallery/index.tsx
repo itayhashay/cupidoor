@@ -53,6 +53,7 @@ const ImagesGallery = ({ images }: { images: ServerApartmentImages[] }) => {
       showFullscreenButton={false}
       showThumbnails={false}
       showPlayButton={false}
+      lazyLoad={true}
       showIndex={true}
       renderLeftNav={(onClick, disabled) => (
         <Button onClick={onClick} disabled={disabled} sx={navLeftButtonStyle} disableRipple={true}>

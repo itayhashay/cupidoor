@@ -91,7 +91,7 @@ const getApartment = async (id, user) => {
       apartmentPromise,
       scorePromise,
     ]);
-    apartment.images = await Storage.addBase64Value(apartment.images);
+    // apartment.images = await Storage.addBase64Value(apartment.images);
 
     return { ...apartment, match: score.score };
   } catch (err) {
