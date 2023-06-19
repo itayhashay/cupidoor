@@ -70,6 +70,7 @@ const getApartment = async (id) => {
       apartmentPromise,
       scorePromise,
     ]);
+    apartment.images = await Storage.addBase64Value(apartment.images)
 
     return { ...apartment, match: score.score };
   } catch (err) {
