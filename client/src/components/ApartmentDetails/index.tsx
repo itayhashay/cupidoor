@@ -137,7 +137,7 @@ const ApartmentDetails = () => {
           <Box display={'flex'} color={'white'} alignItems={'center'} height={'100%'}>
             <LocationOnIcon></LocationOnIcon>
             <Typography variant='h5' fontWeight={'bold'} ml={1}>
-              {apartmentInfo.city},{apartmentInfo.street} {apartmentInfo.houseNumber}
+              {`${apartmentInfo.city}, ${apartmentInfo.street} ${apartmentInfo.houseNumber}`}
             </Typography>
           </Box>
         </Grid>

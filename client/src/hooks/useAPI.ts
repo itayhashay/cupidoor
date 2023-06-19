@@ -2,10 +2,10 @@ import { AxiosError, AxiosResponse } from 'axios';
 import config from '../config.json';
 import { MatchData } from '../types/matchData';
 import { User } from '../types/user';
-import { NewApartment } from '../components/AddProperty/types';
 import { Apartment } from '../types/apartment';
 import { QuestionAnswer, ServerQuestionAnswer } from '../types/questionAnswer';
 import useAxiosPrivate from './useAxiosPrivate';
+import { StepperApartment } from '../components/AddProperty/types';
 
 const useAPI = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -36,11 +36,23 @@ const useAPI = () => {
     return response;
   };
 
-  const addApartment = async (newApartment: NewApartment) => {
+  const addApartment = async (newApartment: StepperApartment) => {
     try {
       const response: AxiosResponse = await axiosPrivate.post(
         config.api.routes.addApartment,
         newApartment,
+      );
+      return response;
+    } catch (ex: AxiosError | any) {
+      return ex;
+    }
+  };
+
+  const editApartment = async (editedApartment: StepperApartment) => {
+    try {
+      const response: AxiosResponse = await axiosPrivate.put(
+        `${config.api.routes.addApartment}/${editedApartment._id}`,
+        editedApartment,
       );
       return response;
     } catch (ex: AxiosError | any) {
@@ -106,6 +118,7 @@ const useAPI = () => {
     signIn,
     signUp,
     addApartment,
+    editApartment,
     getApartmentLikes,
     approveTenant,
     getUserProperties,

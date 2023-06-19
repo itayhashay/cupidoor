@@ -3,10 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import { PROPERTY_CONDITIONS } from "../../utils/properyConditions";
 import { generateArrayFromRange } from "../../utils/logic";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
-import { ApartmentAbout, NewApartment } from "./types";
+import { ApartmentAbout, StepperApartment } from "./types";
 import { CHECKBOXES_DEFAULT, DEFAULT_ABOUT } from "./constants";
   
-const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: NewApartment,  saveChangesOnNext: (values: any) => void}) => {
+const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void}) => {
     const [aboutState, setAboutState] = useState<ApartmentAbout>(DEFAULT_ABOUT) 
     const aboutStateRef = useRef(aboutState); // Create a mutable ref
 

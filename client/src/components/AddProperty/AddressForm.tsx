@@ -1,9 +1,9 @@
 import { Box, TextField, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { ApartmentAddress, NewApartment } from "./types";
+import { ApartmentAddress, StepperApartment } from "./types";
 import { DEFAULT_ADDRESS } from "./constants";
 
-const AddressForm = ({apartmentData, saveChangesOnNext} : {apartmentData: NewApartment,  saveChangesOnNext: (values: any) => void}) => {
+const AddressForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void}) => {
     const [addressState, setAddressState] = useState<ApartmentAddress>(DEFAULT_ADDRESS) 
     const addressStateRef = useRef(addressState); // Create a mutable ref
 
