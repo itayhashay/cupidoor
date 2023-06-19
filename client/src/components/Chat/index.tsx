@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 import {
   Paper,
   Grid,
@@ -11,38 +11,32 @@ import {
   Tab,
   CircularProgress,
   Fab,
-} from "@mui/material";
-import { useAuth } from "../../context/AuthContext";
-import {
-  Chat as ChatIcon,
-  HouseOutlined,
-  PersonOutlined,
-} from "@mui/icons-material";
-import ChatConversation from "./chatConversation";
+} from '@mui/material';
+import { useAuth } from '../../context/AuthContext';
+import { Chat as ChatIcon, HouseOutlined, PersonOutlined } from '@mui/icons-material';
+import ChatConversation from './chatConversation';
 import {
   ChatArrivedMessageType,
   ChatContactType,
   ChatConversationAxiosResponse,
   ChatConversationProps,
   ChatUserType,
-} from "./types";
-import config from "../../config.json"
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import ChatContact from "./chatContact";
-import { Socket, io } from "socket.io-client";
-import { AxiosResponse } from "axios";
-import ChatContactList from "./chatContactList";
-import CupidoorSpinner from "../CupidoorSpinner";
+} from './types';
+import config from '../../config.json';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import ChatContact from './chatContact';
+import { Socket, io } from 'socket.io-client';
+import { AxiosResponse } from 'axios';
+import ChatContactList from './chatContactList';
+import CupidoorSpinner from '../CupidoorSpinner';
 
 const CupidChat: React.FC = () => {
   const { user } = useAuth();
   const socket = useRef<Socket>();
   const chatContainerRef = useRef(null);
-  const [conversationUserId, setConversationUserId] = useState<string | null>(
-    null
-  );
+  const [conversationUserId, setConversationUserId] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState(() => {
-    return user?.role !== "landlord" ? 0 : 1;
+    return user?.role !== 'landlord' ? 0 : 1;
   });
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -50,8 +44,7 @@ const CupidChat: React.FC = () => {
   const [currentConversation, setCurrentConversation] =
     useState<ChatConversationAxiosResponse | null>(null);
   const [contacts, setContacts] = useState<ChatContactType[] | []>([]);
-  const [arrivedMessage, setArrivedMessage] =
-    useState<ChatArrivedMessageType | null>(null);
+  const [arrivedMessage, setArrivedMessage] = useState<ChatArrivedMessageType | null>(null);
   const [isChatCentered, setIsChatCentered] = useState(false);
   const axiosPrivate = useAxiosPrivate();
 
@@ -60,24 +53,29 @@ const CupidChat: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    socket.current?.on("connect", () => {
-      socket.current?.emit("addUser", user?._id);
+    socket.current?.on('connect', () => {
+      socket.current?.emit('addUser', user?._id);
 
-      socket.current?.on("getMessage", (data) => {
+      socket.current?.on('getMessage', (data) => {
         setArrivedMessage(data);
+      });
+
+      socket.current?.on('forceUpdate', (data) => {
+        const url = selectedTab === 0 ? '/chat/tenant/matches' : '/chat/landlord/matches';
+        axiosPrivate.get(url).then((response) => {
+          const { matches } = response.data;
+          setContacts(matches);
+        });
       });
     });
 
-    socket.current?.on("disconnect", () => {
+    socket.current?.on('disconnect', () => {
       socket.current = io(`${config.api.baseUrl}`);
     });
   }, []);
 
   useEffect(() => {
-    if (
-      arrivedMessage &&
-      currentConversation?.conversationId === arrivedMessage.conversationId
-    ) {
+    if (arrivedMessage && currentConversation?.conversationId === arrivedMessage.conversationId) {
       setCurrentConversation((prev: any) => {
         if (prev) {
           const messages = prev?.messages;
@@ -86,30 +84,26 @@ const CupidChat: React.FC = () => {
         }
         return prev;
       });
-    } else {
-      setContacts((prevState: any) => {
-        const newState = prevState.map((contactState: ChatContactType) => {
-          if (contactState.conversationId === arrivedMessage?.conversationId) {
-            return {
-              ...contactState,
-              lastMessage: arrivedMessage.text,
-              notifications:
-                contactState.notifications !== undefined
-                  ? contactState.notifications + 1
-                  : 1,
-            };
-          }
-          return contactState;
-        });
-        return newState;
-      });
     }
+    setContacts((prevState: any) => {
+      const newState = prevState.map((contactState: ChatContactType) => {
+        if (contactState.conversationId === arrivedMessage?.conversationId) {
+          return {
+            ...contactState,
+            lastMessage: arrivedMessage.text,
+            notifications:
+              contactState.notifications !== undefined ? contactState.notifications + 1 : 1,
+          };
+        }
+        return contactState;
+      });
+      return newState;
+    });
   }, [arrivedMessage]);
 
   useEffect(() => {
     const fetchContacts = async () => {
-      const url =
-        selectedTab === 0 ? "/chat/tenant/matches" : "/chat/landlord/matches";
+      const url = selectedTab === 0 ? '/chat/tenant/matches' : '/chat/landlord/matches';
       const response = await axiosPrivate.get(url);
       const { matches } = response.data;
       setContacts(matches);
@@ -121,16 +115,16 @@ const CupidChat: React.FC = () => {
 
   useEffect(() => {
     const fetchConversation = async () => {
-      const response: AxiosResponse<ChatConversationAxiosResponse> =
-        await axiosPrivate.get(`${config.api.baseUrl}/chat/${conversationId}`);
+      const response: AxiosResponse<ChatConversationAxiosResponse> = await axiosPrivate.get(
+        `${config.api.baseUrl}/chat/${conversationId}`,
+      );
       const { messages } = response.data;
-      const contact = contacts.filter(
-        (contact) => contact.conversationId === conversationId
-      )[0];
+      const contact = contacts.filter((contact) => contact.conversationId === conversationId)[0];
       setCurrentConversation({
         conversationId: conversationId as string,
         receiver: contact.receiver,
         messages,
+        apartmentName: contact.name,
       });
       setIsLoading(false);
     };
@@ -170,11 +164,7 @@ const CupidChat: React.FC = () => {
     setSelectedTab(newValue);
   };
 
-  const handleSendMessage = async (
-    conversationId: string,
-    receiver: string,
-    text: string
-  ) => {
+  const handleSendMessage = async (conversationId: string, receiver: string, text: string) => {
     const message = {
       conversationId,
       text,
@@ -182,7 +172,7 @@ const CupidChat: React.FC = () => {
       createdAt: Date.now(),
     };
 
-    socket.current?.emit("sendMessage", {
+    socket.current?.emit('sendMessage', {
       conversationId,
       senderId: user?._id,
       receiver,
@@ -190,7 +180,7 @@ const CupidChat: React.FC = () => {
     });
 
     try {
-      const response = await axiosPrivate.post("/chat/messages", message);
+      const response = await axiosPrivate.post('/chat/messages', message);
       setCurrentConversation((prev: any) => {
         if (prev) {
           const messages = [...prev?.messages];
@@ -200,19 +190,17 @@ const CupidChat: React.FC = () => {
         }
         return prev;
       });
-    } catch (ex) {
-     
-    }
+    } catch (ex) {}
   };
 
   return (
     <>
       {!isChatOpen && (
         <Fab
-        color="secondary"
+          color='secondary'
           onClick={handleChatClick}
           sx={{
-            position: "absolute",
+            position: 'absolute',
             bottom: 5,
             right: 30,
             borderRadius: 800,
@@ -231,46 +219,34 @@ const CupidChat: React.FC = () => {
         elevation={3}
         zIndex={9999999999}
         ref={chatContainerRef}
-        bgcolor={"white"}
-        className={
-          isChatCentered ? "chat-container centered" : "chat-container"
-        }
-        sx={{ border: "black solid 1px" }}
+        bgcolor={'white'}
+        className={isChatCentered ? 'chat-container centered' : 'chat-container'}
+        sx={{ border: 'black solid 1px' }}
       >
-        <Collapse
-          in={isChatOpen}
-          mountOnEnter
-          unmountOnExit
-          sx={{ width: "100%" }}
-        >
+        <Collapse in={isChatOpen} mountOnEnter unmountOnExit sx={{ width: '100%' }}>
           <Grid
             item
             xs={12}
-            sx={{ cursor: "pointer", bgcolor: "secondary.main" }}
+            sx={{ cursor: 'pointer', bgcolor: 'secondary.main' }}
             padding={1}
             onClick={handleChatClick}
           >
-            <Box
-              display={"flex"}
-              justifyContent={"center"}
-              color={"white"}
-              alignItems={"center"}
-            >
+            <Box display={'flex'} justifyContent={'center'} color={'white'} alignItems={'center'}>
               <ChatIcon sx={{ mr: 2 }}></ChatIcon>
-              <Typography fontWeight={"bold"} fontSize={"1.2em"}>
+              <Typography fontWeight={'bold'} fontSize={'1.2em'}>
                 Chat
               </Typography>
             </Box>
           </Grid>
 
-          {!conversationId && user?.role === "both" && (
+          {!conversationId && user?.role === 'both' && (
             <Grid item xs={12}>
               <Tabs
                 value={selectedTab}
                 onChange={handleTabChange}
-                variant="fullWidth"
-                textColor="secondary"
-                indicatorColor="secondary"
+                variant='fullWidth'
+                textColor='secondary'
+                indicatorColor='secondary'
               >
                 <Tab icon={<HouseOutlined></HouseOutlined>}></Tab>
                 <Tab icon={<PersonOutlined></PersonOutlined>}></Tab>
@@ -278,25 +254,21 @@ const CupidChat: React.FC = () => {
             </Grid>
           )}
 
-          <Grid item xs={12} overflow={"auto"} height={"50vh"}>
-            <Grid container padding={1} height={"100%"} position={"relative"}>
+          <Grid item xs={12} overflow={'auto'} height={'50vh'}>
+            <Grid container padding={1} height={'100%'} position={'relative'}>
               {(() => {
                 if (isLoading) {
-                  return (
-                    <CupidoorSpinner></CupidoorSpinner>
-                  );
+                  return <CupidoorSpinner></CupidoorSpinner>;
                 }
                 if (contacts.length <= 0) {
                   return (
                     <Box
-                      alignItems={"center"}
-                      height={"100%"}
-                      display={"flex"}
-                      justifyContent={"center"}
+                      alignItems={'center'}
+                      height={'100%'}
+                      display={'flex'}
+                      justifyContent={'center'}
                     >
-                      <Typography textAlign={"center"}>
-                        No matches yet.
-                      </Typography>
+                      <Typography textAlign={'center'}>No matches yet.</Typography>
                     </Box>
                   );
                 }
@@ -316,7 +288,7 @@ const CupidChat: React.FC = () => {
                           key={contact._id}
                           contact={contact}
                           handleContactClick={handleContactClick}
-                        ></ChatContact>
+                        ></ChatContact>,
                       );
                     }
                   });
@@ -346,12 +318,13 @@ const CupidChat: React.FC = () => {
               })()}
 
               {!isLoading && currentConversation && (
-                <Grid item xs={12} minHeight={200} height={"100%"}>
+                <Grid item xs={12} minHeight={200} height={'100%'}>
                   <ChatConversation
                     userAvatar={user?.avatar}
                     conversationId={currentConversation.conversationId}
                     receiver={currentConversation.receiver}
                     messages={currentConversation.messages}
+                    apartmentName={currentConversation.apartmentName}
                     handleClose={handleCloseConversation}
                     handleSendMessage={handleSendMessage}
                   ></ChatConversation>

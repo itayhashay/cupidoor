@@ -1,5 +1,7 @@
+const { forceUpdate } = require("../middlewares/chat");
 const UsersRelations = require("../model/usersRelations.model");
 const ScoreService = require("./score.service")
+const ObjectId = require("mongoose").Types.ObjectId;
 const getLikesByTenantId = async (tenantId) => {
   try {
     const likes =  await UsersRelations.find({ tenant: tenantId, status: "pending" })
@@ -22,10 +24,12 @@ const getMatchesByTenantId = async (tenantId) => {
 
 const getLikesByApartmentId = async (apartmentId) => {
   try {
-    return await UsersRelations.find({
-      apartment: apartmentId,
+     const likes = await UsersRelations.find({
+      apartment: new ObjectId(apartmentId),
       status: "pending",
-    });
+    }).populate("tenant","_id avatar firstName lastName").select("tenant").lean().exec();
+    const users = likes.map(like=>like.tenant);
+    return users;
   } catch (err) {
     throw new Error("Error getting likes of apartment: " + err.message);
   }
@@ -66,17 +70,20 @@ const likeApartment = async (tenantId, apartmentId) => {
   }
 };
 
-const matchTenant = async (tenantId, apartmentId) => {
+const matchTenant = async (tenantId, apartmentId,landLordId) => {
   try {
     const relation = await UsersRelations.findOne({
       apartment: apartmentId,
       tenant: tenantId,
     });
-    return await UsersRelations.findByIdAndUpdate(
+    const response= await UsersRelations.findByIdAndUpdate(
       relation._id,
       { status: "approved" },
       { populate: { path: "tenant apartment" }, returnOriginal: false }
     );
+      forceUpdate(tenantId);
+      forceUpdate(landLordId);
+    return response;
   } catch (err) {
     throw new Error("Error match tenant: " + err.message);
   }

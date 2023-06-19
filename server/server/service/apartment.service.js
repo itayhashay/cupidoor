@@ -4,6 +4,7 @@ const match = require("../model/match");
 const UserAnswer = require("../model/userAnswer.model");
 const Score = require("../model/score.model");
 const ScoreService = require("./score.service");
+const ObjectId = require("mongoose").Types.ObjectId;
 const createApartment = async (apartmentData, user) => {
   try {
     let base64Images = apartmentData.images;
@@ -27,10 +28,52 @@ const createApartment = async (apartmentData, user) => {
 
 const getApartmentsByUser = async (userId) => {
   try {
-    return await Apartment.find({ user: userId }).populate(
-      "user",
-      "-password -salt -refreshToken -email -createdAt"
-    );
+    console.time("user-apartments");
+    const data = await Apartment.aggregate([
+      { $match: { user: new ObjectId(userId) } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {$unwind:"$user"},
+      {
+        $lookup: {
+          from: "usersrelations",
+          localField: "_id",
+          foreignField: "apartment",
+          as: "likes",
+        },
+      },
+
+      {
+        $lookup: {
+          from: "users",
+          localField: "likes.tenant",
+          foreignField: "_id",
+          as: "likes",
+        },
+      },
+      {
+        $project: {
+          "likes.password": 0,
+          "likes.salt": 0,
+          "likes.refreshToken": 0,
+          "likes.email": 0,
+          "likes.createdAt": 0,
+          "user.password": 0,
+          "user.salt": 0,
+          "user.refreshToken": 0,
+          "user.email": 0,
+          "user.createdAt": 0,
+        },
+      },
+    ]).exec();
+    console.timeEnd("user-apartments");
+    return data;
   } catch (err) {
     throw new Error("Error getting apartments: " + err.message);
   }
@@ -66,9 +109,8 @@ const getApartment = async (id, user) => {
       .lean()
       .exec();
     const scorePromise = new Promise((resolve) => {
-
       const findScore = () => {
-        return Score.findOne({ apartment: id,tenant:user._id })
+        return Score.findOne({ apartment: id, tenant: user._id })
           .select({ score: 1 })
           .lean()
           .exec();
@@ -249,6 +291,8 @@ const _scoreMissingApartments = async (user) => {
   }
   return Promise.all(promises);
 };
+
+
 
 module.exports = {
   createApartment,

@@ -2,19 +2,31 @@ const http = require("http");
 // const server = http.createServer();
 const chalk = require("chalk");
 const { Server } = require("socket.io");
+
+let users = [];
+let io;
+const forceUpdate = (userId) => {
+  if (io) {
+    const user = users.filter((user) => user.userId === userId)[0];
+    if (user) {
+      io.to(user.socketId).emit("forceUpdate")
+    }
+  }
+};
+
 const initializeChat = (server) => {
-  const io = new Server(server, {
+  io = new Server(server, {
     cors: {
       origin: "*",
       methods: ["GET", "POST"],
     },
   });
 
-  let users = [];
-
   const addUser = (userId, socketId) => {
-    !users.some((user) => user.userId === userId) &&
-      users.push({ userId, socketId });
+    users = users.filter((user) => user.userId !== userId);
+    users.push({ userId, socketId });
+    // !users.some((user) => user.userId === userId) &&
+    //   users.push({ userId, socketId });
   };
 
   const removeUser = (socketId) => {
@@ -25,7 +37,6 @@ const initializeChat = (server) => {
     return users.find((user) => user.userId === userId);
   };
 
-
   io.on("connection", async (socket) => {
     //Retrieve the user id
     socket.on("addUser", (userId) => {
@@ -35,9 +46,11 @@ const initializeChat = (server) => {
 
     //Handle send and get message
     socket.on("sendMessage", ({ conversationId, senderId, receiver, text }) => {
- 
       const user = getUser(receiver);
-      if (!user) return;
+      if (!user) {
+        console.log(chalk.redBright("Couldn't find user:" + receiver));
+        return;
+      }
       io.to(user.socketId).emit("getMessage", {
         conversationId,
         sender: senderId,
@@ -49,9 +62,10 @@ const initializeChat = (server) => {
     socket.on("disconnect", () => {
       console.log(chalk.magenta("A user has disconnected from the chat!"));
       removeUser(socket.id);
+
       io.emit("getUsers", users);
     });
   });
 };
 
-module.exports = initializeChat;
+module.exports = {initializeChat,forceUpdate};

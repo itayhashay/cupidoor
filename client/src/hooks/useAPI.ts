@@ -86,12 +86,28 @@ const useAPI = () => {
     return response.data;
   };
 
+  const getApartmentLikes = async (apartmentId: string): Promise<User[]> => {
+    const response = await axiosPrivate.get(
+      `${config.api.routes.getApartmentLikes}/${apartmentId}`,
+    );
+    return response.data;
+  };
+
+  const approveTenant = async (tenantId: string, apartmentId: string) => {
+    const response = await axiosPrivate.post(`${config.api.routes.approveTenant}/${tenantId}`, {
+      apartmentId,
+    });
+    return response.data;
+  };
+
   return {
     getTenantMatches,
     setUserAnswers,
     signIn,
     signUp,
     addApartment,
+    getApartmentLikes,
+    approveTenant,
     getUserProperties,
     getUserLikedApartments,
     toggleTenantLike,

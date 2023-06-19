@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import ReactDOM from "react-dom/client";
+import "@fontsource/open-sans"; 
+import "@fontsource/roboto"; 
 import "./index.css";
 import App from "./components/App";
 import { AuthContextProvider } from "./context/AuthContext";

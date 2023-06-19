@@ -8,49 +8,68 @@ const ObjectId = require("mongoose").Types.ObjectId;
 
 const ChatService = {
   getTenantMatches: async function (user) {
-    let matches = await UsersRelationsModel.find({ tenant: user._id,relation:"match",status:"approved" })
+    let matches = await UsersRelationsModel.find({
+      tenant: user._id,
+      relation: "match",
+      status: "approved",
+    })
       .populate({
         path: "apartment",
         populate: {
           path: "user",
         },
       })
+      .lean()
       .exec();
 
     const response = [];
+    const promises = [];
     for (let match of matches) {
-      let conversation = await conversationModel.findOne({
-        apartment: match.apartment._id,
-      });
+      let conversation = await conversationModel
+        .findOne({
+          apartment: match.apartment._id,
+        })
+        .lean();
+
       if (!conversation) {
         conversation = await this.createConversation(
           user._id,
           match.apartment._id
         );
       }
-      const lastMessage = await MessageModel.findOne({
-        conversationId: conversation._id,
-      })
-        .sort({ createdAt: -1 })
-        .limit(1)
-        .exec();
+      promises.push(
+        MessageModel.findOne({
+          conversationId: conversation._id,
+        })
+          .sort({ createdAt: -1 })
+          .limit(1)
+          .lean()
+          .exec()
+      );
 
-      const notifications = await MessageModel.countDocuments({
-        conversationId: conversation._id,
-        sender: { $ne: user._id },
-        status: "sent",
-      });
+      promises.push(
+        MessageModel.countDocuments({
+          conversationId: conversation._id,
+          sender: { $ne: user._id },
+          status: "sent",
+        }).lean()
+      );
+
+      const [lastMessage, notifications] = await Promise.all(promises);
 
       response.push({
         _id: match.apartment._id,
-        name: match.apartment.address,
-        avatar: match.apartment.images[0],
+        name: `${match.apartment.city},${match.apartment.street} ${match.apartment.houseNumber}`,
+        avatar: match.apartment.images[0].url,
         conversationId: conversation._id,
         lastMessage: lastMessage ? lastMessage.text : "",
         notifications,
         receiver: {
           _id: match.apartment.user._id,
-          name: match.apartment.user.name,
+          name:
+            match.apartment.user.firstName +
+            " " +
+            match.apartment.user.lastName,
           avatar: match.apartment.user.avatar,
         },
       });
@@ -62,6 +81,10 @@ const ChatService = {
     if (user.role === "tenant") return [];
 
     const matches = await UsersRelationsModel.aggregate([
+      {$match:{
+        "relation":"match",
+        "status":"approved"
+      }},
       {
         $lookup: {
           from: "apartments",
@@ -82,7 +105,7 @@ const ChatService = {
       },
       {
         $match: {
-          "Apartment.user": user._id,
+          "Apartment.user": user._id
         },
       },
       {
@@ -96,15 +119,21 @@ const ChatService = {
 
     const response = [];
     for (let match of matches) {
-      const apartmentMatches = [];
+      
       const apartment = await ApartmentModel.findOne({
         _id: match.Apartment._id,
       });
+
       for (let tenant of match.tenant) {
+        console.log(tenant);
         const matchUser = await UserModel.findOne({ _id: tenant });
+        
         let conversation = await conversationModel.findOne({
           tenant: matchUser._id,
+          apartment:apartment._id
         });
+        
+
         if (!conversation) {
           conversation = await this.createConversation(
             matchUser._id,
@@ -137,7 +166,7 @@ const ChatService = {
           },
           tag: {
             _id: apartment._id,
-            title: apartment.address,
+            title: `${apartment.city},${apartment.street} ${apartment.houseNumber}`,
           },
         });
       }
@@ -283,7 +312,7 @@ const ChatService = {
   },
   getConversation: async function (user, conversationId) {
     const conversation = await conversationModel.findOne({
-      _id: conversationId,
+      _id: new ObjectId(conversationId),
     });
     await MessageModel.updateMany(
       { conversationId: conversation._id, sender: { $ne: user._id } },

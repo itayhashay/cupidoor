@@ -1,15 +1,31 @@
-import { Avatar, AvatarGroup, Box } from "@mui/material";
-import { User } from "../../types/user";
-import { DividerLine } from "../HouseCard/styles";
+import { Avatar, AvatarGroup, Box, Tooltip } from '@mui/material';
+import { User } from '../../types/user';
+import { DividerLine } from '../HouseCard/styles';
 // import { PROFILE_PICTURES, USER_NAMES } from "../../utils/mock";
-import { randomNumber } from "../../utils/random";
+import { randomNumber } from '../../utils/random';
 
-type LikedUsersProps = {users: User[]};
+type LikedUsersProps = { users: User[] };
 
-const LikedUsers = ({users} : LikedUsersProps) => {
-    return (
-        <>
-        {/* <DividerLine />
+const LikedUsers = ({ users }: LikedUsersProps) => {
+  return (
+    <>
+      <Box
+        display='flex'
+        flexDirection='column'
+        alignItems='center'
+        sx={{ maxHeight: '127px', overflowY: 'auto', padding: '10px' }}
+      >
+        <AvatarGroup max={4}>
+          {users.map((user) => {
+            return (
+              <Tooltip title={`${user.firstName} ${user.lastName}`}>
+                <Avatar alt='' src={user.avatar} />
+              </Tooltip>
+            );
+          })}
+        </AvatarGroup>
+      </Box>
+      {/* <DividerLine />
         <Box display="flex" flexDirection="column" alignItems="center" sx={{maxHeight:"127px", overflowY:"auto", 
     padding: "10px"}}>
         <AvatarGroup max={4}>
@@ -21,8 +37,8 @@ const LikedUsers = ({users} : LikedUsersProps) => {
         </AvatarGroup>
             
         </Box> */}
-        </>
-    );
-}
- 
+    </>
+  );
+};
+
 export default LikedUsers;

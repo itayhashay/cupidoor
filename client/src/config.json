@@ -11,7 +11,10 @@
       "getApartment": "/apartment",
       "getLandloard": "/apartment/landlord",
       "getLikedApartments": "/users-relations/tenant/likes",
+      "getApartmentLikes": "/users-relations/apartment/likes",
+      "approveTenant": "/users-relations/apartment/match",
       "toggleTenantLike": "/users-relations/tenant/like"
+      
     }
   }
 }

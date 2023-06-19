@@ -1,7 +1,7 @@
-import { Theme, ThemeProvider, createTheme } from "@mui/material";
-import React, { useState, useRef, useContext } from "react";
+import { Theme, ThemeProvider, createTheme } from '@mui/material';
+import React, { useState, useRef, useContext } from 'react';
 
-declare module "@mui/material/styles" {
+declare module '@mui/material/styles' {
   interface Theme {
     severity: {
       error: { main: string; text: string };
@@ -21,9 +21,7 @@ declare module "@mui/material/styles" {
   }
 }
 
-const CupidThemeContext = React.createContext<{ theme: Theme }>(
-  {} as { theme: Theme }
-);
+const CupidThemeContext = React.createContext<{ theme: Theme }>({} as { theme: Theme });
 
 export default CupidThemeContext;
 
@@ -37,22 +35,36 @@ export const CupidThemeContextProvider: React.FC<Props> = ({ children }) => {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#20283E",
-        light: "#488A99",
-        dark: "#242444",
-        contrastText: "white",
-        
+        main: '#20283E',
+        light: '#488A99',
+        dark: '#242444',
+        contrastText: 'white',
       },
       secondary: {
-        main: "#64748B",
-        contrastText: "#fff",
+        main: '#64748B',
+        contrastText: '#fff',
       },
     },
     severity: {
-      success: { main: "#2e7d32", text: "#ffffff" },
-      error: { main: "#EF5350", text: "#ffffff" },
-      info: { main: "#0288d1", text: "#ffffff" },
-      warning: { main: "#ed6c02", text: "#ffffff" },
+      success: { main: '#2e7d32', text: '#ffffff' },
+      error: { main: '#EF5350', text: '#ffffff' },
+      info: { main: '#0288d1', text: '#ffffff' },
+      warning: { main: '#ed6c02', text: '#ffffff' },
+    },
+    typography: {
+      fontFamily: [
+        'Open Sans',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
     },
   });
 
@@ -63,5 +75,4 @@ export const CupidThemeContextProvider: React.FC<Props> = ({ children }) => {
   );
 };
 
-export const useCupidThemeProvider = (): { theme: Theme } =>
-  useContext(CupidThemeContext);
+export const useCupidThemeProvider = (): { theme: Theme } => useContext(CupidThemeContext);

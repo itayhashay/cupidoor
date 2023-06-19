@@ -102,3 +102,22 @@ dist
 
 # TernJS port file
 .tern-port
+server/server/mock/urls/1.js
+server/server/mock/urls/2.js
+server/server/mock/urls/3.js
+server/server/mock/urls/4.js
+server/server/mock/urls/5.js
+server/server/mock/urls/6.js
+server/server/mock/urls/7.js
+server/server/mock/urls/8.js
+server/server/mock/urls/9.js
+server/server/mock/urls/10.js
+server/server/mock/urls/11.js
+server/server/mock/urls/12.js
+server/server/mock/urls/13.js
+server/server/mock/urls/14.js
+server/server/mock/urls/15.js
+server/server/mock/urls/16.js
+server/server/mock/urls/17.js
+server/server/mock/urls/18.js
+server/server/mock/urlsBackup/1.js
