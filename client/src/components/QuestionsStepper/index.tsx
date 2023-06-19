@@ -131,7 +131,7 @@ export default function QuestionsStepper({
 
       // TODO: Convert to Apartment type and show the screen.
       // If all Selected -> move to home page
-      console.log(res);
+   
       displayHouses(res);
     } else {
       setSnackBarState({

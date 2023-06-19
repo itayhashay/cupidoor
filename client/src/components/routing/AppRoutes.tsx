@@ -1,67 +1,51 @@
-import LandingPage from "../Landing/LandingPage";
-import NotFoundPage from "../404/404";
-import ProtectedRoute from "./ProtectedRoute";
-import UnAuthorizedPage from "../401/401";
-import MainFeed from "../MainFeed";
-import QuestionsStepper from "../QuestionsStepper";
-import HomeRouter from "../HomeRouter";
-import ApartmentDetails from "../ApartmentDetails";
-import UserRouter from "../UserRouter";
-import Landing from "../Landing/Landing";
-import PrerequisiteRoute from "./PrerequisiteRoute";
+import LandingPage from '../Landing/LandingPage';
+import NotFoundPage from '../404/404';
+import ProtectedRoute from './ProtectedRoute';
+import UnAuthorizedPage from '../401/401';
+import MainFeed from '../MainFeed';
+import QuestionsStepper from '../QuestionsStepper';
+import HomeRouter from '../HomeRouter';
+import ApartmentDetails from '../ApartmentDetails';
+import UserRouter from '../UserRouter';
+import Landing from '../Landing/Landing';
+import PrerequisiteRoute from './PrerequisiteRoute';
+import PreFetch from './PreFetch';
 
 // Will Change!!!!
 let tmpApartments: any = [];
 
 const appRoutes = [
-  { path: "/", element: <Landing />},
-  { path: "/signIn", element: <LandingPage /> },
-  { path: "/Mainfeed", element: <MainFeed /> },
+  // { path: '/', element: <Landing /> },
+  // { path: '/signIn', element: <LandingPage /> },
+  // { path: '/Mainfeed', element: <MainFeed /> },
+
   {
-    path: "/questions",
+    path: '/questions',
+    element: <QuestionsStepper displayHouses={tmpApartments} />,
+  },
+  {
+    path: '/home/*',
     element: (
-      <ProtectedRoute>
-        <QuestionsStepper displayHouses={tmpApartments} />
-      </ProtectedRoute>
+      <PrerequisiteRoute>
+        <HomeRouter />
+      </PrerequisiteRoute>
     ),
   },
   {
-    path: "/home/*",
+    path: '/apartment/:id',
     element: (
-      <ProtectedRoute>
-        <PrerequisiteRoute>
-          <HomeRouter />
-        </PrerequisiteRoute>
-      </ProtectedRoute>
+      <PrerequisiteRoute>
+        <ApartmentDetails />
+      </PrerequisiteRoute>
     ),
   },
   {
-    path: "/apartment/:id",
+    path: '/user/*',
     element: (
-      <ProtectedRoute>
-        <PrerequisiteRoute>
-          <ApartmentDetails />
-        </PrerequisiteRoute>
-      </ProtectedRoute>
+      <PrerequisiteRoute>
+        <UserRouter />
+      </PrerequisiteRoute>
     ),
-  },
-  {
-    path: "/user/*",
-    element: (
-      <ProtectedRoute>
-        <PrerequisiteRoute>
-          <UserRouter />
-        </PrerequisiteRoute>
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/401",
-    element: <UnAuthorizedPage />,
-  },
-  {
-    path: "*",
-    element: <NotFoundPage />,
   },
 ];
 

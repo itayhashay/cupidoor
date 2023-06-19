@@ -38,7 +38,7 @@ const ApartmentDetails = () => {
       setIsFavorite(userLikedApartments.includes(apartmentId))
     }
     
-    else console.log('error');
+   
   }, [params.id]);
 
   useEffect(() => {
