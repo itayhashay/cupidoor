@@ -125,6 +125,16 @@ const apartmentSchema = new mongoose.Schema({
       }
     }
   ],
+  imagesBackup: [
+    {
+      name: {
+        type: String,
+      },
+      url: {
+        type: String,
+      }
+    }
+  ],
   // address: {
   //   type: String,
   //   required: true,

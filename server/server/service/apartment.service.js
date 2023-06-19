@@ -1,5 +1,9 @@
 const Apartment = require("../model/apartment.model");
-const Storage = require("./firebase-storage.service");
+const Storage =
+  process.env.STORAGE_PROVIDER === "CLOUDINARY"
+    ? require("./cloudinaryStorage.service")
+    : require("./firebase-storage.service");
+
 const match = require("../model/match");
 const UserAnswer = require("../model/userAnswer.model");
 const Score = require("../model/score.model");
@@ -10,16 +14,26 @@ const createApartment = async (apartmentData, user) => {
     apartmentData.images = [];
     const apartment = new Apartment(apartmentData);
     const newApartment = await apartment.save();
+    console.log(Storage);
     const imagesUrl = await Storage.uploadApartmentImages(
       newApartment._id.toString(),
       base64Images
     );
     await _scoreMissingApartments(user);
-    return await Apartment.findByIdAndUpdate(
-      newApartment._id,
-      { images: imagesUrl },
-      { populate: { path: "user" }, returnOriginal: false }
-    );
+    if(process.env.STORAGE_PROVIDER === "CLOUDINARY"){
+      return await Apartment.findByIdAndUpdate(
+        newApartment._id,
+        { imagesBackup: imagesUrl },
+        { populate: { path: "user" }, returnOriginal: false }
+      );
+    }else{
+      return await Apartment.findByIdAndUpdate(
+        newApartment._id,
+        { images: imagesUrl },
+        { populate: { path: "user" }, returnOriginal: false }
+      );
+    }
+    
   } catch (err) {
     throw new Error("Error creating apartment: " + err.message);
   }
@@ -66,9 +80,8 @@ const getApartment = async (id, user) => {
       .lean()
       .exec();
     const scorePromise = new Promise((resolve) => {
-
       const findScore = () => {
-        return Score.findOne({ apartment: id,tenant:user._id })
+        return Score.findOne({ apartment: id, tenant: user._id })
           .select({ score: 1 })
           .lean()
           .exec();
