@@ -4,7 +4,7 @@ const match = require("../model/match");
 const UserAnswer = require("../model/userAnswer.model");
 const Score = require("../model/score.model");
 const ScoreService = require("./score.service");
-const createApartment = async (apartmentData) => {
+const createApartment = async (apartmentData, user) => {
   try {
     let base64Images = apartmentData.images;
     apartmentData.images = [];
@@ -14,6 +14,7 @@ const createApartment = async (apartmentData) => {
       newApartment._id.toString(),
       base64Images
     );
+    await _scoreMissingApartments(user);
     return await Apartment.findByIdAndUpdate(
       newApartment._id,
       { images: imagesUrl },
@@ -58,19 +59,39 @@ const getApartments = async (user) => {
   }
 };
 
-const getApartment = async (id) => {
+const getApartment = async (id, user) => {
   try {
     const apartmentPromise = Apartment.findById(id)
       .populate("user", "-password -salt -refreshToken -email -createdAt")
       .lean()
       .exec();
-    const scorePromise = Score.findOne({ apartment: id }).select({ score: 1 });
+    const scorePromise = new Promise((resolve) => {
+      
+      const findScore = () => {
+        return Score.findOne({ apartment: id })
+          .select({ score: 1 })
+          .lean()
+          .exec();
+      };
+
+      findScore().then((score) => {
+        if (!score) {
+          _scoreMissingApartments(user).then(() => {
+            findScore().then((score) => {
+              resolve(score);
+            });
+          });
+        } else {
+          resolve(score);
+        }
+      });
+    });
 
     const [apartment, score] = await Promise.all([
       apartmentPromise,
       scorePromise,
     ]);
-    apartment.images = await Storage.addBase64Value(apartment.images)
+    apartment.images = await Storage.addBase64Value(apartment.images);
 
     return { ...apartment, match: score.score };
   } catch (err) {
@@ -191,7 +212,7 @@ const _scoreMissingApartments = async (user) => {
     },
     // { $match: { Match: { $eq: [] } } },
     {
-      $match: { "Match.tenant": { $ne: user._id }, },
+      $match: { "Match.tenant": { $ne: user._id } },
     },
   ]);
 
