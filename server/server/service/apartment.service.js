@@ -214,7 +214,6 @@ const getApartment = async (id, user) => {
         },
       },
       { $unwind: "$user" },
-      { $match: { "user._id": { $ne: user._id } } },
       {
         $lookup: {
           from: "usersrelations",
