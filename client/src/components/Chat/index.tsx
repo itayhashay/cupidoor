@@ -59,6 +59,14 @@ const CupidChat: React.FC = () => {
       socket.current?.on('getMessage', (data) => {
         setArrivedMessage(data);
       });
+
+      socket.current?.on('forceUpdate', (data) => {
+        const url = selectedTab === 0 ? '/chat/tenant/matches' : '/chat/landlord/matches';
+        axiosPrivate.get(url).then((response) => {
+          const { matches } = response.data;
+          setContacts(matches);
+        });
+      });
     });
 
     socket.current?.on('disconnect', () => {

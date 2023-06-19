@@ -1,3 +1,4 @@
+const { forceUpdate } = require("../middlewares/chat");
 const UsersRelations = require("../model/usersRelations.model");
 const ScoreService = require("./score.service")
 const ObjectId = require("mongoose").Types.ObjectId;
@@ -69,17 +70,20 @@ const likeApartment = async (tenantId, apartmentId) => {
   }
 };
 
-const matchTenant = async (tenantId, apartmentId) => {
+const matchTenant = async (tenantId, apartmentId,landLordId) => {
   try {
     const relation = await UsersRelations.findOne({
       apartment: apartmentId,
       tenant: tenantId,
     });
-    return await UsersRelations.findByIdAndUpdate(
+    const response= await UsersRelations.findByIdAndUpdate(
       relation._id,
       { status: "approved" },
       { populate: { path: "tenant apartment" }, returnOriginal: false }
     );
+      forceUpdate(tenantId);
+      forceUpdate(landLordId);
+    return response;
   } catch (err) {
     throw new Error("Error match tenant: " + err.message);
   }

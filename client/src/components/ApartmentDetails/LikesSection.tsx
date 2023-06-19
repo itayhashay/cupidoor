@@ -21,45 +21,49 @@ const LikesSection = ({
             <Divider></Divider>
           </Box>
         </Grid>
-        <Grid item xs={12} padding={1}>
-          <Grid container rowGap={2} alignItems={'center'}>
-            {likes.map((user) => {
-              return (
-                <Grid item xs={12} key={user._id}>
-                  <Grid container>
-                    <Grid item xs={2}>
-                      <Avatar src={user.avatar}></Avatar>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <Box display={'flex'}>
-                        <Typography>{user.firstName}</Typography>
-                        <Typography>{user.lastName}</Typography>
-                      </Box>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Box display={'flex'} justifyContent={'flex-end'}>
-                        <Tooltip title='Accept'>
-                          <IconButton
-                            color='success'
-                            onClick={() => handleApproveClick(user._id as string)}
-                          >
-                            <CheckOutlined></CheckOutlined>
-                          </IconButton>
-                        </Tooltip>
+        {likes.length === 0 ? (
+          <Box display={'flex'} justifyContent={'center'} alignItems={'center'}></Box>
+        ) : (
+          <Grid item xs={12} padding={1}>
+            <Grid container rowGap={2} alignItems={'center'}>
+              {likes.map((user) => {
+                return (
+                  <Grid item xs={12} key={user._id}>
+                    <Grid container>
+                      <Grid item xs={2}>
+                        <Avatar src={user.avatar}></Avatar>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Box display={'flex'}>
+                          <Typography>{user.firstName}</Typography>
+                          <Typography>{user.lastName}</Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Box display={'flex'} justifyContent={'flex-end'}>
+                          <Tooltip title='Accept'>
+                            <IconButton
+                              color='success'
+                              onClick={() => handleApproveClick(user._id as string)}
+                            >
+                              <CheckOutlined></CheckOutlined>
+                            </IconButton>
+                          </Tooltip>
 
-                        <Tooltip title='Decline'>
-                          <IconButton color='error'>
-                            <CloseOutlined></CloseOutlined>
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
+                          <Tooltip title='Decline'>
+                            <IconButton color='error'>
+                              <CloseOutlined></CloseOutlined>
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              );
-            })}
+                );
+              })}
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </Grid>
     </Grid>
   );

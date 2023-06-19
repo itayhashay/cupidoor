@@ -138,7 +138,6 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
                     <img src="/favicon.png" width={90}></img>
                     <Typography
                       fontWeight={"bold"}
-                      fontFamily={"Roboto sans-serif"}
                       fontSize={"1.3rem"}
                     >
                       CupiDoor

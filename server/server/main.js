@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const mongoSanitize = require("express-mongo-sanitize");
 const cookieParaser = require("cookie-parser");
 
-const initializeChat = require("./middlewares/chat");
+const {initializeChat} = require("./middlewares/chat");
 const errorHandler = require("./middlewares/errorHandler");
 require("dotenv").config();
 
