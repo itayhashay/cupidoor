@@ -5,8 +5,9 @@ import AddPropertyStepper from './AddPropertyStepper';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { DIALOG_STYLES } from './constants';
+import { Apartment } from '../../types/apartment';
 
-const AddProperty = ({ isOpen, onClose } : { isOpen: boolean, onClose: Function }) => {
+const AddProperty = ({ isOpen, onClose, houseData, isEdit = false} : { isOpen: boolean, onClose: Function, houseData?: Apartment, isEdit?: boolean }) => {
   const [open, setOpen] = useState(false);
   
   const handleClose = () => {
@@ -26,7 +27,7 @@ const AddProperty = ({ isOpen, onClose } : { isOpen: boolean, onClose: Function 
           <IconButton sx={{position: "absolute", top: "1rem", left: "1rem", zIndex: 1}} onClick={handleClose}>
             <CloseIcon />
           </IconButton>
-          <AddPropertyStepper handleClose={handleClose} />
+          <AddPropertyStepper handleClose={handleClose} houseData={houseData} isEdit={isEdit}/>
         </Box>
       </Modal>
   );

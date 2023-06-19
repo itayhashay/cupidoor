@@ -1,26 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Box, Stepper, Step, StepLabel } from '@mui/material';
 import AddressForm from "./AddressForm";
 import AboutForm from './AboutForm';
 import PaymentsForm from './PaymentsForm';
 import UploadsForm from './UploadsForm';
 import CupidoorSpinner from '../CupidoorSpinner';
-import { NewApartment } from './types';
+import { StepperApartment, UploadedImage } from './types';
 import { DEFAULT_NEW_APARTMENT_DATA, STEPS } from './constants';
 import useAPI from '../../hooks/useAPI';
 import { AxiosResponse } from 'axios';
 import { convertFilePondImagesToBase64 } from '../../utils/base64';
 import { getUserId } from '../../utils/localStorage';
 import { useNavigate } from "react-router-dom";
+import { Apartment } from '../../types/apartment';
 
-const AddPropertyStepper = ({handleClose} : {handleClose: () => void}) => {
+const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: () => void, houseData?: Apartment, isEdit: boolean}) => {
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [newApartmentData, setNewApartmentData] = useState<NewApartment>(DEFAULT_NEW_APARTMENT_DATA);
+  const [newApartmentData, setNewApartmentData] = useState<StepperApartment>(DEFAULT_NEW_APARTMENT_DATA);
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]) 
+
   const navigate = useNavigate();
-  const {addApartment} = useAPI();
+  const {addApartment, editApartment} = useAPI();
+
+  useEffect(() => {
+    houseData && setNewApartmentData({...houseData , newImages: [], removedImages: []} as StepperApartment);
+  }, [houseData]);
+
   const saveChangesOnNext = (values: any) => {
-    setNewApartmentData((prev: NewApartment) => { 
+    setNewApartmentData((prev: StepperApartment) => { 
       return {...prev, ...values} 
     })
   }
@@ -35,11 +43,20 @@ const AddPropertyStepper = ({handleClose} : {handleClose: () => void}) => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    newApartmentData.images = convertFilePondImagesToBase64(newApartmentData.images);
+    console.log(uploadedImages)
     newApartmentData.user = getUserId();
+    newApartmentData.newImages = uploadedImages.map((image: UploadedImage) => image.base64);
+
+    console.log(newApartmentData);
     try {
-      const response: AxiosResponse = await addApartment(newApartmentData);
-      response.status === 201 && navigate(`/apartment/${response.data._id}`);
+      if(isEdit) {
+        const response: AxiosResponse = await editApartment(newApartmentData);
+        response.status === 201 && navigate(`/apartment/${response.data._id}`);
+      } else {
+        console.log("NOT EDIT")
+        const response: AxiosResponse = await addApartment(newApartmentData);
+        response.status === 201 && navigate(`/apartment/${response.data._id}`);
+      }
       return { success: true };
     } catch (error) {
       return { success: false, error };
@@ -67,7 +84,7 @@ const AddPropertyStepper = ({handleClose} : {handleClose: () => void}) => {
           case 2:
             return <PaymentsForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
           case 3:
-            return <UploadsForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext} />;      
+            return <UploadsForm apartmentData={newApartmentData} saveImages={(files: UploadedImage[]) => setUploadedImages(files)} uploadedImages={uploadedImages}/>;      
           default:
             return <AddressForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
           }
@@ -86,7 +103,7 @@ const AddPropertyStepper = ({handleClose} : {handleClose: () => void}) => {
                   </Button>
                   <Button
                     variant="contained"
-                    onClick={activeStep === STEPS.length - 1 ? handleSubmit: handleNext}
+                    onClick={activeStep === STEPS.length - 1 ? handleSubmit : handleNext}
                     sx={{ mt: 1, mr: 1 }}
                   >
                     {activeStep === STEPS.length - 1 ? 'Finish' : 'Continue'}

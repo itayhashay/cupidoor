@@ -1,7 +1,10 @@
 import { Dayjs } from "dayjs";
+import { User } from "../../types/user";
+import { ServerApartmentImages } from "../../types/apartment";
 
-export type NewApartment = {
-    user: string;
+export type StepperApartment = {
+    _id?: string;
+    user?: User | string;
     city: string;
     street: string;
     houseNumber: number;
@@ -25,10 +28,12 @@ export type NewApartment = {
     tax: number;
     committee: number;
     numOfPayments: number;
-    entranceDate: Dayjs | null;
+    entranceDate: Date | Dayjs | null;
     paymentDay: number;
     totalPrice: number;
-    images: any[];
+    images: ServerApartmentImages[];
+    newImages: string[],
+    removedImages: string[],
   }
 
   // About //
@@ -52,7 +57,7 @@ export type NewApartment = {
     shelter: boolean,
   }
 
-export type ApartmentAbout = Pick<NewApartment, keyof AboutProps>;
+export type ApartmentAbout = Pick<StepperApartment, keyof AboutProps>;
 
 export type CheckboxProps = {
     key: string;
@@ -67,7 +72,7 @@ export type AddressProps = {
     houseNumber: number;
 }
 
-export type ApartmentAddress = Pick<NewApartment, keyof AddressProps>;
+export type ApartmentAddress = Pick<StepperApartment, keyof AddressProps>;
 
 // Payments //
 
@@ -81,12 +86,17 @@ export type PaymentsProps = {
     totalPrice: number;
   }
 
-export type ApartmentPayments = Pick<NewApartment, keyof PaymentsProps>;
+export type ApartmentPayments = Pick<StepperApartment, keyof PaymentsProps>;
 
 // Images //
 
 export type ImagesProps = {
-    images: any[]
+    images: ServerApartmentImages[];
 }
 
-export type ApartmentImages = Pick<NewApartment, keyof ImagesProps>;
+export type ApartmentImages = Pick<StepperApartment, keyof ImagesProps>;
+
+export type UploadedImage = {
+  file: File,
+  base64: string
+}
