@@ -32,7 +32,7 @@ const MyProperties = () => {
         {isLoading ? <CupidoorSpinner /> : 
         <>
         {myApartments.length > 0 ? <GenericHousesList apartments={myApartments}/> :
-        <Box height="85%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" padding="0 45px">
+        <Box height="85%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="center" padding="0 45px" marginTop="3rem">
             <Box display="flex" flexDirection="column" alignItems="flex-start" justifyContent="space-evenly" height="60vh">
                 <Typography variant="h2" fontWeight="700">
                     List Your Propery Today!
