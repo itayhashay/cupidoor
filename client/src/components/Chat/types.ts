@@ -1,4 +1,4 @@
-import { type } from "os";
+import { type } from 'os';
 
 export type ChatUserType = {
   _id: string;
@@ -13,7 +13,7 @@ export type ChatContactType = {
   conversationId: string;
   lastMessage: string;
   notifications?: number;
-  receiver: ChatUserType;
+  receiver: ChatReceiverType;
   tag?: {
     _id: string;
     title: string;
@@ -48,7 +48,9 @@ export type ChatMessageType = {
 
 export type ChatReceiverType = {
   _id: string;
-  name: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
   avatar: string;
 };
 
@@ -61,6 +63,7 @@ export type ChatConversationAxiosResponse = {
   conversationId: string;
   receiver: ChatReceiverType;
   messages: ChatMessageType[];
+  apartmentName:string;
 };
 
 export type ChatConversationProps = {
@@ -68,12 +71,9 @@ export type ChatConversationProps = {
   receiver: ChatReceiverType;
   conversationId: string;
   messages: ChatMessageType[];
+  apartmentName:string;
   handleClose: () => void;
-  handleSendMessage: (
-    conversationId: string,
-    receiver: string,
-    message: string
-  ) => void;
+  handleSendMessage: (conversationId: string, receiver: string, message: string) => void;
 };
 
 export type ChatArrivedMessageType = {

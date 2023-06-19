@@ -21,6 +21,7 @@ const ChatConversation: React.FC<ChatConversationProps> = ({
   conversationId,
   receiver,
   messages,
+  apartmentName,
   handleClose,
   handleSendMessage,
 }) => {
@@ -48,9 +49,14 @@ const ChatConversation: React.FC<ChatConversationProps> = ({
         <Box display={"flex"} ml={2} alignItems={"center"}>
           <Avatar
             src={receiver.avatar}
-            sx={{ width: 32, height: 32, mr: 1 }}
+            sx={{ width: 60, height: 60, mr: 1 }}
           ></Avatar>
-          <Typography fontWeight={"bold"}>{receiver.name}</Typography>
+          <Box alignItems={"center"}>
+          <Typography fontWeight={"bold"} variant="body2" lineHeight={1}>{receiver.name}</Typography>
+          <Typography color={"GrayText"} variant="caption">{apartmentName}</Typography>
+          </Box>
+          
+          
         </Box>
       </Box>
       <Divider sx={{ mb: 1 }} light></Divider>

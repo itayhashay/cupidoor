@@ -1,5 +1,5 @@
 import { useState, FC } from "react";
-import { Avatar, Badge, Box, Divider, Typography } from "@mui/material";
+import { Avatar, Badge, Box, Divider, ListItem, Typography } from "@mui/material";
 import { Mail as MailIcon } from "@mui/icons-material";
 import "./index.css";
 import { ChatContactProps } from "./types";
@@ -15,7 +15,7 @@ const ChatContact: React.FC<ChatContactProps> = ({
   };
 
   return (
-    <>
+    <ListItem>
       <Box
         display={"flex"}
         alignItems={"center"}
@@ -40,7 +40,7 @@ const ChatContact: React.FC<ChatContactProps> = ({
         </Badge>
       </Box>
       <Divider light></Divider>
-    </>
+    </ListItem>
   );
 };
 
