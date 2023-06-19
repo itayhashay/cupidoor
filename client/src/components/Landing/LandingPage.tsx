@@ -17,7 +17,7 @@ const LandingPage = () => {
 
   if (isAuthLoading) return null;
   return user?._id ? (
-    <Navigate to={"/home"} replace></Navigate>
+    <Navigate to={"/home/all-apartments"} replace></Navigate>
   ) : (
     <ThemeProvider theme={theme}>
       <div id="landing-layout">
