@@ -39,7 +39,7 @@ const getApartmentsByUser = async (userId) => {
           as: "user",
         },
       },
-      {$unwind:"$user"},
+      { $unwind: "$user" },
       {
         $lookup: {
           from: "usersrelations",
@@ -85,10 +85,108 @@ const getApartments = async (user) => {
     await _scoreMissingApartments(user);
     console.timeEnd("missing_score");
     console.time("apartments_find");
-    const apartments = await Apartment.find({ user: { $ne: user._id } })
-      .populate("user", "firstName lastName avatar")
-      .lean()
-      .exec();
+    const apartments = await Apartment.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+
+          as: "user",
+        },
+      },
+      { $unwind: "$user" },
+      { $match: { "user._id": { $ne: user._id } } },
+      {
+        $lookup: {
+          from: "usersrelations",
+          localField: "_id",
+          foreignField: "apartment",
+          let: { apartmentId: "$_id" },
+          as: "like",
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$apartment", "$$apartmentId"] },
+                    { $eq: ["$tenant", user._id] },
+                  ],
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                tenant: 0,
+                apartment: 0,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          liked: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: "$like",
+                        cond: {
+                          $and: [
+                            { $eq: ["$$this.relation", "match"] },
+                            { $eq: ["$$this.status", "pending"] },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+          matched: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: "$like",
+                        cond: {
+                          $and: [
+                            { $eq: ["$$this.relation", "match"] },
+                            { $eq: ["$$this.status", "approved"] },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          // "like":0,
+          "user.salt": 0,
+          "user.password": 0,
+          "user.email": 0,
+          "user.refreshToken": 0,
+        },
+      },
+    ]);
 
     console.timeEnd("apartments_find");
 
@@ -104,10 +202,113 @@ const getApartments = async (user) => {
 
 const getApartment = async (id, user) => {
   try {
-    const apartmentPromise = Apartment.findById(id)
-      .populate("user", "-password -salt -refreshToken -email -createdAt")
-      .lean()
-      .exec();
+
+    const apartmentPromise = Apartment.aggregate([{$match:{_id:new ObjectId(id)}},
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+
+          as: "user",
+        },
+      },
+      { $unwind: "$user" },
+      { $match: { "user._id": { $ne: user._id } } },
+      {
+        $lookup: {
+          from: "usersrelations",
+          localField: "_id",
+          foreignField: "apartment",
+          let: { apartmentId: "$_id" },
+          as: "like",
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$apartment", "$$apartmentId"] },
+                    { $eq: ["$tenant", user._id] },
+                  ],
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                tenant: 0,
+                apartment: 0,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          liked: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: "$like",
+                        cond: {
+                          $and: [
+                            { $eq: ["$$this.relation", "match"] },
+                            { $eq: ["$$this.status", "pending"] },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+          matched: {
+            $cond: {
+              if: {
+                $gt: [
+                  {
+                    $size: {
+                      $filter: {
+                        input: "$like",
+                        cond: {
+                          $and: [
+                            { $eq: ["$$this.relation", "match"] },
+                            { $eq: ["$$this.status", "approved"] },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                  0,
+                ],
+              },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          // "like":0,
+          "user.salt": 0,
+          "user.password": 0,
+          "user.email": 0,
+          "user.refreshToken": 0,
+        },
+      },
+    ]);
+    // const apartmentPromise = Apartment.findById(id)
+    //   .populate("user", "-password -salt -refreshToken -email -createdAt")
+    //   .lean()
+    //   .exec();
     const scorePromise = new Promise((resolve) => {
       const findScore = () => {
         return Score.findOne({ apartment: id, tenant: user._id })
@@ -135,7 +336,7 @@ const getApartment = async (id, user) => {
     ]);
     // apartment.images = await Storage.addBase64Value(apartment.images);
 
-    return { ...apartment, match: score.score };
+    return { ...apartment[0], match: score.score };
   } catch (err) {
     throw new Error("Error getting apartment: " + err.message);
   }
@@ -291,8 +492,6 @@ const _scoreMissingApartments = async (user) => {
   }
   return Promise.all(promises);
 };
-
-
 
 module.exports = {
   createApartment,

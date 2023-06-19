@@ -1,8 +1,5 @@
-import React, { useState, useRef } from "react";
-import {
-  ConfirmationModalType,
-  IConfirmationModal,
-} from "../types/ConfirmationModalType";
+import React, { useState, useRef } from 'react';
+import { ConfirmationModalType, IConfirmationModal } from '../types/ConfirmationModalType';
 import {
   Button,
   Dialog,
@@ -10,18 +7,17 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from "@mui/material";
-import { useCupidThemeProvider } from "./CupidThemeProvider";
+} from '@mui/material';
+import { useCupidThemeProvider } from './CupidThemeProvider';
 
 type ConfirmationModalContextType = {
   confirmationModalState: IConfirmationModal;
   showConfirmationModal: (newState: IConfirmationModal) => Promise<boolean>;
 };
 
-const ConfirmationModalContext =
-  React.createContext<ConfirmationModalContextType>(
-    {} as ConfirmationModalContextType
-  );
+const ConfirmationModalContext = React.createContext<ConfirmationModalContextType>(
+  {} as ConfirmationModalContextType,
+);
 
 export default ConfirmationModalContext;
 
@@ -31,22 +27,17 @@ export function useConfirmationModal() {
 
 type Props = { children: React.ReactNode };
 
-export const ConfirmationModalContextProvider: React.FC<Props> = ({
-  children,
-}) => {
-  const [confirmationModalState, setConfirmationModalState] =
-    useState<IConfirmationModal>({
-      title: "",
-      message: "",
-      severity: "info",
-      show: false,
-    });
+export const ConfirmationModalContextProvider: React.FC<Props> = ({ children }) => {
+  const [confirmationModalState, setConfirmationModalState] = useState<IConfirmationModal>({
+    title: '',
+    message: '',
+    severity: 'info',
+    show: false,
+  });
   const resolver = useRef<Function>();
   const { theme } = useCupidThemeProvider();
 
-  const showConfirmationModal = (
-    newState: IConfirmationModal
-  ): Promise<boolean> => {
+  const showConfirmationModal = (newState: IConfirmationModal): Promise<boolean> => {
     setConfirmationModalState((prevState) => ({ ...prevState, ...newState }));
     return new Promise((resolve) => {
       resolver.current = resolve;
@@ -64,34 +55,29 @@ export const ConfirmationModalContextProvider: React.FC<Props> = ({
   };
 
   return (
-    <ConfirmationModalContext.Provider
-      value={{ confirmationModalState, showConfirmationModal }}
-    >
+    <ConfirmationModalContext.Provider value={{ confirmationModalState, showConfirmationModal }}>
       {children}
       <Dialog
+        fullWidth
         open={confirmationModalState.show}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
       >
         <DialogTitle
-          id="alert-dialog-title"
+          id='alert-dialog-title'
           bgcolor={theme.severity[confirmationModalState.severity].main}
           color={theme.severity[confirmationModalState.severity].text}
         >
           {confirmationModalState.title}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText
-            id="alert-dialog-description"
-            padding={1}
-            fontWeight={"bold"}
-          >
+          <DialogContentText id='alert-dialog-description' padding={1} fontWeight={'bold'}>
             {confirmationModalState.message}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
+          <Button onClick={handleClose} color='secondary'>
             Cancel
           </Button>
           <Button onClick={handleOk} autoFocus>

@@ -40,4 +40,6 @@ export type Apartment = {
   createdAt: Date;
   match?:number;
   likes:any[];
+  liked?:boolean;
+  matched:boolean;
 };

@@ -9,7 +9,7 @@ const forceUpdate = (userId) => {
   if (io) {
     const user = users.filter((user) => user.userId === userId)[0];
     if (user) {
-      io.to(user.socketId).emit("forceUpdate")
+      io.to(user.socketId).emit("forceUpdate");
     }
   }
 };
@@ -68,4 +68,4 @@ const initializeChat = (server) => {
   });
 };
 
-module.exports = {initializeChat,forceUpdate};
+module.exports = { initializeChat, forceUpdate };

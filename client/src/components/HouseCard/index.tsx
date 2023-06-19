@@ -40,9 +40,10 @@ const HouseCard = ({
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [isMatched, setIsMatched] = useState<boolean>(false);
   const [matchColor, setMatchColor] = useState<string>('');
   const [likedApartmentsIds, setLikedApartmentsIds] = useState<string[]>([]);
-  
+
   const { getUserLikedApartments, toggleTenantLike } = useAPI();
 
   useEffect(() => {
@@ -51,25 +52,28 @@ const HouseCard = ({
   }, []);
 
   useEffect(() => {
-   
     const color: string = precentToColor(houseData.match || 0);
     setMatchColor(color);
+  }, [houseData]);
 
-    setIsFavorite(likedApartmentsIds.includes(houseData._id))
-  }, [houseData, likedApartmentsIds]);
+  useEffect(() => {
+    setIsFavorite(houseData.liked as boolean);
+    setIsMatched(houseData.matched as boolean);
+  }, [houseData]);
 
   const fetchLikedApartments = async () => {
     const likesApartments: any[] = await getUserLikedApartments();
     return likesApartments;
-  }
-
+  };
 
   const handleClickFavorite = async (event: Event | SyntheticEvent<Element, Event>) => {
     event.preventDefault();
 
     await toggleTenantLike(houseData._id, String(houseData.user._id));
     setIsFavorite((prev) => !prev);
-    fetchLikedApartments().then((likesApartments: any[]) => localStorage.setItem("userLikedApartments", JSON.stringify(likesApartments)));
+    fetchLikedApartments().then((likesApartments: any[]) =>
+      localStorage.setItem('userLikedApartments', JSON.stringify(likesApartments)),
+    );
   };
 
   return (
@@ -95,7 +99,17 @@ const HouseCard = ({
 
         {!isMyProperties ? (
           <Fab sx={likeButtonStyles} onClick={handleClickFavorite} id='favorite-button'>
-            {isFavorite ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+            {isFavorite ? (
+              <Tooltip title='Liked'>
+                <FavoriteIcon />
+              </Tooltip>
+            ) : isMatched ? (
+              <Tooltip title='Matched'>
+                <FavoriteIcon color='error'></FavoriteIcon>
+              </Tooltip>
+            ) : (
+              <FavoriteBorderOutlinedIcon />
+            )}
           </Fab>
         ) : (
           <Fab sx={likeButtonStyles} onClick={handleClickFavorite} id='favorite-button'>

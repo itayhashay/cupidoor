@@ -1,14 +1,26 @@
 const { forceUpdate } = require("../middlewares/chat");
 const UsersRelations = require("../model/usersRelations.model");
-const ScoreService = require("./score.service")
+const ScoreService = require("./score.service");
 const ObjectId = require("mongoose").Types.ObjectId;
 const getLikesByTenantId = async (tenantId) => {
   try {
-    const likes =  await UsersRelations.find({ tenant: tenantId, status: "pending" })
+    const likes = await UsersRelations.find({
+      tenant: tenantId,
+      status: "pending",
+    })
       .select("apartment")
-      .populate([{ path: "apartment", populate: { path: "user",select:{firstName:1,lastName:1,avatar:1} } }]).lean();
-      const apartments = likes.map(like=>like.apartment);
-      return await ScoreService.getApartmentsScores(tenantId,apartments);
+      .populate([
+        {
+          path: "apartment",
+          populate: {
+            path: "user",
+            select: { firstName: 1, lastName: 1, avatar: 1 },
+          },
+        },
+      ])
+      .lean();
+    const apartments = likes.map((like) => like.apartment);
+    return await ScoreService.getApartmentsScores(tenantId, apartments);
   } catch (err) {
     throw new Error("Error getting liked apartments: " + err.message);
   }
@@ -24,11 +36,15 @@ const getMatchesByTenantId = async (tenantId) => {
 
 const getLikesByApartmentId = async (apartmentId) => {
   try {
-     const likes = await UsersRelations.find({
+    const likes = await UsersRelations.find({
       apartment: new ObjectId(apartmentId),
       status: "pending",
-    }).populate("tenant","_id avatar firstName lastName").select("tenant").lean().exec();
-    const users = likes.map(like=>like.tenant);
+    })
+      .populate("tenant", "_id avatar firstName lastName")
+      .select("tenant")
+      .lean()
+      .exec();
+    const users = likes.map((like) => like.tenant);
     return users;
   } catch (err) {
     throw new Error("Error getting likes of apartment: " + err.message);
@@ -62,27 +78,29 @@ const likeApartment = async (tenantId, apartmentId) => {
       });
       return await newRelation.save();
     } else {
-      await UsersRelations.findByIdAndDelete(relation._id);
-      return;
+      if (relation.relation === "match" && relation.status === "approved") {
+        return;
+      }
+      return await UsersRelations.findByIdAndDelete(relation._id);
     }
   } catch (err) {
     throw new Error("Error create a like/unlike: " + err.message);
   }
 };
 
-const matchTenant = async (tenantId, apartmentId,landLordId) => {
+const matchTenant = async (tenantId, apartmentId, landLordId) => {
   try {
     const relation = await UsersRelations.findOne({
       apartment: apartmentId,
       tenant: tenantId,
     });
-    const response= await UsersRelations.findByIdAndUpdate(
+    const response = await UsersRelations.findByIdAndUpdate(
       relation._id,
       { status: "approved" },
       { populate: { path: "tenant apartment" }, returnOriginal: false }
     );
-      forceUpdate(tenantId);
-      forceUpdate(landLordId);
+    forceUpdate(tenantId);
+    forceUpdate(landLordId);
     return response;
   } catch (err) {
     throw new Error("Error match tenant: " + err.message);

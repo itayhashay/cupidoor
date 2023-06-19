@@ -38,11 +38,13 @@ import { useAuth } from '../../context/AuthContext';
 import { User } from '../../types/user';
 import LikesSection from './LikesSection';
 import { useSnackbar } from '../../context/SnackbarContext';
+import { useConfirmationModal } from '../../context/ConfirmationModalContext';
 
 const ApartmentDetails = () => {
   const [apartmentInfo, setApartmentInfo] = useState<Apartment | null>(null);
   const [matchColor, setMatchColor] = useState<string>('');
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [isMatched, setIsMatched] = useState<boolean>(false);
   const [isMyApartment, setIsMyApartment] = useState<boolean>(false);
   const [apartmentLikes, setApartmentLikes] = useState<User[]>([] as User[]);
   const [isLikesLoading, setIsLikesLoading] = useState<boolean>(false);
@@ -56,6 +58,7 @@ const ApartmentDetails = () => {
   } = useAPI();
   const { user } = useAuth();
   const params = useParams();
+  const { showConfirmationModal } = useConfirmationModal();
 
   useEffect(() => {
     const fetchApartmentLikes = async (id: string) => {
@@ -72,14 +75,14 @@ const ApartmentDetails = () => {
         setIsMyApartment(true);
         fetchApartmentLikes(id);
       }
+      setIsFavorite(apartment?.liked as boolean);
+      setIsMatched(apartment?.matched as boolean);
     };
 
     const apartmentId: string = params.id || '';
 
     if (apartmentId) {
       fetchApartmentData(apartmentId);
-      const userLikedApartments: string[] = getUserLikedApartmentsIds();
-      setIsFavorite(userLikedApartments.includes(apartmentId));
     }
   }, [params.id]);
 
@@ -88,17 +91,23 @@ const ApartmentDetails = () => {
     setMatchColor(color);
   }, [apartmentInfo]);
 
-  const fetchLikedApartments = async () => {
-    const likesApartments: any[] = await getUserLikedApartments();
-    return likesApartments;
-  };
-
   const handleLikeClick = async (apartmentId: string, userId: string) => {
-    await toggleTenantLike(apartmentId, userId);
-    setIsFavorite((prev) => !prev);
-    fetchLikedApartments().then((likesApartments: any[]) =>
-      localStorage.setItem('userLikedApartments', JSON.stringify(likesApartments)),
-    );
+    let flag = true;
+    if (isMatched) {
+      flag = await showConfirmationModal({
+        message: 'Are you sure you want to unmatch?',
+        severity: 'info',
+        title: `Unmatch ${apartmentInfo?.city},${apartmentInfo?.street} ${apartmentInfo?.houseNumber}?`,
+        show: true,
+      });
+    }
+    if (flag) {
+      await toggleTenantLike(apartmentId, userId);
+      if (isMatched) {
+        return setIsMatched(false);
+      }
+      setIsFavorite((prev) => !prev);
+    }
   };
 
   const handleApproveClick = (tenantId: string) => {
@@ -191,13 +200,14 @@ const ApartmentDetails = () => {
                 apartmentInfo.match === 100 ? '!' : ''
               }`}</Typography>
               <Button
+                color={isFavorite ? 'secondary' : isMatched ? 'error' : 'primary'}
                 onClick={() => handleLikeClick(apartmentInfo._id, String(apartmentInfo.user._id))}
                 fullWidth
                 variant={isFavorite ? 'outlined' : 'contained'}
                 size='large'
                 endIcon={<FavoriteBorder></FavoriteBorder>}
               >
-                {isFavorite ? 'Liked' : 'Like'}
+                {isFavorite ? 'Liked' : isMatched ? 'Matched!' : 'Like'}
               </Button>
             </Grid>
           </Grid>

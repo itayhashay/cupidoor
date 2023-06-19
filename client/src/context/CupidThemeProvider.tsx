@@ -51,21 +51,9 @@ export const CupidThemeContextProvider: React.FC<Props> = ({ children }) => {
       info: { main: '#0288d1', text: '#ffffff' },
       warning: { main: '#ed6c02', text: '#ffffff' },
     },
-    typography: {
-      fontFamily: [
-        'Open Sans',
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-
-        '"Helvetica Neue"',
-        'Arial',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-      ].join(','),
-    },
+    typography:{
+      fontFamily:"'Open Sans', sans-serif"
+    }
   });
 
   return (

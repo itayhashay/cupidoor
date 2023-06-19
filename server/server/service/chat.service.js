@@ -23,8 +23,9 @@ const ChatService = {
       .exec();
 
     const response = [];
-    const promises = [];
+ 
     for (let match of matches) {
+      const promises = [];
       let conversation = await conversationModel
         .findOne({
           apartment: match.apartment._id,
