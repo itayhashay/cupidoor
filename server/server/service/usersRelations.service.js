@@ -1,5 +1,6 @@
 const UsersRelations = require("../model/usersRelations.model");
 const ScoreService = require("./score.service")
+const ObjectId = require("mongoose").Types.ObjectId;
 const getLikesByTenantId = async (tenantId) => {
   try {
     const likes =  await UsersRelations.find({ tenant: tenantId, status: "pending" })
@@ -22,10 +23,12 @@ const getMatchesByTenantId = async (tenantId) => {
 
 const getLikesByApartmentId = async (apartmentId) => {
   try {
-    return await UsersRelations.find({
-      apartment: apartmentId,
+     const likes = await UsersRelations.find({
+      apartment: new ObjectId(apartmentId),
       status: "pending",
-    });
+    }).populate("tenant","_id avatar firstName lastName").select("tenant").lean().exec();
+    const users = likes.map(like=>like.tenant);
+    return users;
   } catch (err) {
     throw new Error("Error getting likes of apartment: " + err.message);
   }

@@ -1,4 +1,15 @@
-import { Avatar, Box, Button, Container, Divider, Grid, Paper, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Divider,
+  Grid,
+  IconButton,
+  Paper,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Apartment } from '../../types/apartment';
@@ -6,7 +17,14 @@ import DryDetails from './DryDetails';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { ImageContainer } from './styles';
 import ImagesGallery from './ImagesGallery';
-import { ExpandLess, ExpandMore, FavoriteBorder, PercentRounded } from '@mui/icons-material';
+import {
+  CheckOutlined,
+  CloseOutlined,
+  ExpandLess,
+  ExpandMore,
+  FavoriteBorder,
+  PercentRounded,
+} from '@mui/icons-material';
 import ApartmentFeatures from './ApartmentFeatures';
 import { precentToColor } from '../../utils/colors';
 import useAPI from '../../hooks/useAPI';
@@ -16,18 +34,44 @@ import ApartmentDescription from './ApartmentDescription';
 import PaymentCalculator from './PaymentCalculator';
 import { MatchLabelStyles } from '../HouseCard/styles';
 import { getUserLikedApartmentsIds } from '../../utils/localStorage';
+import { useAuth } from '../../context/AuthContext';
+import { User } from '../../types/user';
+import LikesSection from './LikesSection';
+import { useSnackbar } from '../../context/SnackbarContext';
 
 const ApartmentDetails = () => {
   const [apartmentInfo, setApartmentInfo] = useState<Apartment | null>(null);
   const [matchColor, setMatchColor] = useState<string>('');
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const { getUserLikedApartments, getApartmentById, toggleTenantLike } = useAPI();
+  const [isMyApartment, setIsMyApartment] = useState<boolean>(false);
+  const [apartmentLikes, setApartmentLikes] = useState<User[]>([] as User[]);
+  const [isLikesLoading, setIsLikesLoading] = useState<boolean>(false);
+  const { setSnackBarState } = useSnackbar();
+  const {
+    getUserLikedApartments,
+    getApartmentById,
+    toggleTenantLike,
+    getApartmentLikes,
+    approveTenant,
+  } = useAPI();
+  const { user } = useAuth();
   const params = useParams();
 
   useEffect(() => {
+    const fetchApartmentLikes = async (id: string) => {
+      const likes: User[] = await getApartmentLikes(id);
+      setApartmentLikes(likes);
+      setIsLikesLoading(false);
+    };
+
     const fetchApartmentData = async (id: string) => {
       const apartment: Apartment = await getApartmentById(id);
       setApartmentInfo(apartment);
+      if (apartment.user._id === user?._id) {
+        setIsLikesLoading(true);
+        setIsMyApartment(true);
+        fetchApartmentLikes(id);
+      }
     };
 
     const apartmentId: string = params.id || '';
@@ -35,10 +79,8 @@ const ApartmentDetails = () => {
     if (apartmentId) {
       fetchApartmentData(apartmentId);
       const userLikedApartments: string[] = getUserLikedApartmentsIds();
-      setIsFavorite(userLikedApartments.includes(apartmentId))
+      setIsFavorite(userLikedApartments.includes(apartmentId));
     }
-    
-   
   }, [params.id]);
 
   useEffect(() => {
@@ -49,15 +91,33 @@ const ApartmentDetails = () => {
   const fetchLikedApartments = async () => {
     const likesApartments: any[] = await getUserLikedApartments();
     return likesApartments;
-  }
-
+  };
 
   const handleLikeClick = async (apartmentId: string, userId: string) => {
     await toggleTenantLike(apartmentId, userId);
     setIsFavorite((prev) => !prev);
-    fetchLikedApartments().then((likesApartments: any[]) => localStorage.setItem("userLikedApartments", JSON.stringify(likesApartments)));
+    fetchLikedApartments().then((likesApartments: any[]) =>
+      localStorage.setItem('userLikedApartments', JSON.stringify(likesApartments)),
+    );
   };
 
+  const handleApproveClick = (tenantId: string) => {
+    if (apartmentInfo) {
+      try {
+        approveTenant(tenantId, apartmentInfo?._id);
+        setApartmentLikes((prevState) => {
+          return prevState.filter((user) => user._id !== tenantId);
+        });
+      } catch (ex) {
+        setSnackBarState({
+          severity: 'error',
+          message: "Couldn't approve tenant, please try again later!",
+          show: true,
+        });
+      }
+    }
+  };
+  const handleDeclineClick = () => {};
 
   if (!apartmentInfo) return <CupidoorSpinner></CupidoorSpinner>;
   return (
@@ -99,48 +159,49 @@ const ApartmentDetails = () => {
           </Grid>
         </Grid>
 
-        <Grid item xs={4}>
-          <Grid container>
-            <Grid item xs={12} padding={1}>
-              <LandlordSection landlord={apartmentInfo.user}></LandlordSection>
+        {isMyApartment ? (
+          <LikesSection
+            likes={apartmentLikes}
+            handleApproveClick={handleApproveClick}
+            handleDeclineClick={handleDeclineClick}
+          ></LikesSection>
+        ) : (
+          <Grid item xs={4}>
+            <Grid container>
+              <Grid item xs={12} padding={1}>
+                <LandlordSection landlord={apartmentInfo.user}></LandlordSection>
+              </Grid>
+              <Grid item xs={12} padding={1}>
+                <PaymentCalculator apartmentInfo={apartmentInfo}></PaymentCalculator>
+              </Grid>
             </Grid>
-            <Grid item xs={12} padding={1}>
-              <PaymentCalculator apartmentInfo={apartmentInfo}></PaymentCalculator>
+            <Grid item xs={12} padding={1} position={'relative'}>
+              <Typography
+                sx={{
+                  ...MatchLabelStyles,
+                  top: 15,
+                  right: 10,
+                  border: '1px solid #CECECE',
+                  borderRadius: 0,
+                  zIndex: 1,
+                  transform: 'rotate(323deg)',
+                  color: matchColor,
+                }}
+              >{`${apartmentInfo.match}% ${apartmentInfo.match === 100 ? 'Perfect' : ''} Match${
+                apartmentInfo.match === 100 ? '!' : ''
+              }`}</Typography>
+              <Button
+                onClick={() => handleLikeClick(apartmentInfo._id, String(apartmentInfo.user._id))}
+                fullWidth
+                variant={isFavorite ? 'outlined' : 'contained'}
+                size='large'
+                endIcon={<FavoriteBorder></FavoriteBorder>}
+              >
+                {isFavorite ? 'Liked' : 'Like'}
+              </Button>
             </Grid>
           </Grid>
-          {/* <Grid item xs={12}>
-            <Box display={'flex'} justifyContent={'center'}>
-              <Avatar sx={{ bgcolor: matchColor, height: 60, width: 60 }}>
-                <Typography>{apartmentInfo.match}%</Typography>
-              </Avatar>
-            </Box>
-          </Grid> */}
-          <Grid item xs={12} padding={1} position={'relative'}>
-            <Typography
-              sx={{
-                ...MatchLabelStyles,
-                top: 15,
-                right: 10,
-                border: '1px solid #CECECE',
-                borderRadius: 0,
-                zIndex: 1,
-                transform: 'rotate(323deg)',
-                color: matchColor,
-              }}
-            >{`${apartmentInfo.match}% ${apartmentInfo.match === 100 ? 'Perfect' : ''} Match${
-              apartmentInfo.match === 100 ? '!' : ''
-            }`}</Typography>
-            <Button
-              onClick={() => handleLikeClick(apartmentInfo._id, String(apartmentInfo.user._id))}
-              fullWidth
-              variant={isFavorite ? 'outlined' : 'contained'}
-              size='large'
-              endIcon={<FavoriteBorder></FavoriteBorder>}
-            >
-              {isFavorite ? 'Liked' : 'Like'}
-            </Button>
-          </Grid>
-        </Grid>
+        )}
       </Grid>
     </Container>
   );

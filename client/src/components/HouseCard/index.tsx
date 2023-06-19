@@ -173,7 +173,7 @@ const HouseCard = ({
 
         <Box width={'100%'} mt={1}>
           {isMyProperties ? (
-            <LikedUsers users={[]} />
+            <LikedUsers users={houseData.likes} />
           ) : (
             <>
               <Box display={'flex'} justifyContent={'center'} bgcolor={'primary.dark'} paddingY={1}>
