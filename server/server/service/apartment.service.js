@@ -66,9 +66,9 @@ const getApartment = async (id, user) => {
       .lean()
       .exec();
     const scorePromise = new Promise((resolve) => {
-      
+
       const findScore = () => {
-        return Score.findOne({ apartment: id })
+        return Score.findOne({ apartment: id,tenant:user._id })
           .select({ score: 1 })
           .lean()
           .exec();
