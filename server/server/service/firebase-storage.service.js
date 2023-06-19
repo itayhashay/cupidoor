@@ -1,6 +1,8 @@
 const { initializeApp } = require("firebase/app");
 const  { getStorage, ref,uploadString,getDownloadURL, StringFormat } = require("firebase/storage");
 const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
+const base64 = require('base64-js');
 require('dotenv').config();
 
 const firebaseConfig = {
@@ -57,10 +59,25 @@ const uploadApartmentImages = async (apartmentId, base64ImagesArray) => {
   }
 };
 
+const addBase64Value = async (jsonArray) => {
+  return await Promise.all(jsonArray.map(async (image) => {
+    const url = image.url;
+    const imageData = await downloadImage(url);
+    const base64Value = base64.fromByteArray(imageData);
+    image.base64 = base64Value;
+    return image;
+  }));
+}
 
+
+const downloadImage = async (url) => {
+  const response = await axios.get(url, { responseType: 'arraybuffer' });
+  return response.data;
+}
 
 module.exports = {
   downloadProfilePhoto,
   uploadProfilePhoto,
-  uploadApartmentImages
+  uploadApartmentImages,
+  addBase64Value
 }
