@@ -4,10 +4,10 @@ import { generateArrayFromRange } from "../../utils/logic";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from "dayjs";
-import { ApartmentPayments, NewApartment } from "./types";
+import { ApartmentPayments, StepperApartment } from "./types";
 import { DEFAULT_PAYMENTS } from "./constants";
 
-const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: NewApartment,  saveChangesOnNext: (values: any) => void}) => {
+const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void}) => {
     const [paymentsState, setPaymentsState] = useState<ApartmentPayments>(DEFAULT_PAYMENTS) 
     const paymentsStateRef = useRef(paymentsState); // Create a mutable ref
 
@@ -130,8 +130,8 @@ const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: NewAp
                     <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Entrance Date</Typography>
                     <DemoContainer components={['DatePicker']}>
                         <DatePicker
-                            value={paymentsState.entranceDate}
-                            onChange={(date) => handleDatePickerChange(date)}                            
+                            value={dayjs(paymentsState.entranceDate)}
+                            onChange={(date) => handleDatePickerChange(dayjs(date))}                            
                             minDate={dayjs(new Date())}
                             sx={{marginBottom: "8px"}}/>
                     </DemoContainer>

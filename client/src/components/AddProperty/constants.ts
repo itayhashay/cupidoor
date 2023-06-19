@@ -1,5 +1,5 @@
 import { SxProps, Theme } from "@mui/material";
-import { AboutProps, AddressProps, CheckboxProps, ImagesProps, NewApartment, PaymentsProps } from "./types";
+import { AboutProps, AddressProps, CheckboxProps, ImagesProps, PaymentsProps, StepperApartment } from "./types";
 
 export const DIALOG_STYLES: SxProps<Theme> = {
   position: 'absolute' as 'absolute',
@@ -23,36 +23,37 @@ export const STEPS: string[] = [
   ];
 
 
-export const DEFAULT_NEW_APARTMENT_DATA: NewApartment = {
-    user: "",
-    city: "",
-    street: "",
-    houseNumber: 0,
-    propertyCondition: "",
-    houseArea: 0,
-    rooms: 1,
-    floor: 0,
-    parkings: 0,
-    balconies: 0,
-    description: "",
-    accessible: false,
-    boiler: false,
-    furnished: false,
-    airConditioner: false,
-    bars: false,
-    elevator: false,
-    garage: false,
-    longTerm: false,
-    shelter: false,
-    price: 0,
-    tax: 0,
-    committee: 0,
-    numOfPayments: 0,
-    entranceDate: null,
-    paymentDay: 10,
-    totalPrice: 0,
-    images: []
-  }
+export const DEFAULT_NEW_APARTMENT_DATA: StepperApartment = {
+  city: "",
+  street: "",
+  houseNumber: 0,
+  propertyCondition: "",
+  houseArea: 0,
+  rooms: 1,
+  floor: 0,
+  parkings: 0,
+  balconies: 0,
+  description: "",
+  accessible: false,
+  boiler: false,
+  furnished: false,
+  airConditioner: false,
+  bars: false,
+  elevator: false,
+  garage: false,
+  longTerm: false,
+  shelter: false,
+  price: 0,
+  tax: 0,
+  committee: 0,
+  numOfPayments: 0,
+  entranceDate: null,
+  paymentDay: 10,
+  totalPrice: 0,
+  images: [],
+  newImages: [],
+  removedImages: []
+}
   
 // About //
 

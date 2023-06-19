@@ -7,7 +7,7 @@ const ScoreService = require("./score.service");
 const ObjectId = require("mongoose").Types.ObjectId;
 const createApartment = async (apartmentData, user) => {
   try {
-    let base64Images = apartmentData.images;
+    let base64Images = apartmentData.newImages;
     apartmentData.images = [];
     const apartment = new Apartment(apartmentData);
     const newApartment = await apartment.save();

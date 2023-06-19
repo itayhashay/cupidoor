@@ -99,6 +99,11 @@ a {
   display: none;
 }
 
+.filepond--wrapper {
+  width: 60%;
+  margin: auto;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;

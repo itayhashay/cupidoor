@@ -30,6 +30,7 @@ import StairsIcon from '@mui/icons-material/Stairs';
 import { getUserId, getUserLikedApartmentsIds } from '../../utils/localStorage';
 import { randomNumber } from '../../utils/random';
 import useAPI from '../../hooks/useAPI';
+import AddProperty from '../AddProperty';
 
 const HouseCard = ({
   houseData,
@@ -42,7 +43,8 @@ const HouseCard = ({
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [matchColor, setMatchColor] = useState<string>('');
   const [likedApartmentsIds, setLikedApartmentsIds] = useState<string[]>([]);
-  
+  const [editOpen, setEditOpen] = useState(false);
+
   const { getUserLikedApartments, toggleTenantLike } = useAPI();
 
   useEffect(() => {
@@ -72,7 +74,15 @@ const HouseCard = ({
     fetchLikedApartments().then((likesApartments: any[]) => localStorage.setItem("userLikedApartments", JSON.stringify(likesApartments)));
   };
 
+  const handleClickEdit = async (event: Event | SyntheticEvent<Element, Event>) => {
+    event.preventDefault();
+
+    setEditOpen(true);
+  };
+
+
   return (
+    <>
     <Link to={`/apartment/${houseData._id}`}>
       <Card sx={cardStyles}>
         {isLoading && (
@@ -98,7 +108,7 @@ const HouseCard = ({
             {isFavorite ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
           </Fab>
         ) : (
-          <Fab sx={likeButtonStyles} onClick={handleClickFavorite} id='favorite-button'>
+          <Fab sx={likeButtonStyles} onClick={handleClickEdit} id='edit-button'>
             {<EditIcon />}
           </Fab>
         )}
@@ -187,6 +197,8 @@ const HouseCard = ({
         </Box>
       </Card>
     </Link>
+    <AddProperty isOpen={editOpen} onClose={() => setEditOpen(false)} houseData={houseData} isEdit={true}/>
+</>
   );
 };
 
