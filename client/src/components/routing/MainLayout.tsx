@@ -5,6 +5,8 @@ import { useAuth } from '../../context/AuthContext';
 import CupidChat from '../Chat';
 import Navbar from '../Navbar';
 import { useEffect, useState } from 'react';
+import ProtectedRoute from './ProtectedRoute';
+import PreFetch from './PreFetch';
 const MainLayout = () => {
   const { user } = useAuth();
   const location = useLocation();
@@ -17,20 +19,24 @@ const MainLayout = () => {
     }
   }, [location]);
   return (
-    <>
-      <CssBaseline />
-      <Navbar />
+    <ProtectedRoute>
+      <PreFetch>
+        <>
+          <CssBaseline />
+          <Navbar />
 
-      <main>
-        <Box height={'calc(100vh - 64px)'} overflow={'hidden'} display={'flex'}>
-          {showSideBar && <Sidebar></Sidebar>}
-          <Box overflow={'auto'}>
-            <Outlet />
-          </Box>
-        </Box>
-      </main>
-      {user && <CupidChat></CupidChat>}
-    </>
+          <main>
+            <Box height={'calc(100vh - 64px)'} overflow={'hidden'} display={'flex'}>
+              {showSideBar && <Sidebar></Sidebar>}
+              <Box overflow={'auto'}>
+                <Outlet />
+              </Box>
+            </Box>
+          </main>
+          {user && <CupidChat></CupidChat>}
+        </>
+      </PreFetch>
+    </ProtectedRoute>
   );
 };
 

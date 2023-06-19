@@ -51,7 +51,7 @@ const HouseCard = ({
   }, []);
 
   useEffect(() => {
-    console.log(houseData)
+   
     const color: string = precentToColor(houseData.match || 0);
     setMatchColor(color);
 

@@ -17,6 +17,7 @@ export type AuthContextType = {
   signUpUser: (user: User) => void;
   signOutUser: () => void;
   fetchUser: () => void;
+  getAccessToken: () => void;
   updateUser: (newUserData: User) => void;
 };
 
@@ -30,6 +31,7 @@ const AuthContext = createContext<AuthContextType>({
   signUpUser: () => {},
   signOutUser: () => {},
   fetchUser: () => {},
+  getAccessToken: () => {},
   updateUser: () => {},
 });
 
@@ -43,10 +45,12 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
-  const { signIn, signUp } = useAPI();
+  const { signIn, signUp} = useAPI();
   const axiosPrivate = useAxiosPrivate();
 
-  const { getUserLikedApartments } = useAPI();
+  const getAccessToken = ()=>{
+    return accessToken || localStorage.getItem("accessToken");
+  }
 
   // Games yet not finished - storing the user in local storage, adv will be the cookie
   useEffect(() => {
@@ -64,15 +68,11 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
     }
   }, []);
 
-  const fetchLikedApartments =async () => {
-    const likesApartments: any[] = await getUserLikedApartments();
-    return likesApartments;
-  }
+
 
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
-      fetchLikedApartments().then((likesApartments: any[]) => localStorage.setItem("userLikedApartments", JSON.stringify(likesApartments)))
     }
   }, [user]);
 
@@ -112,8 +112,9 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
   const signOutUser = async () => {
     try {
       await axiosPrivate.get('/signOut');
-      localStorage.removeItem('user');
-      localStorage.removeItem('accessToken');
+      localStorage.clear();
+      // localStorage.removeItem('user');
+      // localStorage.removeItem('accessToken');
       setUser(null);
       setAccessToken(null);
     } catch (ex) {}
@@ -152,6 +153,7 @@ export const AuthContextProvider: FunctionComponent<Props> = ({ children }) => {
     signOutUser: signOutUser,
     fetchUser: fetchUser,
     updateUser: updateUser,
+    getAccessToken
   };
 
   return <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>;

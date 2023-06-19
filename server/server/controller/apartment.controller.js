@@ -12,7 +12,7 @@ const {
 // Create apartment
 router.post("/", async (req, res, next) => {
   try {
-    const apartment = await apartmentService.createApartment(req.body);
+    const apartment = await apartmentService.createApartment(req.body,req.user);
     res.status(CREATED).json(apartment);
   } catch (err) {
     next(err);
@@ -43,7 +43,7 @@ router.get("/", async (req, res, next) => {
 // Get apartment by ID
 router.get("/:id", async (req, res, next) => {
   try {
-    const apartment = await apartmentService.getApartment(req.params.id);
+    const apartment = await apartmentService.getApartment(req.params.id,req.user);
     if (!apartment) {
       res.status(NOT_FOUND).send();
     } else {

@@ -201,7 +201,7 @@ const CupidChat: React.FC = () => {
         return prev;
       });
     } catch (ex) {
-      console.log(ex);
+     
     }
   };
 
