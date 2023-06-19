@@ -14,7 +14,7 @@ import {
   likeButtonStyles,
 } from './styles';
 import Skeleton from '@mui/material/Skeleton';
-import { Apartment } from '../../types/apartment';
+import { Apartment, ServerApartmentImages } from '../../types/apartment';
 import { Link } from 'react-router-dom';
 import DryDetails from '../ApartmentDetails/DryDetails';
 import { Box, CardActionArea, Divider, Fab, Grid, Icon, Tooltip } from '@mui/material';
@@ -42,7 +42,7 @@ const HouseCard = ({
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [matchColor, setMatchColor] = useState<string>('');
   const [likedApartmentsIds, setLikedApartmentsIds] = useState<string[]>([]);
-  
+  const [images,setImages] = useState<ServerApartmentImages[]>(()=>houseData.images ? houseData.images :  houseData.imagesBackup ? houseData.imagesBackup as ServerApartmentImages[] : [] as ServerApartmentImages[]);
   const { getUserLikedApartments, toggleTenantLike } = useAPI();
 
   useEffect(() => {
@@ -82,7 +82,7 @@ const HouseCard = ({
           component='img'
           height='220'
           sx={{ display: isLoading ? 'none' : 'block' }}
-          image={houseData.images[0] ? houseData.images[0].url : '/apartmentPlaceholder.png'}
+          image={images[0] ? images[0].url : '/apartmentPlaceholder.png'}
           onLoad={() => setIsLoading(false)}
         />
 

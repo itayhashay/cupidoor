@@ -1,7 +1,6 @@
 const User = require("../model/user.model");
 const storage = require("../service/firebase-storage.service");
 const isBase64 = require("is-base64");
-
 const createUser = async (userData) => {
   try {
     if (userData.avatar && isBase64(userData.avatar, { allowMime: true })) {

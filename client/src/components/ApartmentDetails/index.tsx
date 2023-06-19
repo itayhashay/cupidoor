@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, Container, Divider, Grid, Paper, Typography } from '@mui/material';
 import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { Apartment } from '../../types/apartment';
+import { Apartment, ServerApartmentImages } from '../../types/apartment';
 import DryDetails from './DryDetails';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { ImageContainer } from './styles';
@@ -27,6 +27,7 @@ const ApartmentDetails = () => {
   useEffect(() => {
     const fetchApartmentData = async (id: string) => {
       const apartment: Apartment = await getApartmentById(id);
+      apartment.images = apartment.images ? apartment.images : apartment.imagesBackup as ServerApartmentImages[];
       setApartmentInfo(apartment);
     };
 

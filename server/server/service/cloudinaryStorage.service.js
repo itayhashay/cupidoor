@@ -7,23 +7,45 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const uploadApartmentImages = async (apartmentId, base64Images) => {
-  const promises = [];
-  console.log("Hey");
-  console.log(base64Images);
-  for (let image of base64Images) {
-    const promise = new Promise((resolve, reject) => {
-      const fileName = `${uuidv4()}.png`;
+const uploadProfilePhoto = async (userEmail, base64Photo) => {
+  try {
+    return await new Promise((resolve, reject) => {
       cloudinary.uploader.upload(
-        image,
-        { public_id: `apartments/${apartmentId}/${fileName}` },
+        base64Photo,
+        {
+          public_id: `profiles/${userEmail}`,
+        },
         (error, result) => {
           if (error) {
             reject(error);
             return;
           }
+          resolve(result.secure_url);
+        }
+      );
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-          resolve(result.url);
+const uploadApartmentImages = async (apartmentId, base64Images) => {
+  const promises = [];
+  for (let image of base64Images) {
+    const promise = new Promise((resolve, reject) => {
+      const fileName = `${uuidv4()}`;
+      cloudinary.uploader.upload(
+        image,
+        { public_id: `apartments/${apartmentId}/${fileName}` },
+        (error, result) => {
+          console.error(error);
+          console.log(result);
+          if (error) {
+            reject(error);
+            return;
+          }
+
+          resolve({ name: result.public_id, url: result.secure_url });
         }
       );
     });
@@ -33,5 +55,6 @@ const uploadApartmentImages = async (apartmentId, base64Images) => {
 };
 
 module.exports = {
+  uploadProfilePhoto,
   uploadApartmentImages,
 };

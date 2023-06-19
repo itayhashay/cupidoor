@@ -13,7 +13,8 @@ const {
   getDownloadURL,
   StringFormat,
 } = require("firebase/storage");
-const Storage = require("../service/firebase-storage.service");
+// const Storage = require("../service/firebase-storage.service");
+const Storage = require("../service/cloudinaryStorage.service");
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 
@@ -57,7 +58,7 @@ const bootstrap = async () => {
 
     await ApartmentModel.findOneAndUpdate(
       { _id: apartment._id },
-      { images: imagesUrl }
+      { imagesBackup: imagesUrl }
     );
     console.log("Success!" + index);
 

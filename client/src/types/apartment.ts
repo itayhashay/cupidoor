@@ -39,4 +39,5 @@ export type Apartment = {
   images: ServerApartmentImages[];
   createdAt: Date;
   match?:number;
+  imagesBackup?:ServerApartmentImages[]
 };

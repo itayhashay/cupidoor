@@ -1,39 +1,31 @@
 const Apartment = require("../model/apartment.model");
-const Storage =
-  process.env.STORAGE_PROVIDER === "CLOUDINARY"
-    ? require("./cloudinaryStorage.service")
-    : require("./firebase-storage.service");
-
+const Storage = require("./storage.service");
 const match = require("../model/match");
 const UserAnswer = require("../model/userAnswer.model");
 const Score = require("../model/score.model");
 const ScoreService = require("./score.service");
+const imagesKey =
+  process.env.STORAGE_PROVIDER === "CLOUDINARY" ? "imagesBackup" : "images";
+
+const excludeImagesKey =
+  process.env.STORAGE_PROVIDER === "CLOUDINARY" ? "-images" : "-imagesBackup";
 const createApartment = async (apartmentData, user) => {
   try {
     let base64Images = apartmentData.images;
     apartmentData.images = [];
     const apartment = new Apartment(apartmentData);
     const newApartment = await apartment.save();
-    console.log(Storage);
     const imagesUrl = await Storage.uploadApartmentImages(
       newApartment._id.toString(),
       base64Images
     );
     await _scoreMissingApartments(user);
-    if(process.env.STORAGE_PROVIDER === "CLOUDINARY"){
-      return await Apartment.findByIdAndUpdate(
-        newApartment._id,
-        { imagesBackup: imagesUrl },
-        { populate: { path: "user" }, returnOriginal: false }
-      );
-    }else{
-      return await Apartment.findByIdAndUpdate(
-        newApartment._id,
-        { images: imagesUrl },
-        { populate: { path: "user" }, returnOriginal: false }
-      );
-    }
-    
+
+    return await Apartment.findByIdAndUpdate(
+      newApartment._id,
+      { [imagesKey]: imagesUrl },
+      { populate: { path: "user" }, returnOriginal: false }
+    ).select("* imagesBackup as images");
   } catch (err) {
     throw new Error("Error creating apartment: " + err.message);
   }
@@ -58,6 +50,7 @@ const getApartments = async (user) => {
     console.time("apartments_find");
     const apartments = await Apartment.find({ user: { $ne: user._id } })
       .populate("user", "firstName lastName avatar")
+      .select(excludeImagesKey)
       .lean()
       .exec();
 
@@ -77,6 +70,7 @@ const getApartment = async (id, user) => {
   try {
     const apartmentPromise = Apartment.findById(id)
       .populate("user", "-password -salt -refreshToken -email -createdAt")
+      .select(excludeImagesKey)
       .lean()
       .exec();
     const scorePromise = new Promise((resolve) => {
@@ -116,11 +110,11 @@ const updateApartment = async (id, apartmentData) => {
   try {
     const apartment = await Apartment.findById(id);
     let { newImages, removedImages } = apartmentData;
-    let updatedImagesArray = apartment.images.filter(
+    let updatedImagesArray = apartment[imagesKey].filter(
       (image) => !removedImages.includes(image.name)
     );
     let newSavedimages = await Storage.uploadApartmentImages(id, newImages);
-    apartment.images = [...updatedImagesArray, ...newSavedimages];
+    apartment[imagesKey] = [...updatedImagesArray, ...newSavedimages];
     if (apartmentData.description != null) {
       apartment.description = apartmentData.description;
     }
