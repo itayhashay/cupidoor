@@ -71,8 +71,8 @@ const ChatConversation: React.FC<ChatConversationProps> = ({
               lastSender = message.sender;
               return (
                 <ChatMessage
-                  avatar={isUser ? userAvatar : receiver.avatar}
-                  text={message.text}
+                  avatar={isUser ? receiver.avatar : userAvatar}
+                  text={message.text} 
                   drawAvatar={drawAvatar}
                   isUser={isUser}
                   key={message.sender + message.createdAt}
