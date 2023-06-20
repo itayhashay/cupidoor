@@ -4,8 +4,9 @@ const ScoreService = require("./score.service");
 const ObjectId = require("mongoose").Types.ObjectId;
 const getLikesByTenantId = async (tenantId) => {
   try {
-    const likes = await UsersRelations.find({
+    const likesPromise = UsersRelations.find({
       tenant: tenantId,
+      relation: "match",
       status: "pending",
     })
       .select("apartment")
@@ -18,9 +19,36 @@ const getLikesByTenantId = async (tenantId) => {
           },
         },
       ])
-      .lean();
-    const apartments = likes.map((like) => like.apartment);
-    return await ScoreService.getApartmentsScores(tenantId, apartments);
+      .lean()
+      .exec();
+    const matchesPromise = UsersRelations.find({
+      tenant: tenantId,
+      relation: "match",
+      status: "approved",
+    })
+      .select("apartment")
+      .populate([
+        {
+          path: "apartment",
+          populate: {
+            path: "user",
+            select: { firstName: 1, lastName: 1, avatar: 1 },
+          },
+        },
+      ])
+      .lean()
+      .exec();
+
+    const [likes, matches] = await Promise.all([likesPromise, matchesPromise]);
+
+    const apartmentsLikes = likes.map((like) => {
+      return {...like.apartment,liked:true};
+    });
+    const apartmentsMatches = matches.map((match) => {
+      return {...match.apartment,matched:true};
+    });
+    const apartments = [...apartmentsMatches,...apartmentsLikes]
+    return await ScoreService.getApartmentsScores(tenantId, apartments)
   } catch (err) {
     throw new Error("Error getting liked apartments: " + err.message);
   }
@@ -78,9 +106,6 @@ const likeApartment = async (tenantId, apartmentId) => {
       });
       return await newRelation.save();
     } else {
-      if (relation.relation === "match" && relation.status === "approved") {
-        return;
-      }
       return await UsersRelations.findByIdAndDelete(relation._id);
     }
   } catch (err) {

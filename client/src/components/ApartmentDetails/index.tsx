@@ -1,15 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Divider,
-  Grid,
-  IconButton,
-  Paper,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Container, Grid, Paper, Typography } from '@mui/material';
 import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Apartment } from '../../types/apartment';
@@ -17,14 +6,7 @@ import DryDetails from './DryDetails';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { ImageContainer } from './styles';
 import ImagesGallery from './ImagesGallery';
-import {
-  CheckOutlined,
-  CloseOutlined,
-  ExpandLess,
-  ExpandMore,
-  FavoriteBorder,
-  PercentRounded,
-} from '@mui/icons-material';
+import { FavoriteBorder } from '@mui/icons-material';
 import ApartmentFeatures from './ApartmentFeatures';
 import { precentToColor } from '../../utils/colors';
 import useAPI from '../../hooks/useAPI';
@@ -33,7 +15,6 @@ import LandlordSection from './LandlordSection';
 import ApartmentDescription from './ApartmentDescription';
 import PaymentCalculator from './PaymentCalculator';
 import { MatchLabelStyles } from '../HouseCard/styles';
-import { getUserLikedApartmentsIds } from '../../utils/localStorage';
 import { useAuth } from '../../context/AuthContext';
 import { User } from '../../types/user';
 import LikesSection from './LikesSection';
