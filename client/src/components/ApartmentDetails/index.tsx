@@ -29,6 +29,7 @@ const ApartmentDetails = () => {
   const [isMyApartment, setIsMyApartment] = useState<boolean>(false);
   const [apartmentLikes, setApartmentLikes] = useState<User[]>([] as User[]);
   const [isLikesLoading, setIsLikesLoading] = useState<boolean>(false);
+  const [isLikeActionLoading, setIsLikeActionLoading] = useState<boolean>(false);
   const { setSnackBarState } = useSnackbar();
   const {
     getApartmentById,
@@ -127,7 +128,7 @@ const ApartmentDetails = () => {
   if (!apartmentInfo) return <CupidoorSpinner></CupidoorSpinner>;
   return (
     // TODO: Change last updated mock.
-    <Container maxWidth='xl' sx={{ paddingY: 10 }}>
+    <Container maxWidth='xl' sx={{ paddingY: 3 }}>
       <Grid container component={Paper} elevation={3}>
         <Grid item xs={12} height={60} padding={2} width={'100%'} bgcolor={'primary.dark'}>
           <Box display={'flex'} color={'white'} alignItems={'center'} height={'100%'}>
@@ -198,7 +199,8 @@ const ApartmentDetails = () => {
               <Button
                 color={isFavorite ? 'secondary' : isMatched ? 'error' : 'primary'}
                 onClick={() => handleLikeClick(apartmentInfo._id, String(apartmentInfo.user._id))}
-                fullWidth
+                loading={isLikeActionLoading}
+                fullWidth 
                 variant={isFavorite ? 'outlined' : 'contained'}
                 size='large'
                 endIcon={<FavoriteBorder></FavoriteBorder>}
