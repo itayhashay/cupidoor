@@ -25,8 +25,6 @@ import { DividerLine } from "../Navbar/styles";
 import { LINK_TO_ICON, USER_INFO_FIELDS, UserField } from "../../utils/user";
 import ProfileStepper from "./ProfileStepper";
 import { convertFileToBase64 } from "../../utils/base64";
-import axiosPrivate from "../../utils/axiosPrivate";
-import useRefreshToken from "../../hooks/useRefreshToken";
 import { useSnackbar } from "../../context/SnackbarContext";
 import useAPI from "../../hooks/useAPI";
 import { ServerQuestionAnswer } from "../../types/questionAnswer";
@@ -49,11 +47,10 @@ const PersonalInfo = ({ user }: { user: User }) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isUploadingPicture, setIsUploadingPicture] = useState(false);
-  const refresh = useRefreshToken();
   const { setSnackBarState } = useSnackbar();
   const { getUserAnswers } = useAPI();
   const { showConfirmationModal } = useConfirmationModal();
-  const { updateUser } = useAuth();
+  const { updateUser } = useAPI();
   useEffect(() => {
     const fetchUserAnswers = async () => {
       const answers = await getUserAnswers();

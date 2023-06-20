@@ -18,7 +18,7 @@ const LikedUsers = ({ users }: LikedUsersProps) => {
         <AvatarGroup max={4}>
           {users.map((user) => {
             return (
-              <Tooltip title={`${user.firstName} ${user.lastName}`}>
+              <Tooltip title={`${user.firstName} ${user.lastName}`} key={user._id}>
                 <Avatar alt='' src={user.avatar} />
               </Tooltip>
             );

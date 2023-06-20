@@ -21,8 +21,11 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import Logo from '../../icons/logo.svg';
 import LogoWhite from '../../icons/logo-white.svg';
 
+import UseAuthApi from '../../hooks/useAuthAPI';
+
 export const Navbar = () => {
-  const { user, setUser, signOutUser } = useAuth();
+  const { user, setUser } = useAuth();
+  const { signOut } = UseAuthApi();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
@@ -65,7 +68,7 @@ export const Navbar = () => {
   };
 
   const handleSignOut = () => {
-    signOutUser();
+    signOut();
   };
 
   return (
@@ -86,8 +89,8 @@ export const Navbar = () => {
               </Typography>
             </Grid>
             <Grid item xs={1}></Grid>
-         
-            <Grid item xs={2} display={'flex'} alignItems={'center'} justifyContent={"flex-end"}>
+
+            <Grid item xs={2} display={'flex'} alignItems={'center'} justifyContent={'flex-end'}>
               {user ? (
                 <>
                   <Typography

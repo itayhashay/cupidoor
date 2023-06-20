@@ -23,6 +23,7 @@ import { AxiosError } from 'axios';
 import { CupidAxiosError } from '../../types/cupidAxiosError';
 import { useFormik } from 'formik';
 import { userDetailsScheme } from '../../utils/FormikSchema';
+import useAPI from '../../hooks/useAPI';
 const PersonalSecurity = ({
   user,
   handleEditMode,
@@ -34,7 +35,7 @@ const PersonalSecurity = ({
   const [firstName, setFirstName] = useState(user.firstName);
   const [userDetails, setUserDetails] = useState(() => ({ ...user }));
   const [isLoading, setIsLoading] = useState(false);
-  const { updateUser } = useAuth();
+  const { updateUser } = useAPI();
   const { setSnackBarState } = useSnackbar();
   const formik = useFormik({
     initialValues: { ...userDetails },

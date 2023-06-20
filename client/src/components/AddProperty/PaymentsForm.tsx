@@ -148,7 +148,7 @@ const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Stepp
                                     labelId="demo-simple-select-filled-label"
                                     sx={{ fontSize:"18px","& .MuiInputBase-inputSizeSmall" : {padding: "0 2px 0 0 !important"}, background: "white", "& .MuiSelect-iconFilled": { display: "none"} }}
                                     >
-                                    {generateArrayFromRange(1, 31).map((option) => <MenuItem value={option}>{option}</MenuItem>)}
+                                    {generateArrayFromRange(1, 31).map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
                                 </Select>
                             </FormControl>
                         <Typography variant="body1" fontSize="18px" fontWeight={300} lineHeight={1}>th of the month</Typography>

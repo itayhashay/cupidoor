@@ -6,8 +6,8 @@ import LockIcon from '@mui/icons-material/Lock';
 import { loginScheme, CustomHelperText } from './AuthHelpers';
 import { Formik } from 'formik';
 import './SignIn.css';
-import { AuthContextType, useAuth } from '../../context/AuthContext';
 import { useSnackbar } from '../../context/SnackbarContext';
+import UseAuthApi from '../../hooks/useAuthAPI';
 
 interface SignInPageProps {
   onTogglePage: () => void;
@@ -18,7 +18,7 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { snackBarState, setSnackBarState } = useSnackbar();
-  const { signInUser } = useAuth() as AuthContextType;
+  const { signIn } = UseAuthApi();
 
   const onSubmitHandler = async (values: { email: string; password: string }) => {
     const userData = {
@@ -27,7 +27,7 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
     };
     setIsLoading(true);
 
-    const response: any = await signInUser(userData.email, userData.password);
+    const response: any = await signIn(userData.email, userData.password);
     setIsLoading(false);
     if (response.success) {
       setSnackBarState({
@@ -67,10 +67,7 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
                         alignItems={'center'}
                       >
                         <img src='/favicon.png' width={90}></img>
-                        <Typography
-                          fontWeight={'bold'}
-                          fontSize={'1.3rem'}
-                        >
+                        <Typography fontWeight={'bold'} fontSize={'1.3rem'}>
                           CupiDoor
                         </Typography>
                       </Box>

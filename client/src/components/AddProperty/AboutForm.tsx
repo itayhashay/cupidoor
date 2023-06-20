@@ -107,7 +107,7 @@ const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperA
                                     value={aboutState.balconies}
                                     onChange={handleChangeToggleGroup} 
                                                 >
-                                    {generateArrayFromRange(0, 5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
+                                    {generateArrayFromRange(0, 5).map(number => <ToggleButton key={number} value={number}>{number}</ToggleButton>)}
                                 </ToggleButtonGroup>
                         </Box>
                         <Box display="flex" flexDirection="column">
@@ -120,7 +120,7 @@ const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperA
                                 value={aboutState.parkings}
                                 onChange={handleChangeToggleGroup} 
                             >
-                                {generateArrayFromRange(0, 5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
+                                {generateArrayFromRange(0, 5).map(number => <ToggleButton key={number} value={number}>{number}</ToggleButton>)}
                             </ToggleButtonGroup>
                         </Box>
                     </Box>
@@ -135,7 +135,7 @@ const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperA
                                     value={aboutState.rooms}
                                     onChange={handleChangeToggleGroup} 
                                         >
-                                    {generateArrayFromRange(1, 10, 0.5).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
+                                    {generateArrayFromRange(1, 10, 0.5).map(number => <ToggleButton key={number} value={number}>{number}</ToggleButton>)}
                                 </ToggleButtonGroup>
                             </Box>
                             <Box display="flex" flexDirection="column">
@@ -148,7 +148,7 @@ const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperA
                                     value={aboutState.floor}
                                     onChange={handleChangeToggleGroup} 
                                     >
-                                    {generateArrayFromRange(-1, 20).map(number => <ToggleButton value={number}>{number}</ToggleButton>)}
+                                    {generateArrayFromRange(-1, 20).map(number => <ToggleButton key={number} value={number}>{number}</ToggleButton>)}
                                 </ToggleButtonGroup>
                             </Box>
                         </Box>

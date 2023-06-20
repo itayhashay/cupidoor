@@ -31,7 +31,6 @@ const ApartmentDetails = () => {
   const [isLikesLoading, setIsLikesLoading] = useState<boolean>(false);
   const { setSnackBarState } = useSnackbar();
   const {
-    getUserLikedApartments,
     getApartmentById,
     toggleTenantLike,
     getApartmentLikes,

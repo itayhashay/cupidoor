@@ -6,9 +6,12 @@ import { Apartment } from '../types/apartment';
 import { QuestionAnswer, ServerQuestionAnswer } from '../types/questionAnswer';
 import useAxiosPrivate from './useAxiosPrivate';
 import { StepperApartment } from '../components/AddProperty/types';
+import { useAuth } from '../context/AuthContext';
+import { CupidAxiosError } from '../types/cupidAxiosError';
 
 const useAPI = () => {
   const axiosPrivate = useAxiosPrivate();
+  const { setAccessToken, setUser, user } = useAuth();
 
   const getTenantMatches = async (data: QuestionAnswer[]) => {
     const response = await axiosPrivate.post(config.api.routes.match, data);
@@ -22,19 +25,6 @@ const useAPI = () => {
     return response;
   };
 
-  const signIn = async (email: string, password: string) => {
-    const response = await axiosPrivate(config.api.routes.signIn, {
-      data: { email, password },
-      method: 'POST',
-      withCredentials: true,
-    });
-    return response;
-  };
-
-  const signUp = async (user: User) => {
-    const response: AxiosResponse = await axiosPrivate.post(config.api.routes.signUp, user);
-    return response;
-  };
 
   const addApartment = async (newApartment: StepperApartment) => {
     try {
@@ -112,11 +102,33 @@ const useAPI = () => {
     return response.data;
   };
 
+  const updateUser = async (newUserData: User) => {
+    try {
+      const response: AxiosResponse = await axiosPrivate.put(`/user/${user?._id}`, {
+        ...user,
+        ...newUserData,
+      });
+      if (response.status === 200) {
+        setUser(response.data);
+      }
+    } catch (ex) {
+      throw ex;
+    }
+  };
+
+  const fetchUser = async () => {
+    const response = await axiosPrivate.get('/user');
+    const userData: User = response.data;
+    setUser((prevState) => {
+      return { ...prevState, ...userData };
+    });
+  };
+
   return {
     getTenantMatches,
     setUserAnswers,
-    signIn,
-    signUp,
+    updateUser,
+    fetchUser,
     addApartment,
     editApartment,
     getApartmentLikes,

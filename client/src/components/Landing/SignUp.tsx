@@ -20,6 +20,8 @@ import { useSnackbar } from "../../context/SnackbarContext";
 import { convertFileToBase64 } from "../../utils/base64";
 import { FileUploadOutlined } from "@mui/icons-material";
 import CupidoorSpinner from "../CupidoorSpinner";
+
+import UseAuthApi from "../../hooks/useAuthAPI";
 interface SignUpPageProps {
   onTogglePage: () => void;
 }
@@ -31,10 +33,10 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
     string | ArrayBuffer | null
   >(null);
   const [base64Image, setBase64Image] = useState<string | null>(null);
-  const { signUpUser } = useAuth() as AuthContextType;
   const { snackBarState, setSnackBarState } = useSnackbar();
   const [isLoading,setIsLoading] = useState(false);
   const [showAvatarError, setShowAvatarError] = useState(false);
+  const {signUp} = UseAuthApi();
 
   const handleFileChange = async (
     event: React.SyntheticEvent<HTMLInputElement>
@@ -80,7 +82,7 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
     let userRole: UserTypes = values.role as UserTypes;
     const { firstName, lastName, email, password, phone, age } = values;
     setIsLoading(true);
-    const response: any = await signUpUser({
+    const response: any = await signUp({
       firstName,
       lastName,
       email,

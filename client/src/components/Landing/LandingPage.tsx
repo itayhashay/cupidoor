@@ -15,7 +15,7 @@ const LandingPage = () => {
   };
   const { isAuthLoading, user } = useAuth();
 
-  if (isAuthLoading) return null;
+  // if (isAuthLoading) return null;
   return user?._id ? (
     <Navigate to={"/home/all-apartments"} replace></Navigate>
   ) : (

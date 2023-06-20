@@ -4,7 +4,7 @@ import useAPI from '../../hooks/useAPI';
 
 const PreFetch = ({ children }: { children?: JSX.Element }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const { getUserLikedApartments } = useAPI();
+  // const { getUserLikedApartments } = useAPI();
   useEffect(() => {
     // const fetchUserLikedApartments = async () => {
     //   const response = await getUserLikedApartments();

@@ -37,6 +37,7 @@ import { CupidAxiosError } from "../../types/cupidAxiosError";
 import WorkIcon from "@mui/icons-material/Work";
 import { useFormik } from "formik";
 import { userDetailsScheme } from "../../utils/FormikSchema";
+import useAPI from "../../hooks/useAPI";
 export type AccountField = {
   name: string;
   path: string;
@@ -137,7 +138,7 @@ const PersonalDetails = ({
   const [firstName, setFirstName] = useState(user.firstName);
   const [userDetails, setUserDetails] = useState(() => ({ ...user }));
   const [isLoading, setIsLoading] = useState(false);
-  const { updateUser } = useAuth();
+  const { updateUser } = useAPI();
   const { setSnackBarState } = useSnackbar();
   const formik = useFormik({
     initialValues: { ...userDetails },
