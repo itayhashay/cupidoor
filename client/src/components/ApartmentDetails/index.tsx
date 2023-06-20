@@ -7,6 +7,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { ImageContainer } from './styles';
 import ImagesGallery from './ImagesGallery';
 import { FavoriteBorder } from '@mui/icons-material';
+import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+import LoadingButton from '@mui/lab/LoadingButton';
 import ApartmentFeatures from './ApartmentFeatures';
 import { precentToColor } from '../../utils/colors';
 import useAPI from '../../hooks/useAPI';
@@ -75,6 +77,7 @@ const ApartmentDetails = () => {
 
   const handleLikeClick = async (apartmentId: string, userId: string) => {
     let flag = true;
+    setIsLikeActionLoading(true);
     if (isMatched) {
       flag = await showConfirmationModal({
         message: 'Are you sure you want to unmatch?',
@@ -90,6 +93,7 @@ const ApartmentDetails = () => {
       }
       setIsFavorite((prev) => !prev);
     }
+    setIsLikeActionLoading(false);
   };
 
   const handleApproveClick = (tenantId: string) => {
@@ -196,17 +200,18 @@ const ApartmentDetails = () => {
               >{`${apartmentInfo.match}% ${apartmentInfo.match === 100 ? 'Perfect' : ''} Match${
                 apartmentInfo.match === 100 ? '!' : ''
               }`}</Typography>
-              <Button
+              <LoadingButton
                 color={isFavorite ? 'secondary' : isMatched ? 'error' : 'primary'}
                 onClick={() => handleLikeClick(apartmentInfo._id, String(apartmentInfo.user._id))}
+                fullWidth
                 loading={isLikeActionLoading}
-                fullWidth 
                 variant={isFavorite ? 'outlined' : 'contained'}
                 size='large'
-                endIcon={<FavoriteBorder></FavoriteBorder>}
+                sx={{ fontWeight: "bold", fontSize: "16px" }}
+                endIcon={isFavorite ? <ThumbUpOutlinedIcon /> : <FavoriteBorder />}
               >
                 {isFavorite ? 'Liked' : isMatched ? 'Matched!' : 'Like'}
-              </Button>
+              </LoadingButton>
             </Grid>
           </Grid>
         )}
