@@ -57,6 +57,7 @@ const getApartmentsScores = async (userId, apartments) => {
     { tenant: userId },
     { score: 1, apartment: 1 }
   ).lean();
+  
   const apartmentToScore = {};
   const apartmentsMatches = [];
   for (let score of scores) {
@@ -72,7 +73,6 @@ const getApartmentsScores = async (userId, apartments) => {
       typeof apartment._id === "string"
         ? apartment._id
         : apartment._id.toString();
-
     apartmentsMatches.push({
       ...apartment,
       match: apartmentToScore[apartmentId],

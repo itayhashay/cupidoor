@@ -101,6 +101,13 @@ const useAPI = () => {
     });
     return response.data;
   };
+  const declineTenant = async (tenantId: string, apartmentId: string) => {
+    const response = await axiosPrivate.post(`${config.api.routes.declineTenant}/${tenantId}`, {
+      apartmentId,
+    });
+    return response.data;
+  };
+  
 
   const updateUser = async (newUserData: User) => {
     try {
@@ -133,6 +140,7 @@ const useAPI = () => {
     editApartment,
     getApartmentLikes,
     approveTenant,
+    declineTenant,
     getUserProperties,
     getUserLikedApartments,
     toggleTenantLike,

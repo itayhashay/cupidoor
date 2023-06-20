@@ -35,6 +35,7 @@ const ApartmentDetails = () => {
     toggleTenantLike,
     getApartmentLikes,
     approveTenant,
+    declineTenant
   } = useAPI();
   const { user } = useAuth();
   const params = useParams();
@@ -106,7 +107,22 @@ const ApartmentDetails = () => {
       }
     }
   };
-  const handleDeclineClick = () => {};
+  const handleDeclineClick = (tenantId:string) => {
+    if (apartmentInfo) {
+      try {
+        declineTenant(tenantId, apartmentInfo?._id);
+        setApartmentLikes((prevState) => {
+          return prevState.filter((user) => user._id !== tenantId);
+        });
+      } catch (ex) {
+        setSnackBarState({
+          severity: 'error',
+          message: "Couldn't decline tenant, please try again later!",
+          show: true,
+        });
+      }
+    }
+  };
 
   if (!apartmentInfo) return <CupidoorSpinner></CupidoorSpinner>;
   return (

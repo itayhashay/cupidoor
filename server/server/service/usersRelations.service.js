@@ -42,13 +42,13 @@ const getLikesByTenantId = async (tenantId) => {
     const [likes, matches] = await Promise.all([likesPromise, matchesPromise]);
 
     const apartmentsLikes = likes.map((like) => {
-      return {...like.apartment,liked:true};
+      return { ...like.apartment, liked: true };
     });
     const apartmentsMatches = matches.map((match) => {
-      return {...match.apartment,matched:true};
+      return { ...match.apartment, matched: true };
     });
-    const apartments = [...apartmentsMatches,...apartmentsLikes]
-    return await ScoreService.getApartmentsScores(tenantId, apartments)
+    const apartments = [...apartmentsMatches, ...apartmentsLikes];
+    return await ScoreService.getApartmentsScores(tenantId, apartments);
   } catch (err) {
     throw new Error("Error getting liked apartments: " + err.message);
   }
@@ -73,7 +73,20 @@ const getLikesByApartmentId = async (apartmentId) => {
       .lean()
       .exec();
     const users = likes.map((like) => like.tenant);
-    return users;
+    const promises = [];
+    for (let user of users) {
+      promises.push(
+        ScoreService.getApartmentsScores(user._id, [
+          { _id: apartmentId, user: { ...user } },
+        ])
+      );
+    }
+    let scores = await Promise.all(promises);
+    scores = scores.map((score) => ({
+      ...score[0].user,
+      match: score[0].match,
+    }));
+    return scores;
   } catch (err) {
     throw new Error("Error getting likes of apartment: " + err.message);
   }

@@ -13,6 +13,7 @@
       "getLikedApartments": "/users-relations/tenant/likes",
       "getApartmentLikes": "/users-relations/apartment/likes",
       "approveTenant": "/users-relations/apartment/match",
+      "declineTenant": "/users-relations/apartment/decline",
       "toggleTenantLike": "/users-relations/tenant/like"
       
     }
