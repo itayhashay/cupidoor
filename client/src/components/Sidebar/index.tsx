@@ -168,7 +168,7 @@ const Sidebar = () => {
       >
         <DrawerHeader
           sx={{
-            bgcolor: 'primary.main',
+            bgcolor: 'primary.light',
             color: 'white',
             direction: 'rtl',
             display: 'flex',

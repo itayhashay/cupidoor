@@ -27,5 +27,6 @@ router.use(
 );
 router.use("/", require("./routes/auth.routes"));
 router.use("/chat", [verifyToken], require("./routes/chat.routes"));
+router.use("/admin",[verifyToken],require("./routes/admin.routes"));
 
 module.exports = router;

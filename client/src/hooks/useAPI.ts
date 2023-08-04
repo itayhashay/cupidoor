@@ -94,6 +94,21 @@ const useAPI = () => {
     );
     return response.data;
   };
+  const getAdminAnalytics = async () => {
+    const response = await axiosPrivate.get(config.api.routes.adminAnalytics);
+
+    return response.data;
+  };
+  const getAdminUsers = async () => {
+    const response = await axiosPrivate.get(config.api.routes.adminUsers);
+
+    return response.data;
+  };
+  const getAdminApartments = async () => {
+    const response = await axiosPrivate.get(config.api.routes.adminApartments);
+
+    return response.data;
+  };
 
   const approveTenant = async (tenantId: string, apartmentId: string) => {
     const response = await axiosPrivate.post(`${config.api.routes.approveTenant}/${tenantId}`, {
@@ -147,6 +162,9 @@ const useAPI = () => {
     getApartmentById,
     getApartments,
     getUserAnswers,
+    getAdminAnalytics,
+    getAdminUsers,
+    getAdminApartments
   };
 };
 

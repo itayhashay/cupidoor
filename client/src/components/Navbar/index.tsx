@@ -19,7 +19,7 @@ import { USER_ROUTES } from '../UserRouter/constants';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Logo from '../../icons/logo.svg';
-import LogoWhite from '../../icons/logo-white.svg';
+import LogoWhite from '../../icons/logo-main.svg';
 
 import UseAuthApi from '../../hooks/useAuthAPI';
 
@@ -73,7 +73,7 @@ export const Navbar = () => {
 
   return (
     <Box flexGrow={1} position={'sticky'}>
-      <AppBar position='static' sx={{ bgcolor: 'primary.light' }} elevation={10}>
+      <AppBar position='static' sx={{ bgcolor: 'primary.main' }} elevation={10}>
         <Toolbar>
           <Grid container justifyContent={'space-between'}>
             <Grid item xs={1} display={'flex'} alignItems={'center'}>

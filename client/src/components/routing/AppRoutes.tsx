@@ -10,6 +10,7 @@ import UserRouter from '../UserRouter';
 import Landing from '../Landing/Landing';
 import PrerequisiteRoute from './PrerequisiteRoute';
 import PreFetch from './PreFetch';
+import AdminRouter from '../Admin';
 
 // Will Change!!!!
 let tmpApartments: any = [];
@@ -47,6 +48,12 @@ const appRoutes = [
       </PrerequisiteRoute>
     ),
   },
+  {
+    path:"/admin/*",
+    element: (
+      <AdminRouter/>
+    )
+  }
 ];
 
 export default appRoutes;

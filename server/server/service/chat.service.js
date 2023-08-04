@@ -4,6 +4,7 @@ const UsersRelationsModel = require("../model/usersRelations.model");
 const MessageModel = require("../model/message.model");
 const UserModel = require("../model/user.model");
 const ApartmentModel = require("../model/apartment.model");
+const messageModel = require("../model/message.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 const ChatService = {
@@ -328,6 +329,29 @@ const ChatService = {
       messages,
     };
   },
+  getAllConversations : async function(){
+    return conversationModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+  },
+  getAllMessages : async function(){
+    return  messageModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+  }
+
+  
 };
+
 
 module.exports = ChatService;

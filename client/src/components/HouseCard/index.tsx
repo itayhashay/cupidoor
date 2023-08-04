@@ -199,7 +199,7 @@ const HouseCard = ({
                 <Box
                   display={'flex'}
                   justifyContent={'center'}
-                  bgcolor={'primary.dark'}
+                  bgcolor={'primary.light'}
                   paddingY={1}
                 >
                   <Icon></Icon>

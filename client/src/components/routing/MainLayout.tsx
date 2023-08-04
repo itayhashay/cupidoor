@@ -11,11 +11,17 @@ const MainLayout = () => {
   const { user } = useAuth();
   const location = useLocation();
   const [showSideBar, setShowSideBar] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
   useEffect(() => {
     if (location.pathname.includes('/home')) {
       setShowSideBar(true);
     } else {
       setShowSideBar(false);
+    }
+    if(location.pathname.includes("/admin")){
+      setShowNavbar(false);
+    }else{
+      setShowNavbar(true);
     }
   }, [location]);
   return (
@@ -23,17 +29,17 @@ const MainLayout = () => {
       <PreFetch>
         <>
           <CssBaseline />
-          <Navbar />
+          {showNavbar && <Navbar />}
 
           <main>
-            <Box height={'calc(100vh - 64px)'} overflow={'hidden'} display={'flex'}>
+            <Box height={showNavbar ? 'calc(100vh - 64px)' : "100vh"} overflow={'hidden'} display={'flex'}>
               {showSideBar && <Sidebar></Sidebar>}
               <Box overflow={'auto'}>
                 <Outlet />
               </Box>
             </Box>
           </main>
-          {user && <CupidChat></CupidChat>}
+          {user && showNavbar && <CupidChat></CupidChat>}
         </>
       </PreFetch>
     </ProtectedRoute>

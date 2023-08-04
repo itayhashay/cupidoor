@@ -29,6 +29,48 @@ const getUsers = async () => {
   }
 };
 
+const getUsersWithoutAuth = async () => {
+  try {
+    return await User.find()
+      .select("-password -salt -refreshToken")
+      .lean()
+      .exec();
+  } catch (err) {
+    throw new Error("Error getting users: " + err.message);
+  }
+};
+
+const getUsersCount = () => {
+  try {
+    return User.find().lean().exec();
+  } catch (err) {
+    throw new Error("Error getting users: " + err.message);
+  }
+};
+
+const getMonthlyNewUsersCount = () => {
+  try {
+    const today = new Date();
+    const month = today.getMonth();
+    const fromDate = new Date(today.getFullYear(), month, 1);
+    return User.find({
+      createdAt: { $gte: fromDate, $lte: today },
+    })
+      .lean()
+      .exec();
+  } catch (err) {
+    throw new Error("Error getting users: " + err.message);
+  }
+};
+
+const getUsersByRole = async () => {
+  try {
+    return await User.aggregate().sortByCount("role");
+  } catch (err) {
+    throw new Error("Error getting users: " + err.message);
+  }
+};
+
 const getUser = async (id) => {
   try {
     return await User.findById(id);
@@ -88,13 +130,13 @@ const updateUser = async (id, userData) => {
     if (userData.role != null) {
       user.role = userData.role;
     }
-    if(userData.phone != null){
+    if (userData.phone != null) {
       user.phone = userData.phone;
     }
-    if(userData.description != null){
+    if (userData.description != null) {
       user.description = userData.description;
     }
-    if(userData.jobTitle != null){
+    if (userData.jobTitle != null) {
       user.jobTitle = userData.jobTitle;
     }
     if (userData.avatar && isBase64(userData.avatar, { allowMime: true })) {
@@ -146,4 +188,8 @@ module.exports = {
   uploadUserPhoto,
   getUsersForChat,
   getUserData,
+  getUsersByRole,
+  getMonthlyNewUsersCount,
+  getUsersCount,
+  getUsersWithoutAuth
 };

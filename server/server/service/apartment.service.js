@@ -200,10 +200,58 @@ const getApartments = async (user) => {
   }
 };
 
+const getAllApartmentsForAdmin = async () => {
+  try {
+    return Apartment.find({}).populate("user").lean().exec();
+  } catch (err) {
+    throw new Error("Error getting apartments: " + err.message);
+  }
+};
+
+const getApartmentsCount = async () => {
+  try {
+    return Apartment.find({}).lean().exec();
+  } catch (err) {
+    throw new Error("Error getting apartments: " + err.message);
+  }
+};
+
+const getMonthlyNewApartmentsCount = async () => {
+  try {
+    const today = new Date();
+    const month = today.getMonth();
+    const fromDate = new Date(today.getFullYear(), month, 1);
+    return Apartment.find({
+      createdAt: { $gte: fromDate, $lte: today },
+    })
+      .lean()
+      .exec();
+  } catch (err) {
+    throw new Error("Error getting apartments: " + err.message);
+  }
+};
+
+const getApartmentsPricesAnalytics = async () => {
+  try {
+    return Apartment.aggregate([
+      {
+        $group: {
+          _id: null,
+          max: { $max: "$price" },
+          min: { $min: "$price" },
+          avg: { $avg: "$price" },
+        },
+      },
+    ]);
+  } catch (err) {
+    throw new Error("Error getting apartments: " + err.message);
+  }
+};
+
 const getApartment = async (id, user) => {
   try {
-
-    const apartmentPromise = Apartment.aggregate([{$match:{_id:new ObjectId(id)}},
+    const apartmentPromise = Apartment.aggregate([
+      { $match: { _id: new ObjectId(id) } },
       {
         $lookup: {
           from: "users",
@@ -499,4 +547,8 @@ module.exports = {
   getApartment,
   updateApartment,
   deleteApartment,
+  getApartmentsCount,
+  getMonthlyNewApartmentsCount,
+  getApartmentsPricesAnalytics,
+  getAllApartmentsForAdmin
 };
