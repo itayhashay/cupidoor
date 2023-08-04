@@ -30,6 +30,7 @@ import AnalyticsIcon from '@mui/icons-material/Analytics';
 import AdminAnalytics from './AdminAnalytics';
 import AdminUsers from './AdminUsers';
 import AdminProperties from './AdminProperties';
+import BackButton from '../BackButton';
 
 const drawerWidth = 240;
 
@@ -89,14 +90,13 @@ const AdminRouter = () => {
         }}
       >
         <Box display={'flex'} justifyContent={'center'} alignItems={'center'} pt={2}>
-          <img
-            src={LogoWhite}
-            alt='logo'
-            style={{ height: '4rem', marginRight: '2px', cursor: 'pointer' }}
-          />
+          <img src={LogoWhite} alt='logo' style={{ height: '4rem', marginRight: '2px' }} />
           <Typography variant='h6' ml={1} color={'white'}>
             Cupidoor
           </Typography>
+        </Box>
+        <Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
+          <BackButton bgcolor={'secondary.light'}></BackButton>
         </Box>
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
@@ -135,7 +135,7 @@ const AdminRouter = () => {
           <Divider />
         </Box>
       </Drawer>
-      <Box 
+      <Box
         width={`calc(100% - ${drawerWidth}px)`}
         height={'100%'}
         py={3}
@@ -143,7 +143,7 @@ const AdminRouter = () => {
         bgcolor={'#dfdede'}
         overflow={'auto'}
       >
-          {selectedPage}
+        {selectedPage}
       </Box>
     </Box>
 
