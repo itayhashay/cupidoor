@@ -1,38 +1,85 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import useAPI from '../../hooks/useAPI';
-import { AdminAnalyticsType } from '../../types/AdminAnalytics';
 import { Box, Grid, Typography, Stack, Paper, Avatar, Tooltip } from '@mui/material';
 import CupidoorSpinner from '../CupidoorSpinner';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridCellParams,
+  GridRowModel,
+  MuiEvent,
+} from '@mui/x-data-grid';
 import UndoIcon from '@mui/icons-material/Undo';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import AdminEditUserDialog from './AdminEditUserDialog';
+import { User } from '../../types/user';
+import { useSnackbar } from '../../context/SnackbarContext';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState<any[]>([] as any[]);
-  const { getAdminUsers } = useAPI();
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editUserId, setEditUserId] = useState<string | null>(null);
+  const { getAdminUsers, adminUpdateUser } = useAPI();
+  const { snackBarState, setSnackBarState } = useSnackbar();
 
   const handleRestoreClick = (id: string) => {};
   const handleDeleteClick = (id: string) => {};
-  const handleEditClick = (id: string) => {};
-  // const updateUserDetails = async (params, event, details) => {
-  //   try {
-  //     if (params.field === 'id') {
-  //       return;
-  //     }
+  const handleEditClick = (id: string) => {
+    setEditUserId(id);
+    setIsEditDialogOpen(true);
+  };
+  const handleCloseEditDialog = () => {
+    setIsEditDialogOpen(false);
+    setEditUserId(null);
+  };
 
-  //     const updatedUser = users.filter((user) => user.uid === params.id)[0];
-  //     if (updatedUser[params.field] === params.value) {
-  //       return;
-  //     }
-  //     updatedUser[params.field] = params.value;
-  //     await backendAPI.admin.user.update(updatedUser, token);
-  //     showSuccessSnackbar();
-  //     checkIfLogoutNeeded(updatedUser.email);
-  //   } catch (ex) {
-  //     showErrorSnackbar(ex);
-  //   }
-  // };
+  const updateUserDetails = useCallback(
+    async (newRow: GridRowModel, oldRow: GridRowModel) => {
+      try {
+        let didChange = false;
+        let newValues: any = {};
+        for (let key of Object.keys(oldRow)) {
+          if (key === '_id') continue;
+          if (oldRow[key] !== newRow[key]) {
+            didChange = true;
+            newValues[key] = newRow[key];
+          }
+        }
+        if (!didChange) return oldRow;
+
+        let updatedUser = users.filter((user: User) => user._id === newRow._id)[0];
+        updatedUser = { ...updatedUser, ...newValues };
+        const response: any = await adminUpdateUser(updatedUser as User);
+
+        setSnackBarState({
+          show: true,
+          message: 'User updated successfully!',
+          severity: 'success',
+        });
+        return response;
+      } catch (ex) {
+        setSnackBarState({
+          show: true,
+          message: "Couldn't update user!",
+          severity: 'error',
+        });
+      }
+    },
+    [users],
+  );
+
+  const handleProcessRowUpdateError = useCallback(
+    (error: Error) => {
+      setSnackBarState({
+        show: true,
+        message: error.message,
+        severity: 'error',
+      });
+    },
+    [users],
+  );
+
   const cols = useMemo(
     () => [
       {
@@ -132,21 +179,32 @@ const AdminUsers = () => {
     fetchUsers();
   }, []);
 
-  return Object.keys(users).length > 0 ? (
-    <Box component={Paper} elevation={3}>
-      <DataGrid
-        sx={{ bgcolor: 'white' }}
-        getRowId={(row) => row._id}
-        rows={users}
-        columns={cols}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 20 },
-          },
-        }}
-        pageSizeOptions={[5, 10, 20, 50]}
-      />
-    </Box>
+  return users.length > 0 ? (
+    <>
+      <Box component={Paper} elevation={3}>
+        <DataGrid
+          sx={{ bgcolor: 'white' }}
+          rows={users}
+          getRowId={(row) => row._id}
+          columns={cols}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 20 },
+            },
+          }}
+          pageSizeOptions={[5, 10, 20, 50]}
+          processRowUpdate={updateUserDetails}
+          onProcessRowUpdateError={handleProcessRowUpdateError}
+        />
+      </Box>
+      {isEditDialogOpen && editUserId && (
+        <AdminEditUserDialog
+          open={isEditDialogOpen}
+          userId={editUserId as string}
+          handleDialogClose={handleCloseEditDialog}
+        />
+      )}
+    </>
   ) : (
     <CupidoorSpinner></CupidoorSpinner>
   );

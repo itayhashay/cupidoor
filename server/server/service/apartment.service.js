@@ -200,54 +200,6 @@ const getApartments = async (user) => {
   }
 };
 
-const getAllApartmentsForAdmin = async () => {
-  try {
-    return Apartment.find({}).populate("user").lean().exec();
-  } catch (err) {
-    throw new Error("Error getting apartments: " + err.message);
-  }
-};
-
-const getApartmentsCount = async () => {
-  try {
-    return Apartment.find({}).lean().exec();
-  } catch (err) {
-    throw new Error("Error getting apartments: " + err.message);
-  }
-};
-
-const getMonthlyNewApartmentsCount = async () => {
-  try {
-    const today = new Date();
-    const month = today.getMonth();
-    const fromDate = new Date(today.getFullYear(), month, 1);
-    return Apartment.find({
-      createdAt: { $gte: fromDate, $lte: today },
-    })
-      .lean()
-      .exec();
-  } catch (err) {
-    throw new Error("Error getting apartments: " + err.message);
-  }
-};
-
-const getApartmentsPricesAnalytics = async () => {
-  try {
-    return Apartment.aggregate([
-      {
-        $group: {
-          _id: null,
-          max: { $max: "$price" },
-          min: { $min: "$price" },
-          avg: { $avg: "$price" },
-        },
-      },
-    ]);
-  } catch (err) {
-    throw new Error("Error getting apartments: " + err.message);
-  }
-};
-
 const getApartment = async (id, user) => {
   try {
     const apartmentPromise = Apartment.aggregate([
@@ -540,6 +492,59 @@ const _scoreMissingApartments = async (user) => {
   return Promise.all(promises);
 };
 
+/**
+ * Analytics
+ */
+
+const getAllApartmentsForAdmin = async () => {
+  try {
+    return Apartment.find({}).populate("user").lean().exec();
+  } catch (err) {
+    throw new Error("Error getting apartments: " + err.message);
+  }
+};
+
+const getApartmentsCount = async () => {
+  try {
+    return Apartment.find({}).count().lean().exec();
+  } catch (err) {
+    throw new Error("Error getting apartments: " + err.message);
+  }
+};
+
+const getMonthlyNewApartmentsCount = async () => {
+  try {
+    const today = new Date();
+    const month = today.getMonth();
+    const fromDate = new Date(today.getFullYear(), month, 1);
+    return Apartment.find({
+      createdAt: { $gte: fromDate, $lte: today },
+    })
+      .count()
+      .lean()
+      .exec();
+  } catch (err) {
+    throw new Error("Error getting apartments: " + err.message);
+  }
+};
+
+const getApartmentsPricesAnalytics = async () => {
+  try {
+    return Apartment.aggregate([
+      {
+        $group: {
+          _id: null,
+          max: { $max: "$price" },
+          min: { $min: "$price" },
+          avg: { $avg: "$price" },
+        },
+      },
+    ]);
+  } catch (err) {
+    throw new Error("Error getting apartments: " + err.message);
+  }
+};
+
 module.exports = {
   createApartment,
   getApartmentsByUser,
@@ -550,5 +555,5 @@ module.exports = {
   getApartmentsCount,
   getMonthlyNewApartmentsCount,
   getApartmentsPricesAnalytics,
-  getAllApartmentsForAdmin
+  getAllApartmentsForAdmin,
 };

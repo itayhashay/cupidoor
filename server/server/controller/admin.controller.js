@@ -35,70 +35,120 @@ const AdminController = {
       next(ex);
     }
   },
-  async getAnalytics(req, res, next) {
+  async getUser(req, res, next) {
     if (!req.isAdmin) {
       return res.status(403).json({ sucess: false, error: "UnAuthorized!" });
     }
     try {
-      const newMonthlyApartments =
-        ApartmentService.getMonthlyNewApartmentsCount();
-      const apartmentsCount = ApartmentService.getApartmentsCount();
-      const apartmentsPrices = ApartmentService.getApartmentsPricesAnalytics();
+      res.status(OK).json({
+        success: true,
+        user: await UserService.getUserData(req.params.userId),
+      });
+    } catch (ex) {
+      next(ex);
+    }
+  },
 
-      const newMonthlyUsers = UserService.getMonthlyNewUsersCount();
-      const usersCount = UserService.getUsersCount();
+  async getUsersAnalytics(req, res, next) {
+    if (!req.isAdmin) {
+      return res.status(403).json({ sucess: false, error: "UnAuthorized!" });
+    }
+    try {
+      const monthlyUsersPromise = UserService.getMonthlyNewUsersCount();
+      const monthlyUsersAvatarsPromise =
+        UserService.getMonthlyNewUsersAvatars();
+      const totalUsersPromise = UserService.getUsersCount();
       const userRolesPromise = UserService.getUsersByRole();
 
-      const matchesCount = UsersRelationsService.getAllMatches();
-      const newMonthlyMatches = UsersRelationsService.getAllMatches(true);
+      const [monthlyUsers, monthlyUsersAvatars, totalUsers, userRoles] =
+        await Promise.all([
+          monthlyUsersPromise,
+          monthlyUsersAvatarsPromise,
+          totalUsersPromise,
+          userRolesPromise,
+        ]);
+      const usersAnalytics = {
+        month: monthlyUsers.length,
+        total: totalUsers.length,
+        roles: userRoles,
+        avatars: monthlyUsersAvatars,
+      };
 
-      const totalChatConversationsPromise = ChatService.getAllConversations();
-      const totalChatMessagesPromise = ChatService.getAllMessages();
+      res.status(200).json({ success: true, usersAnalytics });
+    } catch (ex) {
+      next(ex);
+    }
+  },
+  async getApartmentsAnalytics(req, res, next) {
+    if (!req.isAdmin) {
+      return res.status(403).json({ sucess: false, error: "UnAuthorized!" });
+    }
+    try {
+      const monthlyApartmentPromise =
+        ApartmentService.getMonthlyNewApartmentsCount();
+      const apartmentsCountPromise = ApartmentService.getApartmentsCount();
+      const apartmentsPricesPromise =
+        ApartmentService.getApartmentsPricesAnalytics();
 
-      const [
-        newApartments,
-        newUsers,
-        newMatches,
-        totalMatches,
-        totalUsers,
-        totalApartments,
-        pricesApartments,
-        userRoles,
-        totalChatConversations,
-        totalChatMessages,
-      ] = await Promise.all([
-        newMonthlyApartments,
-        newMonthlyUsers,
-        newMonthlyMatches,
-        matchesCount,
-        usersCount,
-        apartmentsCount,
-        apartmentsPrices,
-        userRolesPromise,
+      const [monthlyApartments, apartmentsCount, apartmentsPrices] =
+        await Promise.all([
+          monthlyApartmentPromise,
+          apartmentsCountPromise,
+          apartmentsPricesPromise,
+        ]);
+
+      const apartmentsAnalytics = {
+        month: monthlyApartments,
+        total: apartmentsCount,
+        ...apartmentsPrices[0],
+      };
+
+      res.status(200).json({ success: true, apartmentsAnalytics });
+    } catch (ex) {
+      next(ex);
+    }
+  },
+  async getMatchesAnalytics(req, res, next) {
+    if (!req.isAdmin) {
+      return res.status(403).json({ sucess: false, error: "UnAuthorized!" });
+    }
+    try {
+      const matchesCountPromise = UsersRelationsService.getTotalMatchesCount();
+      const newMonthlyMatchesPromise =
+        UsersRelationsService.getMonthlyNewMatchesCount();
+
+      const [newMatches, totalMatches] = await Promise.all([
+        matchesCountPromise,
+        newMonthlyMatchesPromise,
+      ]);
+
+      const matchesAnalytics = {
+        total: totalMatches,
+        month: newMatches,
+      };
+      res.status(200).json({ success: true, matchesAnalytics });
+    } catch (ex) {
+      next(ex);
+    }
+  },
+  async getChatAnalytics(req, res, next) {
+    if (!req.isAdmin) {
+      return res.status(403).json({ sucess: false, error: "UnAuthorized!" });
+    }
+    try {
+      const totalChatConversationsPromise = ChatService.getConversationsCount();
+      const totalChatMessagesPromise = ChatService.getMessagesCount();
+
+      const [totalChatConversations, totalChatMessages] = await Promise.all([
         totalChatConversationsPromise,
         totalChatMessagesPromise,
       ]);
-      const users = {
-        month: newUsers.length,
-        total: totalUsers.length,
-        roles: userRoles,
-      };
-      const apartments = {
-        month: newApartments.length,
-        total: totalApartments.length,
-        ...pricesApartments[0],
-      };
-      const matches = {
-        total: totalMatches.length,
-        month: newMatches.length,
-      };
-      const chats = {
+
+      const chatsAnalytics = {
         total: totalChatConversations[0].count,
         messages: totalChatMessages[0].count,
       };
-      res
-        .status(200)
-        .json({ success: true, matches, users, apartments, chats });
+      res.status(200).json({ success: true, chatsAnalytics });
     } catch (ex) {
       next(ex);
     }

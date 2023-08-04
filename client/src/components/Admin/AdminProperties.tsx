@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import useAPI from '../../hooks/useAPI';
-import { AdminAnalyticsType } from '../../types/AdminAnalytics';
 import { Box, Grid, Typography, Stack, Paper, Avatar, Tooltip } from '@mui/material';
 import CupidoorSpinner from '../CupidoorSpinner';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';

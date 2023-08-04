@@ -3,31 +3,19 @@ const UsersRelations = require("../model/usersRelations.model");
 const ScoreService = require("./score.service");
 const ObjectId = require("mongoose").Types.ObjectId;
 
-
-const getAllMatches = async (thisMonth)=>{
-  try{
-    if(thisMonth){
-      const today = new Date();
-      const month = today.getMonth() ;
-      const fromDate = new Date(today.getFullYear(),month,1);
-      return await UsersRelations.find({
-        relation: "match",
-        status: "approved",
-        createdAt: { $gte: fromDate, $lte: today },
-      })
-        .lean()
-        .exec();
-    }
-    return await UsersRelations.find({relation:"match",status:"approved"}).lean().exec();
-    
-  }catch(err){
+const getAllMatches = async (thisMonth) => {
+  try {
+    return await UsersRelations.find({ relation: "match", status: "approved" })
+      .lean()
+      .exec();
+  } catch (err) {
     throw new Error("Error getting matches: " + err.message);
   }
-}
+};
 
 const getLikesByTenantId = async (tenantId) => {
   try {
-    const likesPromise =  UsersRelations.find({
+    const likesPromise = UsersRelations.find({
       tenant: tenantId,
       relation: "match",
       status: "pending",
@@ -44,7 +32,7 @@ const getLikesByTenantId = async (tenantId) => {
       ])
       .lean()
       .exec();
-    const matchesPromise =  UsersRelations.find({
+    const matchesPromise = UsersRelations.find({
       tenant: tenantId,
       relation: "match",
       status: "approved",
@@ -184,6 +172,38 @@ const declineTenet = async (tenantId, apartmentId) => {
   }
 };
 
+/**
+ * Analytics
+ */
+const getTotalMatchesCount = async () => {
+  try {
+    return await UsersRelations.find({ relation: "match", status: "approved" })
+      .count()
+      .lean()
+      .exec();
+  } catch (err) {
+    throw new Error("Error getting matches: " + err.message);
+  }
+};
+
+const getMonthlyNewMatchesCount = async () => {
+  try {
+    const today = new Date();
+    const month = today.getMonth();
+    const fromDate = new Date(today.getFullYear(), month, 1);
+    return await UsersRelations.find({
+      relation: "match",
+      status: "approved",
+      createdAt: { $gte: fromDate, $lte: today },
+    })
+      .count()
+      .lean()
+      .exec();
+  } catch (err) {
+    throw new Error("Error getting matches: " + err.message);
+  }
+};
+
 module.exports = {
   getAllMatches,
   getLikesByTenantId,
@@ -193,4 +213,6 @@ module.exports = {
   likeApartment,
   matchTenant,
   declineTenet,
+  getTotalMatchesCount,
+  getMonthlyNewMatchesCount,
 };

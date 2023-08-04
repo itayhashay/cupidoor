@@ -15,8 +15,12 @@
       "approveTenant": "/users-relations/apartment/match",
       "declineTenant": "/users-relations/apartment/decline",
       "toggleTenantLike": "/users-relations/tenant/like",
-      "adminAnalytics": "/admin/analytics",
+      "usersAnalytics": "/admin/analytics/users",
+      "apartmentsAnalytics": "/admin/analytics/apartments",
+      "matchesAnalytics": "/admin/analytics/matches",
+      "chatsAnalytics": "/admin/analytics/chats",
       "adminUsers": "/admin/users",
+      "adminUser": "/admin/user",
       "adminApartments": "/admin/apartments"
     }
   }

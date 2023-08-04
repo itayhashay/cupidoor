@@ -25,7 +25,6 @@ const useAPI = () => {
     return response;
   };
 
-
   const addApartment = async (newApartment: StepperApartment) => {
     try {
       const response: AxiosResponse = await axiosPrivate.post(
@@ -94,8 +93,23 @@ const useAPI = () => {
     );
     return response.data;
   };
-  const getAdminAnalytics = async () => {
-    const response = await axiosPrivate.get(config.api.routes.adminAnalytics);
+  const getUsersAnalytics = async () => {
+    const response = await axiosPrivate.get(config.api.routes.usersAnalytics);
+
+    return response.data;
+  };
+  const getApartmentsAnalytics = async () => {
+    const response = await axiosPrivate.get(config.api.routes.apartmentsAnalytics);
+
+    return response.data;
+  };
+  const getMatchesAnalytics = async () => {
+    const response = await axiosPrivate.get(config.api.routes.matchesAnalytics);
+
+    return response.data;
+  };
+  const getChatsAnalytics = async () => {
+    const response = await axiosPrivate.get(config.api.routes.chatsAnalytics);
 
     return response.data;
   };
@@ -108,6 +122,22 @@ const useAPI = () => {
     const response = await axiosPrivate.get(config.api.routes.adminApartments);
 
     return response.data;
+  };
+  const getAdminUser = async (userId: string) => {
+    const response = await axiosPrivate.get(config.api.routes.adminUser + '/' + userId);
+
+    return response.data;
+  };
+  const adminUpdateUser = async (newUserData: User) => {
+    try {
+      const response: AxiosResponse = await axiosPrivate.put(
+        `/user/${newUserData?._id}`,
+        newUserData,
+      );
+      return response.data;
+    } catch (ex) {
+      throw ex;
+    }
   };
 
   const approveTenant = async (tenantId: string, apartmentId: string) => {
@@ -122,7 +152,6 @@ const useAPI = () => {
     });
     return response.data;
   };
-  
 
   const updateUser = async (newUserData: User) => {
     try {
@@ -162,9 +191,14 @@ const useAPI = () => {
     getApartmentById,
     getApartments,
     getUserAnswers,
-    getAdminAnalytics,
+    getUsersAnalytics,
+    getApartmentsAnalytics,
+    getMatchesAnalytics,
+    getChatsAnalytics,
     getAdminUsers,
-    getAdminApartments
+    getAdminUser,
+    getAdminApartments,
+    adminUpdateUser
   };
 };
 

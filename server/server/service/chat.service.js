@@ -24,7 +24,7 @@ const ChatService = {
       .exec();
 
     const response = [];
- 
+
     for (let match of matches) {
       const promises = [];
       let conversation = await conversationModel
@@ -83,10 +83,12 @@ const ChatService = {
     if (user.role === "tenant") return [];
 
     const matches = await UsersRelationsModel.aggregate([
-      {$match:{
-        "relation":"match",
-        "status":"approved"
-      }},
+      {
+        $match: {
+          relation: "match",
+          status: "approved",
+        },
+      },
       {
         $lookup: {
           from: "apartments",
@@ -107,7 +109,7 @@ const ChatService = {
       },
       {
         $match: {
-          "Apartment.user": user._id
+          "Apartment.user": user._id,
         },
       },
       {
@@ -121,7 +123,6 @@ const ChatService = {
 
     const response = [];
     for (let match of matches) {
-      
       const apartment = await ApartmentModel.findOne({
         _id: match.Apartment._id,
       });
@@ -129,12 +130,11 @@ const ChatService = {
       for (let tenant of match.tenant) {
         console.log(tenant);
         const matchUser = await UserModel.findOne({ _id: tenant });
-        
+
         let conversation = await conversationModel.findOne({
           tenant: matchUser._id,
-          apartment:apartment._id
+          apartment: apartment._id,
         });
-        
 
         if (!conversation) {
           conversation = await this.createConversation(
@@ -329,7 +329,7 @@ const ChatService = {
       messages,
     };
   },
-  getAllConversations : async function(){
+  getAllConversations: async function () {
     return conversationModel.aggregate([
       {
         $group: {
@@ -339,8 +339,8 @@ const ChatService = {
       },
     ]);
   },
-  getAllMessages : async function(){
-    return  messageModel.aggregate([
+  getAllMessages: async function () {
+    return messageModel.aggregate([
       {
         $group: {
           _id: null,
@@ -348,10 +348,31 @@ const ChatService = {
         },
       },
     ]);
-  }
+  },
 
-  
+  /**
+   * Analytics
+   */
+  getConversationsCount: async function () {
+    return conversationModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+  },
+  getMessagesCount: async function () {
+    return messageModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+  },
 };
-
 
 module.exports = ChatService;

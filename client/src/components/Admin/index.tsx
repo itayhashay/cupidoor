@@ -135,19 +135,16 @@ const AdminRouter = () => {
           <Divider />
         </Box>
       </Drawer>
-      <Grid
-        container
+      <Box 
         width={`calc(100% - ${drawerWidth}px)`}
         height={'100%'}
         py={3}
         px={5}
-        bgcolor={'secondary.dark'}
+        bgcolor={'#dfdede'}
         overflow={'auto'}
       >
-        <Grid item xs={12}>
           {selectedPage}
-        </Grid>
-      </Grid>
+      </Box>
     </Box>
 
     // <Routes>

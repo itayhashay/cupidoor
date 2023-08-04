@@ -10,7 +10,7 @@ const {
 } = require("http-status-codes");
 const verifyToken = require("../middlewares/verifyToken");
 
-router.post("/", async (req,res,next) => {
+router.post("/", async (req, res, next) => {
   try {
     const user = await userService.createUser(req.body);
     res.status(CREATED).json(user);
@@ -19,9 +19,13 @@ router.post("/", async (req,res,next) => {
   }
 });
 
-
-router.get("/all",[verifyToken], async (req, res,next) => {
+router.get("/all", [verifyToken], async (req, res, next) => {
   try {
+    if (!req.isAdmin) {
+      const error = new Error("UnAuthorized!");
+      error.status = 401;
+      throw error;
+    }
     const users = await userService.getUsers();
     res.status(OK).json(users);
   } catch (err) {
@@ -29,7 +33,7 @@ router.get("/all",[verifyToken], async (req, res,next) => {
   }
 });
 
-router.get("/",[verifyToken], async (req, res,next) => {
+router.get("/", [verifyToken], async (req, res, next) => {
   try {
     const user = await userService.getUserData(req.user._id);
     res.status(OK).json(user);
@@ -38,8 +42,13 @@ router.get("/",[verifyToken], async (req, res,next) => {
   }
 });
 
-router.get('/:id', async (req, res,next) => {
+router.get("/:id", async (req, res, next) => {
   try {
+    if (req.isAdmin && req.params.id != req.user._id.toString()) {
+      const error = new Error("UnAuthorized!");
+      error.status = 401;
+      throw error;
+    }
     const user = await userService.getUser(req.params.id);
     if (!user) {
       res.status(NOT_FOUND).send();
@@ -51,8 +60,13 @@ router.get('/:id', async (req, res,next) => {
   }
 });
 
-router.put('/:id', async (req, res,next) => {
+router.put("/:id", async (req, res, next) => {
   try {
+    if (!req.isAdmin && req.params.id != req.user._id.toString()) {
+      const error = new Error("UnAuthorized!");
+      error.status = 401;
+      throw error;
+    }
     const user = await userService.updateUser(req.params.id, req.body);
     res.status(OK).json(user);
   } catch (err) {
@@ -60,8 +74,13 @@ router.put('/:id', async (req, res,next) => {
   }
 });
 
-router.delete("/:id", async (req, res,next) => {
+router.delete("/:id", async (req, res, next) => {
   try {
+    if (!req.isAdmin && req.params.id != req.user._id.toString()) {
+      const error = new Error("UnAuthorized!");
+      error.status = 401;
+      throw error;
+    }
     await userService.deleteUser(req.params.id);
     res.status(NO_CONTENT).send();
   } catch (err) {
