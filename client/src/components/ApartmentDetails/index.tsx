@@ -22,6 +22,7 @@ import { User } from '../../types/user';
 import LikesSection from './LikesSection';
 import { useSnackbar } from '../../context/SnackbarContext';
 import { useConfirmationModal } from '../../context/ConfirmationModalContext';
+import BackButton from '../BackButton';
 
 const ApartmentDetails = () => {
   const [apartmentInfo, setApartmentInfo] = useState<Apartment | null>(null);
@@ -33,13 +34,8 @@ const ApartmentDetails = () => {
   const [isLikesLoading, setIsLikesLoading] = useState<boolean>(false);
   const [isLikeActionLoading, setIsLikeActionLoading] = useState<boolean>(false);
   const { setSnackBarState } = useSnackbar();
-  const {
-    getApartmentById,
-    toggleTenantLike,
-    getApartmentLikes,
-    approveTenant,
-    declineTenant
-  } = useAPI();
+  const { getApartmentById, toggleTenantLike, getApartmentLikes, approveTenant, declineTenant } =
+    useAPI();
   const { user } = useAuth();
   const params = useParams();
   const { showConfirmationModal } = useConfirmationModal();
@@ -112,7 +108,7 @@ const ApartmentDetails = () => {
       }
     }
   };
-  const handleDeclineClick = (tenantId:string) => {
+  const handleDeclineClick = (tenantId: string) => {
     if (apartmentInfo) {
       try {
         declineTenant(tenantId, apartmentInfo?._id);
@@ -132,91 +128,97 @@ const ApartmentDetails = () => {
   if (!apartmentInfo) return <CupidoorSpinner></CupidoorSpinner>;
   return (
     // TODO: Change last updated mock.
-    <Container maxWidth='xl' sx={{ paddingY: 3 }}>
-      <Grid container component={Paper} elevation={3}>
-        <Grid item xs={12} height={60} padding={2} width={'100%'} bgcolor={'primary.dark'}>
-          <Box display={'flex'} color={'white'} alignItems={'center'} height={'100%'}>
-            <LocationOnIcon></LocationOnIcon>
-            <Typography variant='h5' fontWeight={'bold'} ml={1}>
-              {`${apartmentInfo.city}, ${apartmentInfo.street} ${apartmentInfo.houseNumber}`}
-            </Typography>
-          </Box>
-        </Grid>
-        <Grid item xs={8}>
-          <Grid container position='relative'>
-            <Grid item xs={12}>
-              <ImageContainer className='apartment-gallery'>
-                <ImagesGallery
-                  images={
-                    apartmentInfo.images[0]
-                      ? apartmentInfo.images
-                      : [{ name: '', _id: '', url: '/apartmentPlaceholder.png' }]
-                  }
-                />
-              </ImageContainer>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container>
-                <Grid item xs={12} padding={1}>
-                  <DryDetails apartmentInfo={apartmentInfo} />
-                  <Box mt={1}>
-                    <ApartmentFeatures apartmentInfo={apartmentInfo}></ApartmentFeatures>
-                  </Box>
+    <>
+      <Box padding={2}>
+        <BackButton></BackButton>
+      </Box>
+
+      <Container maxWidth='xl' sx={{ paddingY: 3 }}>
+        <Grid container component={Paper} elevation={3}>
+          <Grid item xs={12} height={60} padding={2} width={'100%'} bgcolor={'primary.dark'}>
+            <Box display={'flex'} color={'white'} alignItems={'center'} height={'100%'}>
+              <LocationOnIcon></LocationOnIcon>
+              <Typography variant='h5' fontWeight={'bold'} ml={1}>
+                {`${apartmentInfo.city}, ${apartmentInfo.street} ${apartmentInfo.houseNumber}`}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={8}>
+            <Grid container position='relative'>
+              <Grid item xs={12}>
+                <ImageContainer className='apartment-gallery'>
+                  <ImagesGallery
+                    images={
+                      apartmentInfo.images[0]
+                        ? apartmentInfo.images
+                        : [{ name: '', _id: '', url: '/apartmentPlaceholder.png' }]
+                    }
+                  />
+                </ImageContainer>
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container>
+                  <Grid item xs={12} padding={1}>
+                    <DryDetails apartmentInfo={apartmentInfo} />
+                    <Box mt={1}>
+                      <ApartmentFeatures apartmentInfo={apartmentInfo}></ApartmentFeatures>
+                    </Box>
+                  </Grid>
                 </Grid>
               </Grid>
+              <ApartmentDescription apartmentInfo={apartmentInfo}></ApartmentDescription>
             </Grid>
-            <ApartmentDescription apartmentInfo={apartmentInfo}></ApartmentDescription>
           </Grid>
-        </Grid>
 
-        {isMyApartment ? (
-          <LikesSection
-            likes={apartmentLikes}
-            handleApproveClick={handleApproveClick}
-            handleDeclineClick={handleDeclineClick}
-          ></LikesSection>
-        ) : (
-          <Grid item xs={4}>
-            <Grid container>
-              <Grid item xs={12} padding={1}>
-                <LandlordSection landlord={apartmentInfo.user}></LandlordSection>
+          {isMyApartment ? (
+            <LikesSection
+              likes={apartmentLikes}
+              handleApproveClick={handleApproveClick}
+              handleDeclineClick={handleDeclineClick}
+            ></LikesSection>
+          ) : (
+            <Grid item xs={4}>
+              <Grid container>
+                <Grid item xs={12} padding={1}>
+                  <LandlordSection landlord={apartmentInfo.user}></LandlordSection>
+                </Grid>
+                <Grid item xs={12} padding={1}>
+                  <PaymentCalculator apartmentInfo={apartmentInfo}></PaymentCalculator>
+                </Grid>
               </Grid>
-              <Grid item xs={12} padding={1}>
-                <PaymentCalculator apartmentInfo={apartmentInfo}></PaymentCalculator>
+              <Grid item xs={12} padding={1} position={'relative'}>
+                <Typography
+                  sx={{
+                    ...MatchLabelStyles,
+                    top: 15,
+                    right: 10,
+                    border: '1px solid #CECECE',
+                    borderRadius: 0,
+                    zIndex: 1,
+                    transform: 'rotate(323deg)',
+                    color: matchColor,
+                  }}
+                >{`${apartmentInfo.match}% ${apartmentInfo.match === 100 ? 'Perfect' : ''} Match${
+                  apartmentInfo.match === 100 ? '!' : ''
+                }`}</Typography>
+                <LoadingButton
+                  color={isFavorite ? 'secondary' : isMatched ? 'error' : 'primary'}
+                  onClick={() => handleLikeClick(apartmentInfo._id, String(apartmentInfo.user._id))}
+                  fullWidth
+                  loading={isLikeActionLoading}
+                  variant={isFavorite ? 'outlined' : 'contained'}
+                  size='large'
+                  sx={{ fontWeight: 'bold', fontSize: '16px' }}
+                  endIcon={isFavorite ? <ThumbUpOutlinedIcon /> : <FavoriteBorder />}
+                >
+                  {isFavorite ? 'Liked' : isMatched ? 'Matched!' : 'Like'}
+                </LoadingButton>
               </Grid>
             </Grid>
-            <Grid item xs={12} padding={1} position={'relative'}>
-              <Typography
-                sx={{
-                  ...MatchLabelStyles,
-                  top: 15,
-                  right: 10,
-                  border: '1px solid #CECECE',
-                  borderRadius: 0,
-                  zIndex: 1,
-                  transform: 'rotate(323deg)',
-                  color: matchColor,
-                }}
-              >{`${apartmentInfo.match}% ${apartmentInfo.match === 100 ? 'Perfect' : ''} Match${
-                apartmentInfo.match === 100 ? '!' : ''
-              }`}</Typography>
-              <LoadingButton
-                color={isFavorite ? 'secondary' : isMatched ? 'error' : 'primary'}
-                onClick={() => handleLikeClick(apartmentInfo._id, String(apartmentInfo.user._id))}
-                fullWidth
-                loading={isLikeActionLoading}
-                variant={isFavorite ? 'outlined' : 'contained'}
-                size='large'
-                sx={{ fontWeight: "bold", fontSize: "16px" }}
-                endIcon={isFavorite ? <ThumbUpOutlinedIcon /> : <FavoriteBorder />}
-              >
-                {isFavorite ? 'Liked' : isMatched ? 'Matched!' : 'Like'}
-              </LoadingButton>
-            </Grid>
-          </Grid>
-        )}
-      </Grid>
-    </Container>
+          )}
+        </Grid>
+      </Container>
+    </>
   );
 };
 

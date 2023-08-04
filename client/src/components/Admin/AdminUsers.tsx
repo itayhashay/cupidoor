@@ -17,7 +17,7 @@ import { User } from '../../types/user';
 import { useSnackbar } from '../../context/SnackbarContext';
 
 const AdminUsers = () => {
-  const [users, setUsers] = useState<any[]>([] as any[]);
+  const [users, setUsers] = useState<any[] | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editUserId, setEditUserId] = useState<string | null>(null);
   const { getAdminUsers, adminUpdateUser } = useAPI();
@@ -33,10 +33,14 @@ const AdminUsers = () => {
     setIsEditDialogOpen(false);
     setEditUserId(null);
   };
+  const handleDialogSave = ()=>{
+    setUsers(null);
+  }
 
   const updateUserDetails = useCallback(
     async (newRow: GridRowModel, oldRow: GridRowModel) => {
       try {
+        if(!users) return;
         let didChange = false;
         let newValues: any = {};
         for (let key of Object.keys(oldRow)) {
@@ -176,10 +180,13 @@ const AdminUsers = () => {
       const data = await getAdminUsers();
       setUsers(data.users);
     };
-    fetchUsers();
-  }, []);
+    if(users == null){
+      fetchUsers();
+    }
+    
+  }, [users]);
 
-  return users.length > 0 ? (
+  return users && users.length > 0 ? (
     <>
       <Box component={Paper} elevation={3}>
         <DataGrid
@@ -202,6 +209,7 @@ const AdminUsers = () => {
           open={isEditDialogOpen}
           userId={editUserId as string}
           handleDialogClose={handleCloseEditDialog}
+          handleDialogSave={handleDialogSave}
         />
       )}
     </>

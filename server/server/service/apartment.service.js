@@ -346,7 +346,7 @@ const updateApartment = async (id, apartmentData) => {
     const apartment = await Apartment.findById(id);
     let { newImages, removedImages } = apartmentData;
     let updatedImagesArray = apartment.images.filter(
-      (image) => !removedImages.includes(image.name)
+      (image) => removedImages ? !removedImages.includes(image.name) : true
     );
     let newSavedimages = await Storage.uploadApartmentImages(id, newImages);
     apartment.images = [...updatedImagesArray, ...newSavedimages];
@@ -425,9 +425,13 @@ const updateApartment = async (id, apartmentData) => {
     if (apartmentData.tax != null) {
       apartment.tax = apartmentData.tax;
     }
-    if (apartmentData.totalPrice != null) {
-      apartment.totalPrice = apartmentData.totalPrice;
-    }
+    // if (apartmentData.totalPrice != null) {
+    //   apartment.totalPrice = apartmentData.totalPrice;
+    // }
+    const price = apartmentData.price ? apartmentData.price : apartment.price;
+    const tax = apartmentData.tax ? apartmentData.tax : apartment.tax;
+    const committee = apartmentData.committee ? apartmentData.committee : apartment.committee;
+    apartment.totalPrice = Number(price) + Number(tax) + Number(committee);
     return await apartment.save();
   } catch (err) {
     throw new Error("Error updating apartment: " + err.message);
@@ -498,7 +502,7 @@ const _scoreMissingApartments = async (user) => {
 
 const getAllApartmentsForAdmin = async () => {
   try {
-    return Apartment.find({}).populate("user").lean().exec();
+    return Apartment.find().select("-images").populate("user").lean().exec();
   } catch (err) {
     throw new Error("Error getting apartments: " + err.message);
   }

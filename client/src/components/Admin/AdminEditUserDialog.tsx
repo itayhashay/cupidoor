@@ -44,10 +44,13 @@ const AdminEditUserDialog = ({
   open,
   userId,
   handleDialogClose,
+  handleDialogSave,
 }: {
   open: boolean;
   userId: string;
   handleDialogClose: () => void;
+  handleDialogSave: () => void;
+
 }) => {
   const [userDetails, setUserDetails] = useState<User | null>(null);
   const [userProfilePicture, setUserProfilePicture] = useState<string>('');
@@ -121,6 +124,7 @@ const AdminEditUserDialog = ({
           message: 'User updated Successfully!',
           show: true,
         });
+        handleDialogSave();
         handleDialogClose();
       }
     } catch (ex) {

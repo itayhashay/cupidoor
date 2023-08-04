@@ -6,32 +6,29 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import UndoIcon from '@mui/icons-material/Undo';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import AdminEditApartmentDialog from './AdminEditApartmentDialog';
 
 const AdminProperties = () => {
-  const [apartments, setApartments] = useState<any[]>([] as any[]);
+  const [apartments, setApartments] = useState<any[] | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editApartmentId, setEditApartmentId] = useState<string | null>(null);
   const { getAdminApartments } = useAPI();
 
   const handleRestoreClick = (id: string) => {};
   const handleDeleteClick = (id: string) => {};
-  const handleEditClick = (id: string) => {};
-  // const updateUserDetails = async (params, event, details) => {
-  //   try {
-  //     if (params.field === 'id') {
-  //       return;
-  //     }
+  const handleEditClick = (id: string) => {
+    setEditApartmentId(id);
+    setIsEditDialogOpen(true);
+  };
+  const handleCloseEditDialog = () => {
+    setIsEditDialogOpen(false);
+    setEditApartmentId(null);
+  };
 
-  //     const updatedUser = users.filter((user) => user.uid === params.id)[0];
-  //     if (updatedUser[params.field] === params.value) {
-  //       return;
-  //     }
-  //     updatedUser[params.field] = params.value;
-  //     await backendAPI.admin.user.update(updatedUser, token);
-  //     showSuccessSnackbar();
-  //     checkIfLogoutNeeded(updatedUser.email);
-  //   } catch (ex) {
-  //     showErrorSnackbar(ex);
-  //   }
-  // };
+  const handleDialogSave = ()=>{
+    setApartments(null);
+  }
+
   const cols = useMemo(
     () => [
       {
@@ -45,14 +42,14 @@ const AdminProperties = () => {
         field: 'city',
         headerName: 'City',
         flex: 1,
-        editable: true,
+        editable: false,
         hideable: false,
       },
       {
         field: 'street',
         headerName: 'Street',
         flex: 1,
-        editable: true,
+        editable: false,
         hideable: false,
       },
       {
@@ -60,16 +57,40 @@ const AdminProperties = () => {
         headerName: 'House Number',
         type: 'string',
         flex: 1,
-        editable: true,
+        editable: false,
         hideable: false,
       },
       {
         field: 'user',
         headerName: 'Landlord',
         type: 'string',
-        editable: true,
+        editable: false,
         hideable: false,
         flex: 1,
+      },
+      {
+        field: 'price',
+        headerName: 'Price',
+        type: 'number',
+        flex: 1,
+        editable: false,
+        hideable: false,
+      },
+      {
+        field: 'tax',
+        headerName: 'Taxes',
+        type: 'number',
+        flex: 1,
+        editable: false,
+        hideable: false,
+      },
+      {
+        field: 'committee',
+        headerName: 'Committee',
+        type: 'number',
+        flex: 1,
+        editable: false,
+        hideable: false,
       },
       {
         field: 'actions',
@@ -126,29 +147,45 @@ const AdminProperties = () => {
     const fetchApartments = async () => {
       const data = await getAdminApartments();
       const apartments = [];
-      for(let apartment of data.apartments){
-        apartments.push({...apartment,user:`${apartment.user.firstName} ${apartment.user.lastName}`});
+      for (let apartment of data.apartments) {
+        apartments.push({
+          ...apartment,
+          user: `${apartment.user.firstName} ${apartment.user.lastName}`,
+        });
       }
       setApartments(apartments);
     };
-    fetchApartments();
-  }, []);
+    if(apartments == null){
+      fetchApartments();
+    }
+    
+  }, [apartments]);
 
-  return Object.keys(apartments).length > 0 ? (
-    <Box component={Paper} elevation={3}>
-      <DataGrid
-        sx={{ bgcolor: 'white' }}
-        getRowId={(row) => row._id}
-        rows={apartments}
-        columns={cols}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 20 },
-          },
-        }}
-        pageSizeOptions={[5, 10, 20, 50]}
-      />
-    </Box>
+  return apartments && Object.keys(apartments).length > 0 ? (
+    <>
+      <Box component={Paper} elevation={3}>
+        <DataGrid
+          sx={{ bgcolor: 'white' }}
+          getRowId={(row) => row._id}
+          rows={apartments}
+          columns={cols}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 20 },
+            },
+          }}
+          pageSizeOptions={[5, 10, 20, 50]}
+        />
+      </Box>
+      {isEditDialogOpen && editApartmentId && (
+        <AdminEditApartmentDialog
+          open={isEditDialogOpen}
+          apartmentId={editApartmentId as string}
+          handleDialogClose={handleCloseEditDialog}
+          handleDialogSave={handleDialogSave}
+        />
+      )}
+    </>
   ) : (
     <CupidoorSpinner></CupidoorSpinner>
   );

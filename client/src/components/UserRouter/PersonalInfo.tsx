@@ -38,6 +38,7 @@ import { Edit, Edit as EditIcon, Height } from "@mui/icons-material";
 import { useAuth } from "../../context/AuthContext";
 import CupidoorSpinner from "../CupidoorSpinner";
 import PersonalSecurity from "./PersonalSecurity";
+import BackButton from "../BackButton";
 
 const PersonalInfo = ({ user }: { user: User }) => {
   const [role, setRole] = useState("Tenant");
@@ -134,6 +135,7 @@ const PersonalInfo = ({ user }: { user: User }) => {
   const renderLinkLine = (userLink: UserLink, index: number) => {
     return (
       <>
+    
         <Box
           sx={{
             "&:hover": {
@@ -158,6 +160,9 @@ const PersonalInfo = ({ user }: { user: User }) => {
   };
   return (
     <Box bgcolor={"#e4e3e8"} padding={3} height={"100%"} overflow={"auto"}>
+        <Box padding={2}>
+        <BackButton></BackButton>
+      </Box>
       <Box sx={{ width: { xs: "80%", xl: "50%" } }} margin={"auto"}>
         <Box
           component={Paper}
