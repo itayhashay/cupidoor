@@ -18,6 +18,7 @@ const ChatContact: React.FC<ChatContactProps> = ({
     <ListItem>
       <Box
         display={"flex"}
+        px={1}
         alignItems={"center"}
         justifyContent={"space-between"}
         sx={{ cursor: "pointer" }}

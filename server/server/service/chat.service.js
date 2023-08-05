@@ -30,6 +30,7 @@ const ChatService = {
       let conversation = await conversationModel
         .findOne({
           apartment: match.apartment._id,
+          tenant:user._id
         })
         .lean();
 
