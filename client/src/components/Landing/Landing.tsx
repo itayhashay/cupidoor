@@ -24,7 +24,7 @@ const Landing = () => {
       spacing={3}
       justifyContent={"center"}
       padding={5}
-      height={"100vh"}
+      height={"100%"}
       alignContent={"center"}
     >
       <Grid item>
@@ -34,7 +34,8 @@ const Landing = () => {
           sx={{
             backgroundColor: "#ffffff",
             color: "#8e24aa",
-            width: "178px",
+            width: "200px",
+            padding:1
           }}
         />
         <Typography

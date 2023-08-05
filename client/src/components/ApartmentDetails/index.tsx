@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Paper, Typography } from '@mui/material';
+import { Box, Button, Container, Grid, Paper, Typography,Avatar,IconButton } from '@mui/material';
 import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Apartment } from '../../types/apartment';
@@ -23,6 +23,8 @@ import LikesSection from './LikesSection';
 import { useSnackbar } from '../../context/SnackbarContext';
 import { useConfirmationModal } from '../../context/ConfirmationModalContext';
 import BackButton from '../BackButton';
+import EditIcon from '@mui/icons-material/Edit';
+import AddProperty from '../AddProperty';
 
 const ApartmentDetails = () => {
   const [apartmentInfo, setApartmentInfo] = useState<Apartment | null>(null);
@@ -30,6 +32,8 @@ const ApartmentDetails = () => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [isMatched, setIsMatched] = useState<boolean>(false);
   const [isMyApartment, setIsMyApartment] = useState<boolean>(false);
+  const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
+  const [initiateUpdate,setInitiateUpdate] = useState<boolean>(true);
   const [apartmentLikes, setApartmentLikes] = useState<User[]>([] as User[]);
   const [isLikesLoading, setIsLikesLoading] = useState<boolean>(false);
   const [isLikeActionLoading, setIsLikeActionLoading] = useState<boolean>(false);
@@ -50,6 +54,7 @@ const ApartmentDetails = () => {
     const fetchApartmentData = async (id: string) => {
       const apartment: Apartment = await getApartmentById(id);
       setApartmentInfo(apartment);
+      setInitiateUpdate(false);
       if (apartment.user._id === user?._id) {
         setIsLikesLoading(true);
         setIsMyApartment(true);
@@ -61,10 +66,10 @@ const ApartmentDetails = () => {
 
     const apartmentId: string = params.id || '';
 
-    if (apartmentId) {
+    if (apartmentId && initiateUpdate) {
       fetchApartmentData(apartmentId);
     }
-  }, [params.id]);
+  }, [params.id,initiateUpdate]);
 
   useEffect(() => {
     const color: string = precentToColor(apartmentInfo?.match || 0);
@@ -125,6 +130,16 @@ const ApartmentDetails = () => {
     }
   };
 
+  const handleEditClick = ()=>{
+    setIsEditOpen(true);
+  }
+
+  const handleSave= ()=>{
+    setInitiateUpdate(true);
+    setIsEditOpen(false);
+    
+  }
+
   if (!apartmentInfo) return <CupidoorSpinner></CupidoorSpinner>;
   return (
     // TODO: Change last updated mock.
@@ -136,11 +151,32 @@ const ApartmentDetails = () => {
       <Container maxWidth='xl' sx={{ paddingY: 3 }}>
         <Grid container component={Paper} elevation={3}>
           <Grid item xs={12} height={60} padding={2} width={'100%'} bgcolor={'primary.dark'}>
-            <Box display={'flex'} color={'white'} alignItems={'center'} height={'100%'}>
-              <LocationOnIcon></LocationOnIcon>
-              <Typography variant='h5' fontWeight={'bold'} ml={1}>
-                {`${apartmentInfo.city}, ${apartmentInfo.street} ${apartmentInfo.houseNumber}`}
-              </Typography>
+            <Box
+              display={'flex'}
+              color={'white'}
+              alignItems={'center'}
+              height={'100%'}
+              justifyContent={'space-between'}
+            >
+              <Box display={'flex'} color={'white'} alignItems={'center'}>
+                <LocationOnIcon></LocationOnIcon>
+                <Typography variant='h5' fontWeight={'bold'} ml={1}>
+                  {`${apartmentInfo.city}, ${apartmentInfo.street} ${apartmentInfo.houseNumber}`}
+                </Typography>
+              </Box>
+              {isMyApartment && (
+                <IconButton
+                  onClick={handleEditClick}
+                  sx={{
+                    bgcolor: 'secondary.light',
+                    '&.MuiIconButton-root:hover': {
+                      bgcolor: 'primary.light',
+                    },
+                  }}
+                >
+                  <EditIcon sx={{ color: 'white' }}></EditIcon>
+                </IconButton>
+              )}
             </Box>
           </Grid>
           <Grid item xs={8}>
@@ -217,6 +253,13 @@ const ApartmentDetails = () => {
             </Grid>
           )}
         </Grid>
+        <AddProperty
+          isOpen={isEditOpen}
+          onClose={() => setIsEditOpen(false)}
+          handleSave={handleSave}
+          houseData={apartmentInfo}
+          isEdit={true}
+        />
       </Container>
     </>
   );
