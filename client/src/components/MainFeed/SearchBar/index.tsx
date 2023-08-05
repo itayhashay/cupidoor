@@ -1,21 +1,17 @@
-import { useEffect, useState } from "react";
-import Checkbox from "@mui/material/Checkbox";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import Button from "@mui/material/Button";
+import { useEffect, useState } from 'react';
+// import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+// import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
-import { City } from "../../../types/address";
-import { Container } from "./styles";
-import { Cities } from "../../../utils/cities";
-import { getFirsthundredCities } from "../../../utils/logic";
+import { City } from '../../../types/address';
+import { Container } from './styles';
+import { Cities } from '../../../utils/cities';
+import { getFirsthundredCities } from '../../../utils/logic';
 
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
+// const icon = <CheckBoxOutlineBlankIcon fontSize='small' />;
+// const checkedIcon = <CheckBoxIcon fontSize='small' />;
 
 const SearchBar = () => {
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>('');
   const [citiesList, setCities] = useState<City[]>([]);
 
   useEffect(() => {
@@ -23,15 +19,13 @@ const SearchBar = () => {
   }, []);
 
   useEffect(() => {
-    const filteredCities = Cities.filter((city: City) =>
-      city.city_name.includes(searchValue)
-    );
+    const filteredCities = Cities.filter((city: City) => city.city_name.includes(searchValue));
     setCities(getFirsthundredCities(filteredCities));
   }, [searchValue]);
 
-  const onValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
-  };
+  // const onValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearchValue(event.target.value);
+  // };
 
   return (
     <Container>

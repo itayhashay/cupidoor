@@ -1,17 +1,6 @@
-import {
-  AppBar,
-  Box,
-  Toolbar,
-  Button,
-  Grid,
-  Menu,
-  CssBaseline,
-  Container,
-  Tabs,
-  Tab,
-} from '@mui/material';
+import { AppBar, Box, Toolbar, Button, Grid, Menu } from '@mui/material';
 import { Avatar, Typography, MenuItem } from '@mui/material';
-import { UserSection, linkStyles } from './styles';
+import { linkStyles } from './styles';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -65,6 +54,7 @@ export const Navbar = () => {
 
   const handleAccountNavigation = () => {
     if (location.pathname !== '/user/personal-info') navigate('/user/personal-info');
+    handleMenuClose();
   };
 
   const handleSignOut = () => {

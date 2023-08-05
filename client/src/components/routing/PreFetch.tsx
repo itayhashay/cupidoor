@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import CupidoorSpinner from '../CupidoorSpinner';
-import useAPI from '../../hooks/useAPI';
+// import useAPI from '../../hooks/useAPI';
 
 const PreFetch = ({ children }: { children?: JSX.Element }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -13,7 +13,7 @@ const PreFetch = ({ children }: { children?: JSX.Element }) => {
     // fetchUserLikedApartments();
     setIsLoading(false);
   }, []);
-  return isLoading ? <CupidoorSpinner></CupidoorSpinner> : <>{ children }</>;
+  return isLoading ? <CupidoorSpinner /> : <>{children}</>;
 };
 
 export default PreFetch;

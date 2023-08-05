@@ -1,5 +1,5 @@
 import MainRouter from '../routing/MainRouter';
-import { Box, CssBaseline } from '@mui/material';
+import { Box } from '@mui/material';
 
 const App = () => {
   return (
