@@ -1,9 +1,5 @@
 import { createContext, useContext, useState, FunctionComponent, useEffect } from 'react';
 import { User } from '../types/user';
-import { AxiosError, AxiosResponse } from 'axios';
-import { CupidAxiosError } from '../types/cupidAxiosError';
-import useAPI from '../hooks/useAPI';
-import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 type Props = { children: React.ReactNode };
 
