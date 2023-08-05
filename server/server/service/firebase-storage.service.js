@@ -45,6 +45,7 @@ const downloadProfilePhoto = async (userEmail) => {
 //get apartment id and array of base 64 images and returns an array of urls of images
 const uploadApartmentImages = async (apartmentId, base64ImagesArray) => {
   try {
+    if(!base64ImagesArray) return [];
     let images = [];
     for (const image of base64ImagesArray) {
       const fileName = `${uuidv4()}.png`;

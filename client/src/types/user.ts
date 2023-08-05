@@ -28,6 +28,7 @@ export type User = {
   jobTitle?: string;
   familiarity?: string;
   isLandlord?: boolean;
+  isAdmin?: boolean;
   answeredQuestions?: boolean;
   role: UserTypes;
   linkes?: UserLink[];

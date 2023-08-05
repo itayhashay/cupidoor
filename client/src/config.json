@@ -3,7 +3,7 @@
     "baseUrl": "http://localhost:2308",
     "chatPort": "2309",
     "routes": {
-      "userAnswer":"/user-answer",
+      "userAnswer": "/user-answer",
       "match": "/match",
       "signIn": "/signIn",
       "signUp": "/signUp",
@@ -14,8 +14,14 @@
       "getApartmentLikes": "/users-relations/apartment/likes",
       "approveTenant": "/users-relations/apartment/match",
       "declineTenant": "/users-relations/apartment/decline",
-      "toggleTenantLike": "/users-relations/tenant/like"
-      
+      "toggleTenantLike": "/users-relations/tenant/like",
+      "usersAnalytics": "/admin/analytics/users",
+      "apartmentsAnalytics": "/admin/analytics/apartments",
+      "matchesAnalytics": "/admin/analytics/matches",
+      "chatsAnalytics": "/admin/analytics/chats",
+      "adminUsers": "/admin/users",
+      "adminUser": "/admin/user",
+      "adminApartments": "/admin/apartments"
     }
   }
 }

@@ -21,6 +21,11 @@ router.post("/", async (req, res, next) => {
 
 router.get("/landlord/:userId", async (req, res, next) => {
   try {
+    if(!req.isAdmin && req.params.userId != req.user?._id.toString()){
+      const error = new Error("UnAuthorized!");
+      error.status = 401;
+      throw error;
+    }
     const apartments = await apartmentService.getApartmentsByUser(
       req.params.userId
     );
@@ -57,17 +62,30 @@ router.get("/:id", async (req, res, next) => {
 // Update apartment
 router.put("/:id", async (req, res, next) => {
   try {
+    if(!req.isAdmin ){
+      const error = new Error("UnAuthorized!");
+      error.status = 401;
+      if(typeof req.body.user == "string" && req.body.user != req.user._id.toString()){
+        throw error;
+      }else if(typeof req.body.user != "string" && req.body.user._id != req.user._id.toString()){
+        throw error;
+      }
+      
+      
+    }
+
     const apartment = await apartmentService.updateApartment(
       req.params.id,
       req.body
     );
     if (!apartment) {
-      res.status(NOT_FOUND).send();
+      res.status(404).send();
     } else {
-      res.status(OK).json(apartment);
+      res.status(200).json(apartment);
     }
   } catch (err) {
-    res.status(BAD_REQUEST).json({ error: err.message });
+    next(err);
+    // res.status(400).json({ error: err.message });
   }
 });
 

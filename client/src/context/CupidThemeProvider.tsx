@@ -36,7 +36,7 @@ export const CupidThemeContextProvider: React.FC<Props> = ({ children }) => {
     palette: {
       primary: {
         main: '#20283E',
-        light: '#488A99',
+        light: '#394566',
         dark: '#242444',
         contrastText: 'white',
       },
