@@ -3,6 +3,7 @@ import { User } from "../../types/user";
 import { ServerApartmentImages } from "../../types/apartment";
 
 export type StepperApartment = {
+    [key:string]:any;
     _id?: string;
     user?: User | string;
     city: string;

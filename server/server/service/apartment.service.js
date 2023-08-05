@@ -202,8 +202,8 @@ const getApartments = async (user) => {
 
 const getApartment = async (id, user) => {
   try {
-
-    const apartmentPromise = Apartment.aggregate([{$match:{_id:new ObjectId(id)}},
+    const apartmentPromise = Apartment.aggregate([
+      { $match: { _id: new ObjectId(id) } },
       {
         $lookup: {
           from: "users",
@@ -345,15 +345,11 @@ const updateApartment = async (id, apartmentData) => {
   try {
     const apartment = await Apartment.findById(id);
     let { newImages, removedImages } = apartmentData;
-    let updatedImagesArray = apartment.images;
-    if(removedImages != null)
-      updatedImagesArray = apartment.images.filter(
-        (image) => !removedImages.includes(image.name)
-      );
-    let newSavedimages;
-    if(newImages != null)
-      newSavedimages = await Storage.uploadApartmentImages(id, newImages);
-    apartment.images = newImages != null ? [...updatedImagesArray, ...newSavedimages] :  [...updatedImagesArray];
+    let updatedImagesArray = apartment.images.filter(
+      (image) => removedImages ? !removedImages.includes(image.name) : true
+    );
+    let newSavedimages = await Storage.uploadApartmentImages(id, newImages);
+    apartment.images = [...updatedImagesArray, ...newSavedimages];
     if (apartmentData.description != null) {
       apartment.description = apartmentData.description;
     }
@@ -429,9 +425,13 @@ const updateApartment = async (id, apartmentData) => {
     if (apartmentData.tax != null) {
       apartment.tax = apartmentData.tax;
     }
-    if (apartmentData.totalPrice != null) {
-      apartment.totalPrice = apartmentData.totalPrice;
-    }
+    // if (apartmentData.totalPrice != null) {
+    //   apartment.totalPrice = apartmentData.totalPrice;
+    // }
+    const price = apartmentData.price ? apartmentData.price : apartment.price;
+    const tax = apartmentData.tax ? apartmentData.tax : apartment.tax;
+    const committee = apartmentData.committee ? apartmentData.committee : apartment.committee;
+    apartment.totalPrice = Number(price) + Number(tax) + Number(committee);
     return await apartment.save();
   } catch (err) {
     throw new Error("Error updating apartment: " + err.message);
@@ -496,6 +496,59 @@ const _scoreMissingApartments = async (user) => {
   return Promise.all(promises);
 };
 
+/**
+ * Analytics
+ */
+
+const getAllApartmentsForAdmin = async () => {
+  try {
+    return Apartment.find().select("-images").populate("user").lean().exec();
+  } catch (err) {
+    throw new Error("Error getting apartments: " + err.message);
+  }
+};
+
+const getApartmentsCount = async () => {
+  try {
+    return Apartment.find({}).count().lean().exec();
+  } catch (err) {
+    throw new Error("Error getting apartments: " + err.message);
+  }
+};
+
+const getMonthlyNewApartmentsCount = async () => {
+  try {
+    const today = new Date();
+    const month = today.getMonth();
+    const fromDate = new Date(today.getFullYear(), month, 1);
+    return Apartment.find({
+      createdAt: { $gte: fromDate, $lte: today },
+    })
+      .count()
+      .lean()
+      .exec();
+  } catch (err) {
+    throw new Error("Error getting apartments: " + err.message);
+  }
+};
+
+const getApartmentsPricesAnalytics = async () => {
+  try {
+    return Apartment.aggregate([
+      {
+        $group: {
+          _id: null,
+          max: { $max: "$price" },
+          min: { $min: "$price" },
+          avg: { $avg: "$price" },
+        },
+      },
+    ]);
+  } catch (err) {
+    throw new Error("Error getting apartments: " + err.message);
+  }
+};
+
 module.exports = {
   createApartment,
   getApartmentsByUser,
@@ -503,4 +556,8 @@ module.exports = {
   getApartment,
   updateApartment,
   deleteApartment,
+  getApartmentsCount,
+  getMonthlyNewApartmentsCount,
+  getApartmentsPricesAnalytics,
+  getAllApartmentsForAdmin,
 };

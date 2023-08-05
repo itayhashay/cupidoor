@@ -2,11 +2,12 @@ import { axiosPrivate } from "../utils/axiosPrivate";
 import { useEffect } from "react";
 import useRefreshToken from "./useRefreshToken";
 import { useAuth } from "../context/AuthContext";
+import {useNavigate} from "react-router-dom"
 let isRefreshingToken : Promise<string>;
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
   const { user, accessToken } = useAuth();
-
+const navigate = useNavigate();
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
@@ -34,6 +35,10 @@ const useAxiosPrivate = () => {
           prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return axiosPrivate(prevRequest);
           
+        }
+        if(error?.response?.status === 401){
+          navigate("/403");
+          return Promise.reject(error);  
         }
         return Promise.reject(error);
       }

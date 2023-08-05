@@ -3,7 +3,7 @@
 import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import LogoWhite from '../../icons/logo-main.svg';
-const NotFoundPage = () => {
+const UnAuthorizedPage = () => {
   return (
     <Box
       width={'100vw'}
@@ -16,14 +16,8 @@ const NotFoundPage = () => {
       <Container>
         <Stack justifyContent={'center'}>
           <Box display={'flex'} justifyContent={'center'} alignItems={'center'} height={200}>
-            <Typography
-              fontSize={'12em'}
-              fontWeight={'bold'}
-              color={'white'}
-              textAlign={'center'}
-              mr={2}
-            >
-              404
+            <Typography fontSize={'12em'} fontWeight={'bold'} color={'white'} textAlign={'center'}>
+              401
             </Typography>
             <img src={LogoWhite} alt='logo' style={{ height: '100%' }} />
           </Box>
@@ -37,7 +31,7 @@ const NotFoundPage = () => {
             fontWeight={'bold'}
             color={'white'}
           >
-            We couldn't find what you were looking for.
+            You Are Unauthorized!
           </Typography>
           <Button
             component={Link}
@@ -53,4 +47,4 @@ const NotFoundPage = () => {
   );
 };
 
-export default NotFoundPage;
+export default UnAuthorizedPage;

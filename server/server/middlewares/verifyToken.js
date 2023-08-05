@@ -18,6 +18,7 @@ const verifyToken = async function (req, res, next) {
       return res.status(403).json({ error: "Not Authorized!" });
     }
     req.user = user;
+    req.isAdmin = user.isAdmin;
     next();
   } catch (ex) {
     console.log(chalk.yellow("Invalid token!"));

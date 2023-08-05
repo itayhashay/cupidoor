@@ -1,7 +1,7 @@
 import LandingPage from '../Landing/LandingPage';
 import NotFoundPage from '../404/404';
 import ProtectedRoute from './ProtectedRoute';
-import UnAuthorizedPage from '../401/401';
+import UnAuthorizedPage from '../403/403';
 import MainFeed from '../MainFeed';
 import QuestionsStepper from '../QuestionsStepper';
 import HomeRouter from '../HomeRouter';
@@ -10,6 +10,7 @@ import UserRouter from '../UserRouter';
 import Landing from '../Landing/Landing';
 import PrerequisiteRoute from './PrerequisiteRoute';
 import PreFetch from './PreFetch';
+import AdminRouter from '../Admin';
 
 // Will Change!!!!
 let tmpApartments: any = [];
@@ -47,6 +48,12 @@ const appRoutes = [
       </PrerequisiteRoute>
     ),
   },
+  {
+    path:"/admin/*",
+    element: (
+      <AdminRouter/>
+    )
+  }
 ];
 
 export default appRoutes;

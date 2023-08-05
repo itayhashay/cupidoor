@@ -29,7 +29,6 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: true,
-      
     },
     role: {
       type: String,
@@ -40,14 +39,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    jobTitle:{
-      type:String,
-      required:false
+    jobTitle: {
+      type: String,
+      required: false,
     },
     password: {
       type: String,
       required: true,
-      min:[8,"Password length should be at least 8 characters!"]
+      min: [8, "Password length should be at least 8 characters!"],
     },
     salt: {
       type: String,
@@ -57,6 +56,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
       required: false,
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
     },
     createdAt: {
       type: Date,
