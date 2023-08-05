@@ -175,9 +175,10 @@ const ChatService = {
     }
     return response;
   },
-  getConversations: async function (user) {
+  getConversations: async function (user,role) {
     try {
-      const matches = await UsersRelationsModel.aggregate([
+      const filter = role === "tenant" ? [ { tenant: user._id }]: [{ "Apartment.user": user._id }]
+      const matches = UsersRelationsModel.aggregate([
         {
           $lookup: {
             from: "apartments",
@@ -195,7 +196,7 @@ const ChatService = {
         },
         {
           $match: {
-            $or: [{ "Apartment.user": user._id }, { tenant: user._id }],
+            $or:filter,
           },
         },
       ]).exec();
