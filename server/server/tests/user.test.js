@@ -62,7 +62,7 @@ describe('Test Authentications Methods', () => {
         }).set('Authorization', `Bearer ${accessToken}`);
         expect(response.statusCode).toEqual(200)
     });
-    test('test get user by id', async () => {
+    test('test delete user', async () => {
         const response = await request(app).delete(`/user/${newUser._id}`).send().set('Authorization', `Bearer ${accessToken}`);
         expect(response.statusCode).toEqual(204)
     });
