@@ -105,7 +105,9 @@ const HouseCard = ({
 
           {!isMyProperties ? (
             <Fab sx={likeButtonStyles} onClick={handleClickFavorite} id='favorite-button'>
-              {isFavoriteLoading ? <CircularProgress color='error'></CircularProgress> : isFavorite ? (
+              {isFavoriteLoading ? (
+                <CircularProgress color='error'></CircularProgress>
+              ) : isFavorite ? (
                 <Tooltip title='Liked'>
                   <FavoriteIcon />
                 </Tooltip>
@@ -160,7 +162,9 @@ const HouseCard = ({
           <Grid container padding={1}>
             <Grid item xs>
               <Box display={'flex'} alignItems={'center'}>
-                <MeetingRoomIcon color='secondary'></MeetingRoomIcon>
+                <Avatar sx={{ bgcolor: '#3845653d', width: 32, height: 32 }}>
+                  <MeetingRoomIcon color='primary'></MeetingRoomIcon>
+                </Avatar>
                 <Typography ml={0.5} variant='subtitle2' color={'GrayText'}>
                   {houseData.rooms} rooms
                 </Typography>
@@ -168,7 +172,9 @@ const HouseCard = ({
             </Grid>
             <Grid item xs>
               <Box display={'flex'} alignItems={'center'}>
-                <SquareFootIcon color='secondary'></SquareFootIcon>
+                <Avatar sx={{ bgcolor: '#3845653d', width: 32, height: 32 }}>
+                  <SquareFootIcon color='primary'></SquareFootIcon>
+                </Avatar>
                 <Typography ml={0.5} variant='subtitle2' color={'GrayText'}>
                   {houseData.houseArea}
                 </Typography>
@@ -179,7 +185,9 @@ const HouseCard = ({
             </Grid>
             <Grid item>
               <Box display={'flex'} alignItems={'center'}>
-                <StairsIcon color='secondary'></StairsIcon>
+                <Avatar sx={{ bgcolor: '#3845653d', width: 32, height: 32 }}>
+                  <StairsIcon color='primary'></StairsIcon>
+                </Avatar>
                 <Typography ml={0.5} variant='subtitle2' color={'GrayText'}>
                   Floor {houseData.floor}
                 </Typography>
