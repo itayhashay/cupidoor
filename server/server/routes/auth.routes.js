@@ -3,6 +3,7 @@ const router = express.Router();
 const AuthController = require('../controller/auth.controller');
 const { CREATED, OK, NOT_FOUND, NO_CONTENT, INTERNAL_SERVER_ERROR } = require('http-status-codes');
 const { validateUserSignUp } = require('../validator/auth.validator');
+const verifyToken = require('../middlewares/verifyToken');
 
 
  /**
@@ -151,6 +152,28 @@ router.post('/signUp', [validateUserSignUp], AuthController.signUp);
  *               $ref: '#/components/schemas/Tokens'
  */
 router.post('/signIn', AuthController.signIn);
+
+/**
+ * @swagger
+ * /password:
+ *   put:
+ *     summary: Update user's password.
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserLogin'
+ *     responses:
+ *       200:
+ *         description: The access & refresh tokens
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Tokens'
+ */
+router.put('/password',[verifyToken], AuthController.updatePassword);
 
 /**
  * @swagger

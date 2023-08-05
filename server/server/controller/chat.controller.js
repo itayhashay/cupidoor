@@ -19,7 +19,7 @@ const ChatController = {
   },
   getConversations: async (req, res, next) => {
     try {
-      const conversations = await ChatService.getConversations(req.user);
+      const conversations = await ChatService.getConversations(req.user,req.params.role);
       return res.json({ conversations });
     } catch (ex) {
       next(ex);

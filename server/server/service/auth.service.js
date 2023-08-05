@@ -135,6 +135,31 @@ const AuthService = {
       }
     );
   },
+  async updatePassword(userId,currentPassword,newPassword){
+    const user = await UserService.getUser(userId);
+
+    if (!user || !bcrypt.compareSync(currentPassword, user?.password)) {
+      throw new Error("Wrong password!");
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    user.password = hashedPassword;
+    user.salt = salt;
+    await user.save();
+    await _resetRefreshToken(user.email);
+    return await this.signIn(user.email, newPassword, null);
+
+  },
+  async adminUpdatePassword(userId,newPassword){
+    const user = await UserService.getUser(userId);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    user.password = hashedPassword;
+    user.salt = salt;
+    await user.save();
+    await _resetRefreshToken(user.email);
+
+  }
 };
 
 async function _resetRefreshToken(userEmail) {

@@ -10,10 +10,16 @@ import {
   TextField,
   Tooltip,
   Typography,
+  Select,
+  MenuItem
 } from '@mui/material';
-import { ProfileSectionTitle } from './styles';
+import {
+  ProfilePersonalDetailsTitleContainer,
+  ProfilePersonalDetailsTitleLabel,
+  ProfileSectionTitle,
+} from "./styles";
 import { User } from '../../types/user';
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useMemo } from 'react';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
@@ -22,8 +28,79 @@ import { useSnackbar } from '../../context/SnackbarContext';
 import { AxiosError } from 'axios';
 import { CupidAxiosError } from '../../types/cupidAxiosError';
 import { useFormik } from 'formik';
-import { userDetailsScheme } from '../../utils/FormikSchema';
+import { userPasswordSchema } from '../../utils/FormikSchema';
 import useAPI from '../../hooks/useAPI';
+import BadgeIcon from "@mui/icons-material/Badge";
+
+ type AccountField = {
+  name: string;
+  path: string;
+  icon: JSX.Element;
+  type?: string;
+  options?: { title: string; value: string }[];
+};
+type PersonalSecurityType = {
+  [key: string]: any;
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
+const FieldComponent = ({
+  field,
+  value,
+  disabled,
+  isReadOnly,
+  handleFieldChange,
+  error,
+  helperText,
+}: {
+  field: AccountField;
+  value: string;
+  disabled: boolean;
+  isReadOnly: boolean;
+  handleFieldChange: any;
+  error: any;
+  helperText: any;
+}) => {
+  return (
+    <Grid
+      item
+      xs={6}
+      sx={{ ...ProfilePersonalDetailsTitleContainer }}
+      key={field.path}
+    >
+      <Box display={"flex"} alignItems={"center"} mb={1}>
+        {/* {field.icon} */}
+        <Typography sx={{ ...ProfilePersonalDetailsTitleLabel }}>
+          {field.name}
+        </Typography>
+      </Box>
+      <Box display={"flex"}>
+        {(() => {
+             return (
+              <TextField
+                id={field.path}
+                name={field.path}
+                key={field.path}
+                disabled={disabled}
+                error={error}
+                type={field.type}
+                helperText={helperText}
+                // sx={{ width: 210 }}
+                value={value}
+                size="small"
+                fullWidth
+                onChange={handleFieldChange}
+                inputProps={{ readOnly: !isReadOnly }}
+              ></TextField>
+            );
+        })()}
+      </Box>
+    </Grid>
+  );
+};
+
+
 const PersonalSecurity = ({
   user,
   handleEditMode,
@@ -32,33 +109,30 @@ const PersonalSecurity = ({
   handleEditMode: (flag: boolean) => void;
 }) => {
   const [isEditMode, _setIsEditMode] = useState(false);
-  const [firstName, setFirstName] = useState(user.firstName);
-  const [userDetails, setUserDetails] = useState(() => ({ ...user }));
   const [isLoading, setIsLoading] = useState(false);
-  const { updateUser } = useAPI();
+  const { updatePassword } = useAPI();
   const { setSnackBarState } = useSnackbar();
   const formik = useFormik({
-    initialValues: { ...userDetails },
-    validationSchema: userDetailsScheme,
+    initialValues: { currentPassword:"",newPassword:"",confirmPassword:"" } as PersonalSecurityType,
+    validationSchema: userPasswordSchema,
     onSubmit: (values) => {
       handleSaveClick(values);
     },
   });
 
-  useEffect(() => {
-    setUserDetails({ ...user });
-  }, [user]);
+
   const setIsEditMode = (flag: boolean) => {
     _setIsEditMode(flag);
     handleEditMode(flag);
   };
 
-  const handleSaveClick = async (newUserDetails: User) => {
+  const handleSaveClick = async (values:PersonalSecurityType) => {
     setIsLoading(true);
+
     try {
-      await updateUser(newUserDetails);
+      await updatePassword(values.currentPassword, values.newPassword, values.confirmPassword);
       setSnackBarState({
-        message: 'Updated Successfully!',
+        message: 'Password updated successfully!',
         severity: 'success',
         show: true,
       });
@@ -66,7 +140,7 @@ const PersonalSecurity = ({
     } catch (ex: any) {
       const error: AxiosError = ex;
       const errorData: CupidAxiosError = error.response?.data as CupidAxiosError;
-      const message = errorData ? errorData.error : "Couldn't update your details!";
+      const message = errorData ? errorData.error : "Couldn't update your password!";
       setSnackBarState({
         message: message,
         severity: 'error',
@@ -84,8 +158,30 @@ const PersonalSecurity = ({
 
   const handleCancelClick = () => {
     setIsEditMode(false);
-    formik.setValues({ ...user });
+    formik.setValues({currentPassword:"",newPassword:"",confirmPassword:"" });
   };
+  const accountFields: AccountField[] = useMemo(() => {
+    return [
+      {
+        name: 'Current Password',
+        path: 'currentPassword',
+        type: 'password',
+        icon: <BadgeIcon></BadgeIcon>,
+      },
+      {
+        name: 'New Password',
+        path: 'newPassword',
+        type: 'password',
+        icon: <BadgeIcon></BadgeIcon>,
+      },
+      {
+        name: 'Confirm Password',
+        path: 'confirmPassword',
+        type: 'password',
+        icon: <BadgeIcon></BadgeIcon>,
+      },
+    ];
+  }, []);
 
   return (
     <Grid item xs={12}>
@@ -113,15 +209,23 @@ const PersonalSecurity = ({
             )}
             {isEditMode && (
               <>
-                <Grid item xs={12}>
-                  <TextField label={'Current Password'} type='password' value={''}></TextField>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField label={'New Password'} type='password' value={''}></TextField>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField label={'Confirm New Password'} type='password' value={''}></TextField>
-                </Grid>
+                {accountFields.map((field) => {
+              return (
+                <>
+                  <FieldComponent
+                    key={field.path}
+                    field={field}
+                    value={formik.values[field.path]}
+                    disabled={isLoading}
+                    isReadOnly={isEditMode}
+                    handleFieldChange={formik.handleChange}
+                    error={formik.touched[field.path] && Boolean(formik.errors[field.path])}
+                    helperText={formik.touched[field.path] && formik.errors[field.path]}
+                  ></FieldComponent>
+                  <Grid item xs={6}></Grid>
+                </>
+              );
+            })}
                 <Grid item xs={12} my={3}>
                   <Box display={'flex'} justifyContent={'space-between'}>
                     <Button
@@ -146,7 +250,6 @@ const PersonalSecurity = ({
                         )
                       }
                       variant='contained'
-                      // onClick={handleSaveClick}
                       type='submit'
                       fullWidth
                     >
