@@ -345,11 +345,15 @@ const updateApartment = async (id, apartmentData) => {
   try {
     const apartment = await Apartment.findById(id);
     let { newImages, removedImages } = apartmentData;
-    let updatedImagesArray = apartment.images.filter(
-      (image) => !removedImages.includes(image.name)
-    );
-    let newSavedimages = await Storage.uploadApartmentImages(id, newImages);
-    apartment.images = [...updatedImagesArray, ...newSavedimages];
+    let updatedImagesArray = apartment.images;
+    if(removedImages != null)
+      updatedImagesArray = apartment.images.filter(
+        (image) => !removedImages.includes(image.name)
+      );
+    let newSavedimages;
+    if(newImages != null)
+      newSavedimages = await Storage.uploadApartmentImages(id, newImages);
+    apartment.images = newImages != null ? [...updatedImagesArray, ...newSavedimages] :  [...updatedImagesArray];
     if (apartmentData.description != null) {
       apartment.description = apartmentData.description;
     }

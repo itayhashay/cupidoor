@@ -28,8 +28,14 @@ const getQuestion = async (id) => {
 const updateQuestion= async (id, questionData) => {
   try {
     const question = await Question.findById(id);
-    if (questionData.question != null) {
-      question.question = questionData.question;
+    if (questionData.questionName != null) {
+      question.questionName = questionData.questionName;
+    }
+    if (questionData.tenant != null) {
+      question.tenant = questionData.tenant;
+    }
+    if (questionData.landlord != null) {
+      question.landlord = questionData.landlord;
     }
     return await question.save();
   } catch (err) {

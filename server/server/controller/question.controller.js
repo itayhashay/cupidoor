@@ -10,23 +10,61 @@ const {
 } = require("http-status-codes");
 const questionService = require("../service/question.service");
 
-// const QuestionsController = {
-//   async createQuestion(req, res, next) {
-//     const questionDetails = req.body;
-//     try {
-//       res
-//         .status(OK)
-//         .json(await questionService.createQuestion(questionDetails));
-//     } catch (ex) {
-//       res.status(INTERNAL_SERVER_ERROR).json({ error: ex.message });
-//       next(ex);
-//     }
-//   },
-// };
+/**
+ * @swagger
+ * tags:
+ *   name: Question
+ *   description: Question management APIs
+ */
 
-// module.exports = QuestionsController;
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Question:
+ *       type: object
+ *       required:
+ *         - questionName
+ *         - tenant
+ *         - landlord
+ *       properties:
+ *         questionName:
+ *           type: string
+ *         tenant:
+ *           type: string
+ *         landlord:
+ *           type: string
+ *       example:
+ *         questionName: "Sample Question"
+ *         tenant: "Question for tenant?"
+ *         landlord: "Question for landlord?"
+ */
 
 
+/**
+ * @swagger
+ * /question:
+ *   post:
+ *     summary: Create a new question
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Question]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Question'
+ *     responses:
+ *       201:
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Question'
+ *       500:
+ *         description: Internal Server Error
+ */
 router.post("/", async (req,res,next) => {
   try {
     const question = await questionService.createQuestion(req.body);
@@ -36,6 +74,27 @@ router.post("/", async (req,res,next) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /question:
+ *   get:
+ *     summary: Get all questions
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Question]
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Question'
+ *       500:
+ *         description: Internal Server Error
+ */
 router.get("/", async (req,res,next) => {
   try {
     const questions = await questionService.getQuestions();
@@ -45,6 +104,33 @@ router.get("/", async (req,res,next) => {
   }
 });
 
+/**
+ * @swagger
+ * /question/{id}:
+ *   get:
+ *     summary: Get a question by ID
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Question]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the question to retrieve
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Question'
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
 router.get("/:id", async (req,res,next) => {
   try {
     const question = await questionService.getQuestion(req.params.id);
@@ -58,6 +144,37 @@ router.get("/:id", async (req,res,next) => {
   }
 });
 
+/**
+ * @swagger
+ * /question/{id}:
+ *   put:
+ *     summary: Update a question by ID
+ *     tags: [Question]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the question to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Question'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Question'
+ *       500:
+ *         description: Internal Server Error
+ */
 router.put("/:id", async (req,res,next) => {
   try {
     const updatedQuestion = await questionService.updateQuestion(
@@ -69,6 +186,28 @@ router.put("/:id", async (req,res,next) => {
     next(err);
   }
 });
+
+/**
+ * @swagger
+ * /question/{id}:
+ *   delete:
+ *     summary: Delete a question by ID
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Question]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the question to delete
+ *     responses:
+ *       204:
+ *         description: No Content
+ *       500:
+ *         description: Internal Server Error
+ */
 
 router.delete("/:id", async (req,res,next) => {
   try {

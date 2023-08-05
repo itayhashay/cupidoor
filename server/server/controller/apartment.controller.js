@@ -6,9 +6,168 @@ const {
   OK,
   NOT_FOUND,
   NO_CONTENT,
-  INTERNAL_SERVER_ERROR,
+  BAD_REQUEST,
 } = require("http-status-codes");
 
+ /**
+  * @swagger
+  * tags:
+  *   name: Apartment
+  *   description: The Apartment API
+  */
+
+
+ /**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Apartment:
+ *       type: object
+ *       properties:
+ *         description:
+ *           type: string
+ *           required: true
+ *         propertyCondition:
+ *           type: string
+ *           required: true
+ *         city:
+ *           type: string
+ *           required: true
+ *         street:
+ *           type: string
+ *           required: true
+ *         houseNumber:
+ *           type: string
+ *           required: true
+ *         floor:
+ *           type: number
+ *           required: true
+ *         rooms:
+ *           type: number
+ *           required: true
+ *         elevator:
+ *           type: boolean
+ *           required: true
+ *         houseArea:
+ *           type: string
+ *           required: true
+ *         parkings:
+ *           type: number
+ *           required: true
+ *         balconies:
+ *           type: number
+ *           required: true
+ *         entranceDate:
+ *           type: string
+ *           format: date
+ *           required: true
+ *         furnished:
+ *           type: boolean
+ *           required: true
+ *         bars:
+ *           type: boolean
+ *           required: true
+ *         boiler:
+ *           type: boolean
+ *           required: true
+ *         airConditioner:
+ *           type: boolean
+ *           required: true
+ *         accessible:
+ *           type: boolean
+ *           required: true
+ *         garage:
+ *           type: boolean
+ *           required: true
+ *         shelter:
+ *           type: boolean
+ *           required: true
+ *         longTerm:
+ *           type: boolean
+ *           required: true
+ *         numOfPayments:
+ *           type: number
+ *           required: true
+ *         paymentDay:
+ *           type: number
+ *           required: true
+ *         price:
+ *           type: number
+ *           required: true
+ *         committee:
+ *           type: number
+ *           required: true
+ *         tax:
+ *           type: number
+ *           required: true
+ *         totalPrice:
+ *           type: number
+ *           required: true
+ *         images:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               url:
+ *                 type: string
+ *       example:
+ *         description: "Spacious apartment with a beautiful view"
+ *         propertyCondition: "Good"
+ *         city: "New York"
+ *         street: "Main Street"
+ *         houseNumber: "123"
+ *         floor: 5
+ *         rooms: 3
+ *         elevator: true
+ *         houseArea: "120 sqm"
+ *         parkings: 1
+ *         balconies: 1
+ *         entranceDate: "2023-07-18"
+ *         furnished: true
+ *         bars: false
+ *         boiler: true
+ *         airConditioner: true
+ *         accessible: true
+ *         garage: false
+ *         shelter: true
+ *         longTerm: true
+ *         numOfPayments: 12
+ *         paymentDay: 1
+ *         price: 1500
+ *         committee: 100
+ *         tax: 50
+ *         totalPrice: 1650
+ *         images:
+ *           - name: "Living Room"
+ *             url: "https://example.com/living-room.jpg"
+ *           - name: "Bedroom"
+ *             url: "https://example.com/bedroom.jpg"
+ */
+
+ /**
+ * @swagger
+ * /apartment:
+ *   post:
+ *     summary: Create a new apartment
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Apartment]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Apartment'
+ *     responses:
+ *       201:
+ *         description: Apartment created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Apartment'
+ */
 // Create apartment
 router.post("/", async (req, res, next) => {
   try {
@@ -19,6 +178,31 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /apartment/landlord/{userId}:
+ *   get:
+ *     summary: Get apartments by user
+ *     tags: [Apartment]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the user
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Apartment'
+ */
 router.get("/landlord/:userId", async (req, res, next) => {
   try {
     const apartments = await apartmentService.getApartmentsByUser(
@@ -30,6 +214,24 @@ router.get("/landlord/:userId", async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /apartment:
+ *   get:
+ *     summary: Get all apartments
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Apartment]
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Apartment'
+ */
 // Get all apartments
 router.get("/", async (req, res, next) => {
   try {
@@ -40,6 +242,31 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /apartment/{id}:
+ *   get:
+ *     summary: Get apartment by ID
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Apartment]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the apartment
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Apartment'
+ *       404:
+ *         description: Apartment not found
+ */
 // Get apartment by ID
 router.get("/:id", async (req, res, next) => {
   try {
@@ -54,6 +281,38 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /apartment/{id}:
+ *   put:
+ *     summary: Update an apartment
+ *     tags: [Apartment]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the apartment
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Apartment'
+ *     responses:
+ *       200:
+ *         description: Apartment updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Apartment'
+ *       404:
+ *         description: Apartment not found
+ */
 // Update apartment
 router.put("/:id", async (req, res, next) => {
   try {
@@ -71,6 +330,28 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /apartment/{id}:
+ *   delete:
+ *     summary: Delete an apartment
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Apartment]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the apartment
+ *     responses:
+ *       204:
+ *         description: Apartment deleted successfully
+ *       404:
+ *         description: Apartment not found
+ */
 // Delete apartment
 router.delete("/:id", async (req, res, next) => {
   try {

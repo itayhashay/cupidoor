@@ -4,6 +4,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const mongoSanitize = require("express-mongo-sanitize");
 const cookieParaser = require("cookie-parser");
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
 
 const {initializeChat} = require("./middlewares/chat");
 const errorHandler = require("./middlewares/errorHandler");
@@ -11,6 +13,27 @@ require("dotenv").config();
 
 const PORT = process.env.PORT || 2308;
 const app = express();
+
+const options = {
+	definition: {
+		openapi: "3.0.0",
+		info: {
+			title: "Cupidoor Swagger",
+			version: "1.0.0",
+			description: "Swagger For The Best Tenant-Apartments Matching Website!",
+		},
+		servers: [
+			{
+				url: "http://localhost:2308",
+			},
+		],
+	},
+	apis: ["./routes/*.js", "./controller/*.js"],
+};
+
+const specs = swaggerJsDoc(options);
+
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 app.use(
   cors({
