@@ -33,6 +33,30 @@ const AuthController = {
       next(ex);
     }
   },
+  async updatePassword(req, res, next) {
+    const { currentPassword,newPassword, confirmPassword } = req.body;
+    try {
+      if(newPassword!=null && newPassword !== confirmPassword){
+        return res
+          .status(400)
+          .json({ success: false, error: "Passwords not match!" });
+      }
+      const { accessToken, refreshToken, user } =
+        await AuthService.updatePassword(
+          req.user?._id,
+          currentPassword,
+          newPassword
+        );
+      res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        maxAge: 2*24 * 60 * 60 * 1000,
+      });
+      res.status(OK).json({ accessToken, user });
+    } catch (ex) {
+      next(ex);
+    }
+  },
+  
   async signOut(req, res, next) {
     try {
       const cookies = req.cookies;

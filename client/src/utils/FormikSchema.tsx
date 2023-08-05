@@ -52,3 +52,15 @@ export const userDetailsScheme = Yup.object().shape({
   description:Yup.string().test("description-max-word-count","Description must be a maximum of 120 words",wordCountValidator),
   role: Yup.string().required("Role is a required field"),
 });
+
+export const userPasswordSchema = Yup.object().shape({
+  currentPassword: Yup.string()
+    .required('Password is a required field')
+    .min(8, 'Password must be at least 8 characters'),
+  newPassword: Yup.string()
+    .required('New password is a required field')
+    .min(8, 'New password must be at least 8 characters'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('newPassword'), ''], 'Passwords must match')
+    .required('Confirm password is a required field'),
+});

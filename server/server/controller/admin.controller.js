@@ -9,6 +9,7 @@ const {
   INTERNAL_SERVER_ERROR,
 } = require("http-status-codes");
 const ChatService = require("../service/chat.service");
+const AuthService = require("../service/auth.service");
 
 const AdminController = {
   async getAllUsers(req, res, next) {
@@ -149,6 +150,18 @@ const AdminController = {
         messages: totalChatMessages[0].count,
       };
       res.status(200).json({ success: true, chatsAnalytics });
+    } catch (ex) {
+      next(ex);
+    }
+  },
+  async adminUpdateUser(req, res, next) {
+    const { userId,newPassword } = req.body;
+    try {
+      if (!req.isAdmin){
+        return res.status(403).json({ sucess: false, error: "UnAuthorized!" });
+      }
+      await AuthService.adminUpdatePassword(userId, newPassword);
+        res.status(200).json({ success: true });
     } catch (ex) {
       next(ex);
     }

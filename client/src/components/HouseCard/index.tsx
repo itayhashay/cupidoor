@@ -81,6 +81,10 @@ const HouseCard = ({
     setEditOpen(true);
   };
 
+  const handleApartmentSave = ()=>{
+   window.location.reload(); 
+  }
+
   return (
     <>
       <Link to={`/apartment/${houseData._id}`}>
@@ -228,6 +232,7 @@ const HouseCard = ({
       <AddProperty
         isOpen={editOpen}
         onClose={() => setEditOpen(false)}
+        handleSave={handleApartmentSave}
         houseData={houseData}
         isEdit={true}
       />

@@ -7,6 +7,7 @@
       "match": "/match",
       "signIn": "/signIn",
       "signUp": "/signUp",
+      "updatePassword": "/password",
       "addApartment": "/apartment",
       "getApartment": "/apartment",
       "getLandloard": "/apartment/landlord",
@@ -21,7 +22,8 @@
       "chatsAnalytics": "/admin/analytics/chats",
       "adminUsers": "/admin/users",
       "adminUser": "/admin/user",
-      "adminApartments": "/admin/apartments"
+      "adminApartments": "/admin/apartments",
+      "adminUpdatePassword": "/admin/password"
     }
   }
 }

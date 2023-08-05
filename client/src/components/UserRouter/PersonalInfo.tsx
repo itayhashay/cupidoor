@@ -9,8 +9,6 @@ import {
   Drawer,
   Tooltip,
   IconButton,
-  Button,
-  CircularProgress,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import {
@@ -34,8 +32,7 @@ import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import PersonalDetails from "./PersonalDetails";
 import PersonalInfoAnswers from "./PersonalInfoAnswers";
 import { useConfirmationModal } from "../../context/ConfirmationModalContext";
-import { Edit, Edit as EditIcon, Height } from "@mui/icons-material";
-import { useAuth } from "../../context/AuthContext";
+import { Edit as EditIcon, Height } from '@mui/icons-material';
 import CupidoorSpinner from "../CupidoorSpinner";
 import PersonalSecurity from "./PersonalSecurity";
 import BackButton from "../BackButton";

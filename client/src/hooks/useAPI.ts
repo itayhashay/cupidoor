@@ -140,6 +140,18 @@ const useAPI = () => {
     }
   };
 
+  const adminUpdatePassword = async (userId:string,newPassword:string) => {
+    try {
+      const response: AxiosResponse = await axiosPrivate.put(
+        config.api.routes.adminUpdatePassword,
+        { userId, newPassword },
+      );
+      return response.data;
+    } catch (ex) {
+      throw ex;
+    }
+  };
+
   const approveTenant = async (tenantId: string, apartmentId: string) => {
     const response = await axiosPrivate.post(`${config.api.routes.approveTenant}/${tenantId}`, {
       apartmentId,
@@ -166,6 +178,21 @@ const useAPI = () => {
       throw ex;
     }
   };
+
+  const updatePassword = async (currentPassword:string,newPassword:string,confirmPassword:string)=>{
+    try {
+      const response: AxiosResponse = await axiosPrivate.put(config.api.routes.updatePassword, {
+        currentPassword,
+        newPassword,
+        confirmPassword
+      });
+      if (response.status === 200) {
+        setUser(response.data);
+      }
+    } catch (ex) {
+      throw ex;
+    }
+  }
 
   const fetchUser = async () => {
     const response = await axiosPrivate.get('/user');
@@ -198,7 +225,9 @@ const useAPI = () => {
     getAdminUsers,
     getAdminUser,
     getAdminApartments,
-    adminUpdateUser
+    adminUpdateUser,
+    updatePassword,
+    adminUpdatePassword
   };
 };
 

@@ -6,11 +6,9 @@ import {
   FormControl,
   FormHelperText,
   Grid,
-  Icon,
   IconButton,
   MenuItem,
   Select,
-  SelectChangeEvent,
   TextField,
   Tooltip,
   Typography,
@@ -18,19 +16,14 @@ import {
 import {
   ProfilePersonalDetailsTitleContainer,
   ProfilePersonalDetailsTitleLabel,
-  ProfilePersonalDetailsValue,
   ProfileSectionTitle,
 } from "./styles";
 import { User } from "../../types/user";
-import EmailIcon from "@mui/icons-material/Email";
 import BadgeIcon from "@mui/icons-material/Badge";
-import PhoneIcon from "@mui/icons-material/Phone";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import { useAuth } from "../../context/AuthContext";
 import { useSnackbar } from "../../context/SnackbarContext";
 import { AxiosError } from "axios";
 import { CupidAxiosError } from "../../types/cupidAxiosError";
