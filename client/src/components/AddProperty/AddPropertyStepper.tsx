@@ -14,7 +14,7 @@ import { getUserId } from '../../utils/localStorage';
 import { useNavigate } from "react-router-dom";
 import { Apartment } from '../../types/apartment';
 
-const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (flag?:boolean) => void, houseData?: Apartment, isEdit: boolean}) => {
+const AddPropertyStepper = ({handleClose, houseData, isEdit, nextStep} : {handleClose: (flag?:boolean) => void, houseData?: Apartment, isEdit: boolean, nextStep:(apartmentId: number) => void}) => {
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newApartmentData, setNewApartmentData] = useState<StepperApartment>(DEFAULT_NEW_APARTMENT_DATA);
@@ -51,18 +51,17 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
     try {
       if(isEdit) {
         const response: AxiosResponse = await editApartment(newApartmentData);
-        response.status === 201 && navigate(`/apartment/${response.data._id}`);
+        nextStep(response.data._id);
       } else {
         console.log("NOT EDIT")
         const response: AxiosResponse = await addApartment(newApartmentData);
-        response.status === 201 && navigate(`/apartment/${response.data._id}`);
+        nextStep(response.data._id);
       }
       return { success: true };
     } catch (error) {
       return { success: false, error };
     } finally {
       setIsLoading(false);
-      handleClose(true);
     }
   }
 

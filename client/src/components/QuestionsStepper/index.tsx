@@ -1,4 +1,4 @@
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
 import Stepper from '@mui/material/Stepper';
@@ -14,7 +14,7 @@ import HandshakeIcon from '@mui/icons-material/Handshake';
 import { StepIconProps } from '@mui/material/StepIcon';
 import Box from '@mui/material/Box/Box';
 import Button from '@mui/material/Button/Button';
-import { QUESTIONS } from './constant';
+import { QUESTIONS, QUESTIONS_STATE } from './constant';
 import { ColorlibConnector, ColorlibStepIconRoot, QuestionFormSection } from './styles';
 import { useEffect, useState } from 'react';
 import AnswerForm from './AnswerForm';
@@ -48,7 +48,7 @@ function ColorlibStepIcon(props: StepIconProps) {
   );
 }
 
-export default function QuestionsStepper({ displayHouses }: { displayHouses: Function }) {
+export default function QuestionsStepper({ displayHouses, state, propertyId }: { displayHouses: Function, state: QUESTIONS_STATE, propertyId?: number }) {
   const { user } = useAuth();
   const [questions, setQuestions] = useState<Question[]>([] as Question[]);
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -57,6 +57,8 @@ export default function QuestionsStepper({ displayHouses }: { displayHouses: Fun
   const { setUserAnswers, getTenantMatches, fetchUser } = useAPI();
   const { setSnackBarState } = useSnackbar();
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchQuestions = async () => {
       setIsLoading(true);
@@ -109,14 +111,17 @@ export default function QuestionsStepper({ displayHouses }: { displayHouses: Fun
 
   const handleSubmit = async () => {
     setIsLoading(true);
+
+    // TODO: CHANGE TO SET APARTMENT ANSWERS
     const submitResponse: AxiosResponse = await setUserAnswers(answers);
     if (submitResponse.status === 201) {
+      if(state === QUESTIONS_STATE.LANDLORD && propertyId) {
+        navigate(`/apartment/${propertyId}`);
+        return;
+      }
+
       await fetchUser();
       const res = await getTenantMatches(answers);
-
-      // TODO: Convert to Apartment type and show the screen.
-      // If all Selected -> move to home page
-
       displayHouses(res);
     } else {
       setSnackBarState({
@@ -133,14 +138,14 @@ export default function QuestionsStepper({ displayHouses }: { displayHouses: Fun
   };
 
   const isLastStep = activeStep === QUESTIONS.length - 1;
-  if (user?.answeredQuestions) {
+  if (user?.answeredQuestions && state === QUESTIONS_STATE.TENANT) {
     return <Navigate to={'/home/all-apartments'}></Navigate>;
   } else {
     return isLoading ? (
       <CupidoorSpinner></CupidoorSpinner>
     ) : (
-      <Box sx={{ display: 'flex', justifyContent: 'center' }} mt={4}>
-        <Card sx={{ width: '60%', borderRadius: '24px' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }} mt={0}>
+        <Card sx={{ width:'100%', borderRadius: '24px' }}>
           <Stack sx={{ width: '100%' }} spacing={3}>
             <Stepper
               sx={{ marginTop: '24px' }}
@@ -190,7 +195,7 @@ export default function QuestionsStepper({ displayHouses }: { displayHouses: Fun
                     onClick={handleSubmit}
                     sx={{ mt: 1, mr: 1 }}
                   >
-                    {'Find My Home!'}
+                    {state === QUESTIONS_STATE.TENANT ? 'Find My Home!' : 'Publish my property!'}
                   </Button>
                 ) : (
                   <Button variant='contained' onClick={handleNext} sx={{ mt: 1, mr: 1 }}>
@@ -203,5 +208,5 @@ export default function QuestionsStepper({ displayHouses }: { displayHouses: Fun
         </Card>
       </Box>
     );
-  }
+}
 }
