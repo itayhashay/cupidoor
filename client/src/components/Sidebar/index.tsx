@@ -1,10 +1,16 @@
-import { useEffect, useState } from 'react';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import IconButton from '@mui/material/IconButton';
+import { useContext, useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { List, Box, Divider, Tooltip, Typography, IconButton } from '@mui/material';
+import { Grid, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { CheckOutlined, CloseOutlined } from '@mui/icons-material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TuneIcon from '@mui/icons-material/Tune';
+import { ROUTES_DEFAULT_STATE, USER_ROUTES } from '../UserRouter/constants';
+import { DEFAULT_FILTERS } from '../Filters/constants';
+import { Filter } from '../../types/filters';
+import RangeSlider from '../Filters/RangeSlider';
+import CheckBoxFilters from '../Filters/CheckBoxFilters';
 import { Drawer, DrawerHeader } from './styles';
 import {
   BasicFilters,
@@ -13,29 +19,7 @@ import {
   filtersToUrl,
   queryToFilters,
 } from '../../utils/filters';
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Tooltip,
-  Typography,
-} from '@mui/material';
-import { DEFAULT_FILTERS } from '../Filters/constants';
-import { CheckBoxFilter, Filter } from '../../types/filters';
-import RangeSlider from '../Filters/RangeSlider';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {
-  ROUTES_DEFAULT_STATE,
-  USER_ROUTES,
-  USER_ROUTES_DEFAULT_STATE,
-} from '../UserRouter/constants';
-import CheckBoxFilters from '../Filters/CheckBoxFilters';
-import { CheckOutlined, CloseOutlined } from '@mui/icons-material';
+import AuthContext from '../../context/AuthContext';
 
 export type FiltersStateType = {
   [key: string]: FilterStateValue;
@@ -44,6 +28,7 @@ export type FiltersStateType = {
 export type FilterStateValue = number[] | boolean | null;
 
 const Sidebar = () => {
+  const { user } = useContext(AuthContext);
   const [open, setOpen] = useState(true);
   const [expanded, setExpanded] = useState<string | false>(false);
   const [filters, setFilters] = useState<FiltersStateType>(DEFAULT_FILTERS);
@@ -157,7 +142,6 @@ const Sidebar = () => {
     );
   };
 
-  // TODO: How to display life style filters?
   return (
     <>
       <Drawer
@@ -192,35 +176,39 @@ const Sidebar = () => {
         </DrawerHeader>
         <Box>
           <List>
-            {UserMenuItems.map((item) => (
-              <ListItem key={item.id} disablePadding sx={{ display: 'block' }}>
-                <Link className='sidebar-link' to={`home/${item.urlName}`}>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: 'space-between',
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : 'auto',
-                        justifyContent: 'center',
-                        height: '30px',
-                        width: '30px',
-                      }}
-                    >
-                      {navStates[item.urlName] ? item.selectedIcon : item.icon}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={item.displayName}
-                      sx={{ opacity: open ? 1 : 0, color: '#4d4d4d' }}
-                    />
-                  </ListItemButton>
-                </Link>
-              </ListItem>
-            ))}
+            {UserMenuItems.map(
+              (item) =>
+                user &&
+                item.roles.includes(user?.role) && (
+                  <ListItem key={item.id} disablePadding sx={{ display: 'block' }}>
+                    <Link className='sidebar-link' to={`home/${item.urlName}`}>
+                      <ListItemButton
+                        sx={{
+                          minHeight: 48,
+                          justifyContent: 'space-between',
+                          px: 2.5,
+                        }}
+                      >
+                        <ListItemIcon
+                          sx={{
+                            minWidth: 0,
+                            mr: open ? 3 : 'auto',
+                            justifyContent: 'center',
+                            height: '30px',
+                            width: '30px',
+                          }}
+                        >
+                          {navStates[item.urlName] ? item.selectedIcon : item.icon}
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={item.displayName}
+                          sx={{ opacity: open ? 1 : 0, color: '#4d4d4d' }}
+                        />
+                      </ListItemButton>
+                    </Link>
+                  </ListItem>
+                ),
+            )}
           </List>
           {navStates[USER_ROUTES.ALL_APARTMENTS] && (
             <Box>
@@ -259,11 +247,7 @@ const Sidebar = () => {
                   </Tooltip>
                   <Tooltip title='Apply Filters'>
                     <span>
-                      <IconButton
-                        onClick={applyFilters}
-                        color='primary'
-                        // disabled={filterCount == 0}
-                      >
+                      <IconButton onClick={applyFilters} color='primary'>
                         <CheckOutlined></CheckOutlined>
                       </IconButton>
                     </span>
