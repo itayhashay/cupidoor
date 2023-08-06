@@ -9,28 +9,50 @@ import { StepperApartment, UploadedImage } from './types';
 import { DEFAULT_NEW_APARTMENT_DATA, STEPS } from './constants';
 import useAPI from '../../hooks/useAPI';
 import { AxiosResponse } from 'axios';
-import { convertFilePondImagesToBase64 } from '../../utils/base64';
 import { getUserId } from '../../utils/localStorage';
 import { useNavigate } from "react-router-dom";
 import { Apartment } from '../../types/apartment';
+import usePropertyValidator from '../../hooks/usePropertyValidator';
 
 const AddPropertyStepper = ({handleClose, houseData, isEdit, nextStep} : {handleClose: (flag?:boolean) => void, houseData?: Apartment, isEdit: boolean, nextStep:(apartmentId: number) => void}) => {
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<any>({});
   const [newApartmentData, setNewApartmentData] = useState<StepperApartment>(DEFAULT_NEW_APARTMENT_DATA);
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]) 
 
-  const navigate = useNavigate();
   const {addApartment, editApartment} = useAPI();
+  const { validateStep } = usePropertyValidator();
+  
+  useEffect(() => {
+    if(activeStep === -1) setActiveStep(0);
+  }, [activeStep]);
 
   useEffect(() => {
     houseData && setNewApartmentData({...houseData , newImages: [], removedImages: []} as StepperApartment);
   }, [houseData]);
 
   const saveChangesOnNext = (values: any) => {
+    console.log(activeStep)
+    console.log(values)
+
+    const validatorRes = validateStep(activeStep, values);
+
+    console.log(validatorRes)
+    const isStepValid = Object.values(validatorRes).every(value => value === false);
+    console.log(isStepValid)
+    
     setNewApartmentData((prev: StepperApartment) => { 
       return {...prev, ...values} 
     })
+
+    setErrors((prevErrors: any) => {
+      return {...prevErrors, ...validatorRes}
+    });
+
+    if(!isStepValid) {
+      handleBack();
+    }
   }
   
   const handleNext = () => {
@@ -77,15 +99,15 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit, nextStep} : {handle
       {isLoading? <CupidoorSpinner /> : (() => {
         switch (activeStep) {
           case 0:
-            return <AddressForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
+            return <AddressForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext} errors={errors}/>;
           case 1:
-            return <AboutForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
+            return <AboutForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext} errors={errors}/>;
           case 2:
-            return <PaymentsForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
+            return <PaymentsForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext} errors={errors}/>;
           case 3:
             return <UploadsForm apartmentData={newApartmentData} saveImages={(files: UploadedImage[]) => setUploadedImages(files)} uploadedImages={uploadedImages}/>;      
           default:
-            return <AddressForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
+            return <AddressForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext} errors={errors}/>;
           }
       })()}
       <Box sx={{ width: "auto",

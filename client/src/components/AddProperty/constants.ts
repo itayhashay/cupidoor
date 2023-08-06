@@ -7,7 +7,7 @@ export const DIALOG_STYLES: SxProps<Theme> = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: "80vw",
-  height: "90vh",
+  height: "95vh",
   bgcolor: 'background.paper',
   p: 4,
   border: 0,

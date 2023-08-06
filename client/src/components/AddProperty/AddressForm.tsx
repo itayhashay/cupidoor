@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { ApartmentAddress, StepperApartment } from "./types";
 import { DEFAULT_ADDRESS } from "./constants";
 
-const AddressForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void}) => {
+const AddressForm = ({apartmentData, saveChangesOnNext, errors} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void, errors: any}) => {
     const [addressState, setAddressState] = useState<ApartmentAddress>(DEFAULT_ADDRESS) 
     const addressStateRef = useRef(addressState); // Create a mutable ref
 
@@ -41,6 +41,8 @@ const AddressForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Steppe
                         focused
                         value={addressState.city}
                         onChange={handleChange} 
+                        error={errors.city}
+                        helperText={errors.city && errors.city}
                 />
             </Box>
             <Box display="flex" flexDirection="column">
@@ -49,7 +51,10 @@ const AddressForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Steppe
                                     id="street"
                                     required
                                     value={addressState.street}
-                                    onChange={handleChange} 
+                                    onChange={handleChange}
+                                    error={errors.street}
+                                    helperText={errors.street && errors.street}
+            
                                     />
 
             </Box>
@@ -63,6 +68,9 @@ const AddressForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Steppe
                         type="number"
                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                  
                         sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
+                        error={errors.houseNumber}
+                        helperText={errors.houseNumber && errors.houseNumber}
+
                     />
             </Box>
         </Box>

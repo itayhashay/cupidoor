@@ -5,8 +5,9 @@ import { generateArrayFromRange } from "../../utils/logic";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { ApartmentAbout, StepperApartment } from "./types";
 import { CHECKBOXES_DEFAULT, DEFAULT_ABOUT } from "./constants";
+import { CustomHelperText } from "../../utils/FormikSchema";
   
-const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void}) => {
+const AboutForm = ({apartmentData, saveChangesOnNext, errors} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void, errors: any}) => {
     const [aboutState, setAboutState] = useState<ApartmentAbout>(DEFAULT_ABOUT) 
     const aboutStateRef = useRef(aboutState); // Create a mutable ref
 
@@ -65,6 +66,8 @@ const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperA
                         select
                         required
                         sx={{width: '-webkit-fill-available'}}
+                        error={errors.propertyCondition}
+                        helperText={errors.propertyCondition && errors.propertyCondition}
                         >
                         {Object.values(PROPERTY_CONDITIONS).map((option, index) => (
                             <MenuItem key={index} value={option}>
@@ -81,6 +84,8 @@ const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperA
                         InputProps={{
                             endAdornment: <InputAdornment position="end">m²</InputAdornment>,
                         }}
+                        error={errors.houseArea}
+                        helperText={errors.houseArea && errors.houseArea}
                     />
                 </Box>
                 <Box display="flex" flexDirection="column" width="48%">
@@ -90,8 +95,10 @@ const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperA
                         value={aboutState.description}
                         onChange={handleChange} 
                         minRows={7.5} 
-                        style={{resize: "none", padding: "12px", fontSize: "14px", fontFamily:"'Roboto'", wordSpacing: 1.5, borderRadius: "4px", border: "1px solid #c4c4c4"}} 
+                        style={{resize: "none", padding: "12px", fontSize: "14px", fontFamily:"'Roboto'", wordSpacing: 1.5, 
+                        borderRadius: "4px", border: `1px solid ${errors.description ? 'rgb(211 48 47)':'#c4c4c4'}`}} 
                         placeholder="Describe your property, the condition of the furnishings, the frequency of maintenance, etc."/>
+                        {errors.description && <CustomHelperText>{errors.description}</CustomHelperText>}
                 </Box>
             </Box>
             <Box height="45%" display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start">

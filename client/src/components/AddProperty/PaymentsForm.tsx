@@ -6,8 +6,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from "dayjs";
 import { ApartmentPayments, StepperApartment } from "./types";
 import { DEFAULT_PAYMENTS } from "./constants";
+import { CustomHelperText } from "../../utils/FormikSchema";
 
-const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void}) => {
+const PaymentsForm = ({apartmentData, saveChangesOnNext, errors} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void, errors: any}) => {
     const [paymentsState, setPaymentsState] = useState<ApartmentPayments>(DEFAULT_PAYMENTS) 
     const paymentsStateRef = useRef(paymentsState); // Create a mutable ref
 
@@ -77,6 +78,8 @@ const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Stepp
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">₪</InputAdornment>,
                             }}
+                            error={errors.price}
+                            helperText={errors.price && errors.price}    
                         />
                 </Box>
                 <Box display="flex" flexDirection="column">
@@ -118,6 +121,8 @@ const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Stepp
                         select
                         required
                         sx={{width: '-webkit-fill-available', marginBottom: "8px"}}
+                        error={errors.numOfPayments}
+                        helperText={errors.numOfPayments && errors.numOfPayments}    
                         >
                         {generateArrayFromRange(1,12).map((option, index) => (
                             <MenuItem key={index} value={option}>
@@ -135,6 +140,7 @@ const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Stepp
                             minDate={dayjs(new Date())}
                             sx={{marginBottom: "8px"}}/>
                     </DemoContainer>
+                    {errors.entranceDate && <CustomHelperText>{errors.entranceDate}</CustomHelperText>}
                 </Box>
                 <Box display="flex" flexDirection="column">
                     <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Payment Day</Typography>
