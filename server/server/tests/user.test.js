@@ -30,7 +30,7 @@ afterAll(async () => {
     await User.findOneAndDelete({ email: 'cupi@gmail.com' });
 });
 
-describe('Test Authentications Methods', () => {
+describe('Test Users Methods', () => {
     let newUser;
     test('test create user', async () => {
         const response = await request(app).post('/user').send({

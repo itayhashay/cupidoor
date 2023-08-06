@@ -69,7 +69,7 @@ afterAll(async () => {
     await User.findOneAndDelete({ email: 'cupi@gmail.com' });
 });
 
-describe('Test Authentications Methods', () => {
+describe('Test Apartment Methods', () => {
     let newApartment;
     test('test create apartment', async () => {
         const response = await request(app).post('/apartment').send(apartment).set('Authorization', `Bearer ${accessToken}`);
