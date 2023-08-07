@@ -1,6 +1,6 @@
 {
   "api": {
-    "baseUrl": "http://localhost:2308",
+    "baseUrl": "http://193.106.55.149:3000",
     "chatPort": "2309",
     "routes": {
       "userAnswer": "/user-answer",
