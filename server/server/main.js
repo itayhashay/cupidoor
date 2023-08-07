@@ -9,9 +9,10 @@ const swaggerJsDoc = require("swagger-jsdoc");
 
 const {initializeChat} = require("./middlewares/chat");
 const errorHandler = require("./middlewares/errorHandler");
+const { env } = require("process");
 require("dotenv").config();
 
-const PORT = process.env.PORT || 2308;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 const options = {
@@ -24,7 +25,7 @@ const options = {
 		},
 		servers: [
 			{
-				url: "http://localhost:2308",
+				url: "http://193.106.55.149:3000",
 			},
 		],
 	},
@@ -60,7 +61,7 @@ const startServer = async () => {
     console.log(chalk.red(ex.stack));
   }
 
-  const server = app.listen(2308, () => {
+  const server = app.listen(process.env.PORT, () => {
     console.log(chalk.green(`\nServer listening on port: ${PORT}\n`));
   });
   initializeChat(server);
