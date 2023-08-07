@@ -38,7 +38,7 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "10.10.248.149:3000",
     credentials: true,
   })
 );
