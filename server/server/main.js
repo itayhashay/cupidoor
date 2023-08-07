@@ -14,7 +14,7 @@ require("dotenv").config();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
-const allowedOrigins = ["10.10.248.149:3000","cupidoor.cs.colman.ac.il"]
+const allowedOrigins = ["http://193.106.55.150:3000","http://cupidoor.cs.colman.ac.il"]
 
 const options = {
 	definition: {
