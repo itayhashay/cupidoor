@@ -10,6 +10,7 @@ const {
 } = require("http-status-codes");
 
 router.get("/users", AdminController.getAllUsers);
+router.put("/password", AdminController.adminUpdateUser);
 router.get("/apartments", AdminController.getAllApartments);
 router.get("/user/:userId", AdminController.getUser);
 router.get("/analytics/users", AdminController.getUsersAnalytics);

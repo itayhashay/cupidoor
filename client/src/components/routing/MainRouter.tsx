@@ -5,20 +5,19 @@ import Landing from '../Landing/Landing';
 import LandingPage from '../Landing/LandingPage';
 import UnAuthorizedPage from '../403/403';
 import NotFoundPage from '../404/404';
-// import Navbar from "../Navbar";
 
 const MainRouter = () => {
   return (
     <Routes>
-      <Route path={'/'} element={<Landing />}></Route>
-      <Route path={'/signIn'} element={<LandingPage />}></Route>
-      <Route element={<MainLayout></MainLayout>}>
+      <Route path={'/'} element={<Landing />} />
+      <Route path={'/signIn'} element={<LandingPage />} />
+      <Route element={<MainLayout />}>
         {AppRoutes.map((route, index) => (
           <Route key={index} path={route.path} element={<>{route.element}</>} />
         ))}
       </Route>
-      <Route path={'/401'} element={<UnAuthorizedPage />}></Route>
-      <Route path={'*'} element={<NotFoundPage />}></Route>
+      <Route path={'/401'} element={<UnAuthorizedPage />} />
+      <Route path={'*'} element={<NotFoundPage />} />
     </Routes>
   );
 };

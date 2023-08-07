@@ -14,7 +14,7 @@ import { getUserId } from '../../utils/localStorage';
 import { useNavigate } from "react-router-dom";
 import { Apartment } from '../../types/apartment';
 
-const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: () => void, houseData?: Apartment, isEdit: boolean}) => {
+const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (flag?:boolean) => void, houseData?: Apartment, isEdit: boolean}) => {
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newApartmentData, setNewApartmentData] = useState<StepperApartment>(DEFAULT_NEW_APARTMENT_DATA);
@@ -62,7 +62,7 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: () 
       return { success: false, error };
     } finally {
       setIsLoading(false);
-      handleClose();
+      handleClose(true);
     }
   }
 

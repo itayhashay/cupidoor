@@ -197,7 +197,6 @@ const CupidChat: React.FC = () => {
     <>
       {!isChatOpen && (
         <Fab
-          color='secondary'
           onClick={handleChatClick}
           sx={{
             position: 'absolute',
@@ -207,6 +206,11 @@ const CupidChat: React.FC = () => {
             height: 60,
             width: 60,
             zIndex: 999999,
+            bgcolor:"primary.light",
+            color:"white",
+            "&.MuiFab-root:hover":{
+              bgcolor:"secondary.main"
+            }
           }}
         >
           <ChatIcon></ChatIcon>
@@ -227,7 +231,7 @@ const CupidChat: React.FC = () => {
           <Grid
             item
             xs={12}
-            sx={{ cursor: 'pointer', bgcolor: 'secondary.main' }}
+            sx={{ cursor: 'pointer', bgcolor: 'primary.light' }}
             padding={1}
             onClick={handleChatClick}
           >
@@ -253,7 +257,13 @@ const CupidChat: React.FC = () => {
               </Tabs>
             </Grid>
           )}
-
+        <Grid item xs={12}>
+        <Box textAlign={"center"} padding={1}>
+                          <Typography variant='body1' fontWeight={"bold"} color={'black'} fontSize={"1.2em"}>
+                            {selectedTab === 0 ? "Liked Properties" : "My Properties"}
+                          </Typography>
+                        </Box>
+        </Grid>
           <Grid item xs={12} overflow={'auto'} height={'50vh'}>
             <Grid container padding={1} height={'100%'} position={'relative'}>
               {(() => {

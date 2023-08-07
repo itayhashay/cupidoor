@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, KeyboardEvent } from "react";
 import {
   Avatar,
   Box,
@@ -42,71 +42,80 @@ const ChatConversation: React.FC<ChatConversationProps> = ({
       setNewMessage("");
     }
   };
+
+  const handleInputKeyDown = (event:KeyboardEvent)=>{
+    if(event.key === "Enter"){
+      event.preventDefault();
+      if(event.shiftKey){
+        setNewMessage((oldVal) => oldVal + '\n');
+      }else{
+        handleSendClick();
+      }
+    }
+  }
   return (
-    <Stack height={"100%"}>
-      <Box display={"flex"} alignItems={"center"} mb={1}>
-        <ArrowBack sx={{ cursor: "pointer" }} onClick={handleClose}></ArrowBack>
-        <Box display={"flex"} ml={2} alignItems={"center"}>
-          <Avatar
-            src={receiver.avatar}
-            sx={{ width: 60, height: 60, mr: 1 }}
-          ></Avatar>
-          <Box alignItems={"center"}>
-          <Typography fontWeight={"bold"} variant="body2" lineHeight={1}>{receiver.name}</Typography>
-          <Typography color={"GrayText"} variant="caption">{apartmentName}</Typography>
+    <Stack height={'100%'}>
+      <Box display={'flex'} alignItems={'center'} mb={1}>
+        <ArrowBack sx={{ cursor: 'pointer' }} onClick={handleClose}></ArrowBack>
+        <Box display={'flex'} ml={2} alignItems={'center'}>
+          <Avatar src={receiver.avatar} sx={{ width: 60, height: 60, mr: 1 }}></Avatar>
+          <Box alignItems={'center'}>
+            <Typography fontWeight={'bold'} variant='body2' lineHeight={1}>
+              {receiver.name}
+            </Typography>
+            <Typography color={'GrayText'} variant='caption'>
+              {apartmentName}
+            </Typography>
           </Box>
-          
-          
         </Box>
       </Box>
       <Divider sx={{ mb: 1 }} light></Divider>
 
       {messages && messages.length > 0 ? (
-        <Stack gap={1} overflow={"auto"} maxHeight={"80%"}>
-          {(() => {
-            let lastSender: string;
-            return messages?.map((message) => {
-              const drawAvatar = lastSender !== message.sender;
-              const isUser = message.sender !== receiver._id;
-              lastSender = message.sender;
-              return (
-                <ChatMessage
-                  avatar={isUser ? receiver.avatar : userAvatar}
-                  text={message.text} 
-                  drawAvatar={drawAvatar}
-                  isUser={isUser}
-                  key={message.sender + message.createdAt}
-                ></ChatMessage>
-              );
-            });
-          })()}
-          <Typography ref={scrollRef} variant="caption">
-            You are up to date
-          </Typography>
-        </Stack>
+        <Box padding={2} overflow={'auto'} maxHeight={'80%'}>
+          <Stack gap={1} >
+            {(() => {
+              let lastSender: string;
+              return messages?.map((message) => {
+                const drawAvatar = lastSender !== message.sender;
+                const isUser = message.sender !== receiver._id;
+                lastSender = message.sender;
+                return (
+                  <ChatMessage
+                    avatar={isUser ? userAvatar : receiver.avatar}
+                    text={message.text}
+                    drawAvatar={drawAvatar}
+                    isUser={isUser}
+                    key={message.sender + message.createdAt}
+                  ></ChatMessage>
+                );
+              });
+            })()}
+            <Typography ref={scrollRef} variant='caption'>
+              You are up to date
+            </Typography>
+          </Stack>
+        </Box>
       ) : (
-        <Typography textAlign={"center"} variant={"body2"} color={"GrayText"}>
+        <Typography textAlign={'center'} variant={'body2'} color={'GrayText'}>
           No messages yet.
         </Typography>
       )}
 
-      <Box display={"flex"} mt={"auto !important"} alignItems={"center"}>
+      <Box display={'flex'} mt={'auto !important'} alignItems={'center'}>
         <TextField
           fullWidth
-          size="small"
+          size='small'
           multiline
-          id="chat-input"
-          label="Enter your message..."
-          variant={"outlined"}
+          id='chat-input'
+          label='Enter your message...'
+          variant={'outlined'}
           value={newMessage}
           maxRows={8}
+          onKeyDown={handleInputKeyDown}
           onChange={(e) => handleNewMessageChange(e.target.value)}
         ></TextField>
-        <IconButton component={"label"}>
-          <AttachFileIcon></AttachFileIcon>
-          <input hidden accept="image/*" multiple type="file" />
-        </IconButton>
-        <IconButton color="primary" onClick={handleSendClick}>
+        <IconButton color='primary' onClick={handleSendClick}>
           <SendIcon></SendIcon>
         </IconButton>
       </Box>

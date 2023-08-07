@@ -1,9 +1,9 @@
 import MainRouter from '../routing/MainRouter';
-import { Box, CssBaseline } from '@mui/material';
+import { Box } from '@mui/material';
 
 const App = () => {
   return (
-    <Box sx={{ maxHeight: "100vh", overflowY: "hidden" }}>
+    <Box sx={{ height: "100vh", overflowY: "hidden" }}>
       <MainRouter />
     </Box>
   );

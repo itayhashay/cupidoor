@@ -7,13 +7,22 @@ import CloseIcon from '@mui/icons-material/Close';
 import { DIALOG_STYLES } from './constants';
 import { Apartment } from '../../types/apartment';
 
-const AddProperty = ({ isOpen, onClose, houseData, isEdit = false} : { isOpen: boolean, onClose: Function, houseData?: Apartment, isEdit?: boolean }) => {
+const AddProperty = ({ isOpen, onClose,handleSave, houseData, isEdit = false} : { isOpen: boolean,handleSave?:()=>void, onClose: Function, houseData?: Apartment, isEdit?: boolean }) => {
   const [open, setOpen] = useState(false);
   
   const handleClose = () => {
     setOpen(false);
     onClose();
+    
   }
+
+  const handleStepperClose = (flag?: boolean) => {
+    if(flag && handleSave){
+      handleSave();
+    }
+    handleClose();
+     
+  };
 
   useEffect(() => {
     setOpen(isOpen);
@@ -27,7 +36,7 @@ const AddProperty = ({ isOpen, onClose, houseData, isEdit = false} : { isOpen: b
           <IconButton sx={{position: "absolute", top: "1rem", left: "1rem", zIndex: 1}} onClick={handleClose}>
             <CloseIcon />
           </IconButton>
-          <AddPropertyStepper handleClose={handleClose} houseData={houseData} isEdit={isEdit}/>
+          <AddPropertyStepper handleClose={handleStepperClose} houseData={houseData} isEdit={isEdit}/>
         </Box>
       </Modal>
   );

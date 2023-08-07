@@ -10,26 +10,24 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   isUser,
 }) => {
   return (
-    <Grid container>
-      <Grid item xs={2}>
-        {drawAvatar && (
-          <Avatar src={avatar} sx={{ width: 32, height: 32, mr: 1 }}></Avatar>
-        )}
-      </Grid>
-      <Grid item xs={"auto"}>
+    <>
+      <Box display={'flex'} alignItems={'center'}>
+        <Avatar
+          src={avatar}
+          sx={{ width: 40, height: 40, mr: 1, visibility: drawAvatar ? 'visible' : 'hidden' }}
+        ></Avatar>
         <Box
           padding={1}
-          bgcolor={isUser ? "#f9f9f9" : "#e5e9fa"}
-          borderRadius={"1px 5px 5px 5px"}
-          width={"auto"}
+          bgcolor={isUser ? '#f9f9f9' : '#e5e9fa'}
+          borderRadius={'1px 5px 5px 5px'}
+          width={'auto'}
         >
-          <Typography width={"auto"} fontWeight={"body1"}>
+          <Typography width={'auto'} fontWeight={'body1'}>
             {text}
           </Typography>
         </Box>
-      </Grid>
-      <Divider sx={{ mt: 1 }} light></Divider>
-    </Grid>
+      </Box>
+    </>
   );
 };
 

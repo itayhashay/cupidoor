@@ -55,8 +55,9 @@ const AdminEditUserDialog = ({
   const [userDetails, setUserDetails] = useState<User | null>(null);
   const [userProfilePicture, setUserProfilePicture] = useState<string>('');
   const [errors, setErrors] = useState(defaultErrors);
-  const { getAdminUser, adminUpdateUser } = useAPI();
+  const { getAdminUser, adminUpdateUser,adminUpdatePassword } = useAPI();
   const { snackBarState, setSnackBarState } = useSnackbar();
+  const [newPassword,setNewPassword] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -103,7 +104,7 @@ const AdminEditUserDialog = ({
     if (userDetails?.email.trim() === '') {
       currentErrors.email = true;
     }
-    if (userDetails?.password && userDetails.password.trim().length <= 6) {
+    if (userDetails?.password && userDetails.password.trim().length < 8) {
       currentErrors.password = true;
     }
     if (Object.keys(currentErrors).length === 0) {
@@ -119,6 +120,9 @@ const AdminEditUserDialog = ({
     
       if (validateForm()) {
         const response = await adminUpdateUser({ ...userDetails, avatar: userAvatar } as User);
+        if(userDetails?.password && userDetails.password.trim().length >= 8){
+          const passResponse = await adminUpdatePassword(userDetails._id as string,userDetails.password);
+        }
         setSnackBarState({
           severity: 'success',
           message: 'User updated Successfully!',
@@ -272,11 +276,11 @@ const AdminEditUserDialog = ({
               label='Password'
               type='password'
               variant='outlined'
-              onChange={handleFormChange}
+              onChange={(handleFormChange)}
               fullWidth
               required
-              error={errors.email}
-              helperText={errors.email && 'Password should have at least 6 characters!'}
+              error={errors.password}
+              helperText={errors.password && 'Password should have at least 8 characters!'}
             />
           </Grid>
           <Grid item xs={12}>

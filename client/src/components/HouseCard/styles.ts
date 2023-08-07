@@ -12,6 +12,7 @@ export const DividerLine = styled.hr`
 
 export const cardStyles = {
   width:"100%",
+  height:"100%",
   borderRadius: "8px",
   boxShadow: "rgb(0 0 0 / 35%) 0px 5px 15px",
   position: "relative",

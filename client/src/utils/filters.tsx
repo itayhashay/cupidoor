@@ -161,6 +161,7 @@ export const UserMenuItems = [
     urlName: USER_ROUTES.MY_PROPERTIES,
     icon: <img alt='' src={MyIcon} />,
     selectedIcon: <img alt='' src={MySelecedIcon} />,
+    roles: ['landlord', 'both', 'admin'],
   },
   {
     id: 2,
@@ -168,6 +169,7 @@ export const UserMenuItems = [
     urlName: USER_ROUTES.LIKED_APARTMENTS,
     icon: <img alt='' src={LikedIcon} />,
     selectedIcon: <img alt='' src={LikedSelectedIcon} />,
+    roles: ['tenant', 'both', 'admin'],
   },
   {
     id: 1,
@@ -175,6 +177,7 @@ export const UserMenuItems = [
     urlName: USER_ROUTES.ALL_APARTMENTS,
     icon: <img alt='' src={AllIcon} />,
     selectedIcon: <img alt='' src={AllSelecedIcon} />,
+    roles: ['tenant', 'landlord', 'both', 'admin'],
   },
 ];
 
@@ -197,14 +200,14 @@ export const queryToFilters = (queryString: string): FiltersStateType => {
 
   const filtersObj = params.reduce((filtersObj: FiltersStateType, currentValue: string) => {
     const filterParts = currentValue.split('=');
-    if(filterParts[1] === "true"){
+    if (filterParts[1] === 'true') {
       filtersObj[filterParts[0]] = true;
-    }else{
+    } else {
       const filterValuesStr = filterParts[1].split(',');
       const filterValues = filterValuesStr.map((value) => parseInt(value));
       filtersObj[filterParts[0]] = filterValues;
     }
-    
+
     return filtersObj;
   }, {});
   return filtersObj;
@@ -223,18 +226,17 @@ export const filterByUserProperties = (
   for (const filterName in enabledFilters) {
     apartments = apartments.filter((apartment: Apartment) => {
       const filterValue = enabledFilters[filterName];
-      if(typeof filterValue === "boolean"){
+      if (typeof filterValue === 'boolean') {
         return apartment[filterName] == true;
-      }else if(Array.isArray(filterValue)){
+      } else if (Array.isArray(filterValue)) {
         const apartmentValue: number = parseInt(
           apartment[filterName as keyof typeof apartment] as string,
         );
         const bottomValue: number = enabledFilters[filterName][0];
         const topValue: number = enabledFilters[filterName][1];
-  
+
         return apartmentValue >= bottomValue && apartmentValue <= topValue;
       }
-    
     });
   }
 
