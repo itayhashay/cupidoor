@@ -14,6 +14,7 @@ require("dotenv").config();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
+const allowedOrigins = ["10.10.248.149:3000","cupidoor.cs.colman.ac.il"]
 
 const options = {
 	definition: {
@@ -38,7 +39,13 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
 app.use(
   cors({
-    origin: "10.10.248.149:3000",
+    origin: (origin,callback)=>{
+      if(allowedOrigins.indexOf(origin) > -1){
+        callback(null,true);
+      }else{
+        callback(new Error("Cors ERROR!"));
+      }
+    },
     credentials: true,
   })
 );
