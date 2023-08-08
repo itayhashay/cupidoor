@@ -67,12 +67,10 @@ const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Stepp
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant={'h6'} color={'black'} fontWeight={'bold'}>
-              About The Property
+              Payments
             </Typography>
             <Typography variant='subtitle2' color={'GrayText'} mb={1}>
-              Tell us more about your property's condition, total house area, room details, parking
-              availability, balcony features, and any other essential information to enhance your
-              listing and attract potential renters.
+            This section lets you customize the financial details for your house listing. Fill in the rent price, taxes, and any applicable committee fees. Select your preferred payment day and provide the entrance date to ensure a smooth and hassle-free rental process. We've made it easy for you to manage payments effortlessly and efficiently.
             </Typography>
             <Divider />
           </Grid>
