@@ -4,6 +4,7 @@ const match = require("../model/match");
 const UserAnswer = require("../model/userAnswer.model");
 const Score = require("../model/score.model");
 const ScoreService = require("./score.service");
+const ApartmentAnswer = require("../model/apartmentAnswer.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 const createApartment = async (apartmentData, user) => {
   try {
@@ -496,6 +497,56 @@ const _scoreMissingApartments = async (user) => {
   return Promise.all(promises);
 };
 
+const _scoreMissingApartmentsNew = async (user) => {
+  const missingScoreApartments = await Apartment.aggregate([
+    {
+      $lookup: {
+        from: "scores",
+        localField: "_id",
+        foreignField: "apartment",
+        as: "Match",
+      },
+    },
+    // { $match: { Match: { $eq: [] } } },
+    {
+      $match: { "Match.tenant": { $ne: user._id } },
+    },
+  ]);
+
+  if (missingScoreApartments.length === 0) return;
+
+  const userAnswers = await UserAnswer.find({ user: user._id })
+    .populate("question")
+    .lean()
+    .exec();
+
+  const promises = [];
+  for (let apartment of missingScoreApartments) {
+    promises.push(
+      new Promise((resolve) => {
+        ApartmentAnswer.find({
+          apartment: apartment._id,
+        })
+          .populate("question")
+          .exec()
+          .then((apartmentAnswers) => {
+            const matchData = match(userAnswers, apartmentAnswers);
+            const scoreData = Score.create({
+              apartment: apartment._id,
+              tenant: user._id,
+              landlord: apartment.user,
+              score: matchData,
+              updatedAt: Date.now(),
+            }).then(() => {
+              resolve();
+            });
+          });
+      })
+    );
+  }
+  return Promise.all(promises);
+};
+
 /**
  * Analytics
  */
@@ -560,4 +611,5 @@ module.exports = {
   getMonthlyNewApartmentsCount,
   getApartmentsPricesAnalytics,
   getAllApartmentsForAdmin,
+  _scoreMissingApartmentsNew
 };
