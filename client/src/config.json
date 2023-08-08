@@ -5,6 +5,7 @@
     "routes": {
       "userAnswer": "/user-answer",
       "match": "/match",
+      "apartmentAnswer":"/user-answer/apartment",
       "signIn": "/signIn",
       "signUp": "/signUp",
       "updatePassword": "/password",
