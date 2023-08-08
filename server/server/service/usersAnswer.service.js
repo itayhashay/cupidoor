@@ -41,14 +41,15 @@ const createApartmentAnswer = async (apartmentAnswerData,user) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    for(let questionData of apartmentAnswerData){
+    const {answers,apartmentId} = apartmentAnswerData;
+    for(let questionData of answers){
       const {value : answer,priority,questionId} = questionData;
-      const answerObject = await ApartmentAnswer.findOne({apartment:apartmentAnswerData.apartmentId,question:questionData._id}).exec();
+      const answerObject = await ApartmentAnswer.findOne({apartment:apartmentId,question:questionData._id}).exec();
       if(answerObject){
         await ApartmentAnswer.findByIdAndUpdate(answerObject._id,{answer,priority});
       }else{
         const apartmentAnswer = new ApartmentAnswer({
-          apartment:apartmentAnswerData.apartmentId,
+          apartment:apartmentId,
           question:new ObjectId(questionId),
           answer,
           priority

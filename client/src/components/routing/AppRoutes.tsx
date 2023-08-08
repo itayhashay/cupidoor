@@ -4,6 +4,7 @@ import ApartmentDetails from '../ApartmentDetails';
 import UserRouter from '../UserRouter';
 import PrerequisiteRoute from './PrerequisiteRoute';
 import AdminRouter from '../Admin';
+import { QUESTIONS_STATE } from '../QuestionsStepper/constant';
 
 let tmpApartments: any = [];
 
@@ -14,7 +15,7 @@ const appRoutes = [
 
   {
     path: '/questions',
-    element: <QuestionsStepper displayHouses={tmpApartments} />,
+    element: <QuestionsStepper displayHouses={tmpApartments}  state={QUESTIONS_STATE.TENANT} />,
   },
   {
     path: '/home/*',

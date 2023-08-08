@@ -32,7 +32,7 @@ const MainLayout = () => {
           {showNavbar && <Navbar />}
 
           <main>
-            <Box height={showNavbar ? 'calc(100vh - 64px)' : "100vh"} overflow={'hidden'} display={'flex'}>
+            <Box height={showNavbar ? 'calc(100vh - 64px)' : "100vh"} overflow={'hidden'} display={'flex'} bgcolor={"#e8e8e8"}>
               {showSideBar && <Sidebar></Sidebar>}
               <Box overflow={'auto'}>
                 <Outlet />

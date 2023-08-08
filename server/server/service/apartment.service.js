@@ -447,7 +447,7 @@ const deleteApartment = async (id) => {
   }
 };
 
-const _scoreMissingApartments = async (user) => {
+const _scoreMissingApartmentsOld = async (user) => {
   const missingScoreApartments = await Apartment.aggregate([
     {
       $lookup: {
@@ -497,7 +497,7 @@ const _scoreMissingApartments = async (user) => {
   return Promise.all(promises);
 };
 
-const _scoreMissingApartmentsNew = async (user) => {
+const _scoreMissingApartments = async (user) => {
   const missingScoreApartments = await Apartment.aggregate([
     {
       $lookup: {
@@ -611,5 +611,4 @@ module.exports = {
   getMonthlyNewApartmentsCount,
   getApartmentsPricesAnalytics,
   getAllApartmentsForAdmin,
-  _scoreMissingApartmentsNew
 };
