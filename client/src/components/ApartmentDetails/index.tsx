@@ -150,7 +150,7 @@ const ApartmentDetails = () => {
 
       <Container maxWidth='xl' sx={{ paddingY: 3 }}>
         <Grid container component={Paper} elevation={3}>
-          <Grid item xs={12} height={60} padding={2} width={'100%'} bgcolor={'primary.dark'}>
+          <Grid item xs={12} height={60} padding={2} width={'100%'} bgcolor={'primary.light'}>
             <Box
               display={'flex'}
               color={'white'}
@@ -168,9 +168,9 @@ const ApartmentDetails = () => {
                 <IconButton
                   onClick={handleEditClick}
                   sx={{
-                    bgcolor: 'secondary.light',
+                    bgcolor: 'primary.dark',
                     '&.MuiIconButton-root:hover': {
-                      bgcolor: 'primary.light',
+                      bgcolor: 'secondary.main',
                     },
                   }}
                 >
