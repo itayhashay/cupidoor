@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Box, Stepper, Step, StepLabel } from '@mui/material';
+import { Button, Box, Stepper, Step, StepLabel, Grid, Stack, Divider } from '@mui/material';
 import AddressForm from "./AddressForm";
 import AboutForm from './AboutForm';
 import PaymentsForm from './PaymentsForm';
@@ -67,49 +67,78 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
   }
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={activeStep}  alternativeLabel sx={{ marginBottom: "1.5rem" }}>
-        {STEPS.map((label, index) => (
-          <Step key={index}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      {isLoading? <CupidoorSpinner /> : (() => {
-        switch (activeStep) {
-          case 0:
-            return <AddressForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
-          case 1:
-            return <AboutForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
-          case 2:
-            return <PaymentsForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
-          case 3:
-            return <UploadsForm apartmentData={newApartmentData} saveImages={(files: UploadedImage[]) => setUploadedImages(files)} uploadedImages={uploadedImages}/>;      
-          default:
-            return <AddressForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
-          }
-      })()}
-      <Box sx={{ width: "auto",
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                margin: "0 1rem 1rem 0" }}>
-                  <Button
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={activeStep === STEPS.length - 1 ? handleSubmit : handleNext}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    {activeStep === STEPS.length - 1 ? 'Finish' : 'Continue'}
-                  </Button>
-              </Box>
-    </Box>
+    <Stack height={'100%'}>
+      <Grid container>
+        <Grid item xs={12}>
+          <Stepper activeStep={activeStep} alternativeLabel sx={{ marginBottom: '1.5rem' }}>
+            {STEPS.map((label, index) => (
+              <Step key={index}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <Divider></Divider>
+        </Grid>
+        <Grid item xs={12} mt={3}>
+          {isLoading ? (
+            <CupidoorSpinner />
+          ) : (
+            (() => {
+              switch (activeStep) {
+                case 0:
+                  return (
+                    <AddressForm
+                      apartmentData={newApartmentData}
+                      saveChangesOnNext={saveChangesOnNext}
+                    />
+                  );
+                case 1:
+                  return (
+                    <AboutForm
+                      apartmentData={newApartmentData}
+                      saveChangesOnNext={saveChangesOnNext}
+                    />
+                  );
+                case 2:
+                  return (
+                    <PaymentsForm
+                      apartmentData={newApartmentData}
+                      saveChangesOnNext={saveChangesOnNext}
+                    />
+                  );
+                case 3:
+                  return (
+                    <UploadsForm
+                      apartmentData={newApartmentData}
+                      saveImages={(files: UploadedImage[]) => setUploadedImages(files)}
+                      uploadedImages={uploadedImages}
+                    />
+                  );
+                default:
+                  return (
+                    <AddressForm
+                      apartmentData={newApartmentData}
+                      saveChangesOnNext={saveChangesOnNext}
+                    />
+                  );
+              }
+            })()
+          )}
+        </Grid>
+      </Grid>
+      <Box display={'flex'} justifyContent={'flex-end'} mt={'auto'}>
+        <Button disabled={activeStep === 0} onClick={handleBack}>
+          Back
+        </Button>
+        <Button
+          variant='contained'
+          sx={{ ml: 2 }}
+          onClick={activeStep === STEPS.length - 1 ? handleSubmit : handleNext}
+        >
+          {activeStep === STEPS.length - 1 ? 'Finish' : 'Continue'}
+        </Button>
+      </Box>
+    </Stack>
   );
 };
 

@@ -104,7 +104,7 @@ const UploadsForm = ({apartmentData, saveImages, uploadedImages} : {apartmentDat
         </div>`;
 
     return (
-        <Box maxHeight={"55vh"} overflow={"auto"} width={"90%"} margin={"auto"}>
+        <Box display={"flex"} width={"100%"}>
             <FilePond
                 allowFileEncode={true}
                 files={files}

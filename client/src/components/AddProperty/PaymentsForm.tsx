@@ -1,4 +1,4 @@
-import { Box, FormControl, InputAdornment, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
+import { Box, Divider, FormControl, Grid, InputAdornment, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { generateArrayFromRange } from "../../utils/logic";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -63,107 +63,161 @@ const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Stepp
     }, [paymentsState.committee, paymentsState.price, paymentsState.tax]);
   
     return (
-        <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between" padding="0 24px">
-            <Box width="30%"  display="flex" flexDirection="column">
-                <Box display="flex" flexDirection="column">
-                    <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Price</Typography>
-                        <TextField
-                            id="price"
-                            value={paymentsState.price}
-                            onChange={handleChange} 
-                            type="number"
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                       
-                            sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">₪</InputAdornment>,
-                            }}
-                        />
-                </Box>
-                <Box display="flex" flexDirection="column">
-                    <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Property tax (for two months)</Typography>
-                        <TextField
-                            id="tax"
-                            value={paymentsState.tax}
-                            onChange={handleChange} 
-                            type="number"
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                       
-                            sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">₪</InputAdornment>,
-                            }}
-                        />
-                </Box>
-                <Box display="flex" flexDirection="column">
-                    <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">House committee</Typography>
-                        <TextField
-                            id="committee"
-                            value={paymentsState.committee}
-                            onChange={handleChange} 
-                            type="number"
-                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                       
-                            sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">₪</InputAdornment>,
-                            }}
-                        />
-                </Box>
-        </Box>
-        <Box width="30%" display="flex" flexDirection="column" alignItems="center">
-            <Box display="flex" flexDirection="column">
-                    <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Number of Payments</Typography>
-                    <TextField
-                        name="numOfPayments"
-                        value={paymentsState.numOfPayments}
-                        onChange={handleChange} 
-                        select
-                        required
-                        sx={{width: '-webkit-fill-available', marginBottom: "8px"}}
-                        >
-                        {generateArrayFromRange(1,12).map((option, index) => (
-                            <MenuItem key={index} value={option}>
-                            {option}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                </Box>
-                <Box display="flex" flexDirection="column">
-                    <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Entrance Date</Typography>
-                    <DemoContainer components={['DatePicker']}>
-                        <DatePicker
-                            value={dayjs(paymentsState.entranceDate)}
-                            onChange={(date) => handleDatePickerChange(dayjs(date))}                            
-                            minDate={dayjs(new Date())}
-                            sx={{marginBottom: "8px"}}/>
-                    </DemoContainer>
-                </Box>
-                <Box display="flex" flexDirection="column">
-                    <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Payment Day</Typography>
-                    <Box display="flex" flexDirection="row" alignItems="center">
-                        <Typography variant="body1" fontSize="18px" fontWeight={300} lineHeight={1}>Every</Typography>
-                            <FormControl variant="filled" sx={{ mx: 0, minWidth: "auto", marginLeft: "4px" }} size="small">
-                                <Select
-                                    onChange={handleChangePaymentsDay}
-                                    value={paymentsState.paymentDay}
-                                    size="small"
-                                    labelId="demo-simple-select-filled-label"
-                                    sx={{ fontSize:"18px","& .MuiInputBase-inputSizeSmall" : {padding: "0 2px 0 0 !important"}, background: "white", "& .MuiSelect-iconFilled": { display: "none"} }}
-                                    >
-                                    {generateArrayFromRange(1, 31).map((option) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
-                                </Select>
-                            </FormControl>
-                        <Typography variant="body1" fontSize="18px" fontWeight={300} lineHeight={1}>th of the month</Typography>
-                    </Box>
-                </Box>
-        </Box>
-        <Box width="30%" display="flex" flexDirection="column" justifyContent="center" alignItems="center" >
-            <Typography variant="h4" fontWeight={400} >Total Payment</Typography>
-            <Box display="flex" flexDirection="row" justifyContent="center" alignItems="flex-end">
-                <Typography variant="h5" fontWeight={400} >{`${paymentsState.totalPrice}₪`}</Typography>
-                <Typography variant="body1" fontSize="15px" fontWeight={100} margin="0 0 1px 1px" lineHeight={1.7}>/month</Typography>
-            </Box>
-        </Box>    
-    </Box>
+      <>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant={'h6'} color={'black'} fontWeight={'bold'}>
+              About The Property
+            </Typography>
+            <Typography variant='subtitle2' color={'GrayText'} mb={1}>
+              Tell us more about your property's condition, total house area, room details, parking
+              availability, balcony features, and any other essential information to enhance your
+              listing and attract potential renters.
+            </Typography>
+            <Divider />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              id='price'
+              label={'Price'}
+              fullWidth
+              value={paymentsState.price}
+              onChange={handleChange}
+              type='number'
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              InputProps={{
+                endAdornment: <InputAdornment position='end'>₪</InputAdornment>,
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              id='tax'
+              label={'Property Tax (for two months)'}
+              fullWidth
+              value={paymentsState.tax}
+              onChange={handleChange}
+              type='number'
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              InputProps={{
+                endAdornment: <InputAdornment position='end'>₪</InputAdornment>,
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              id='committee'
+              label={'House Committee'}
+              fullWidth
+              value={paymentsState.committee}
+              onChange={handleChange}
+              type='number'
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              InputProps={{
+                endAdornment: <InputAdornment position='end'>₪</InputAdornment>,
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              id='numOfPayments'
+              name='numOfPayments'
+              label='Number Of Payments'
+              fullWidth
+              value={paymentsState.numOfPayments}
+              onChange={handleChange}
+              select
+              required
+            >
+              {generateArrayFromRange(1, 12).map((option, index) => (
+                <MenuItem key={index} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
 
+          <Grid item xs={12} md={6} position={'relative'}>
+            <Box border={'1px solid #cecece'} borderRadius={1} height={'100%'}>
+              <Typography
+                variant='caption'
+                color={'GrayText'}
+                textAlign={'center'}
+                fontSize={'0.8rem'}
+                position={'absolute'}
+                top={5}
+                left={25}
+                width={100}
+                bgcolor={'white'}
+              >
+                Payment Day
+              </Typography>
+              <Stack direction={'row'} height={'100%'} alignItems={'center'} mx={2} width={'100%'}>
+                <Typography variant='body1' fontSize='18px' fontWeight={300} lineHeight={1}>
+                  Every
+                </Typography>
+                <FormControl
+                  variant='filled'
+                  sx={{ mx: 0, minWidth: 'auto', marginLeft: '4px' }}
+                  size='small'
+                >
+                  <Select
+                    onChange={handleChangePaymentsDay}
+                    value={paymentsState.paymentDay}
+                    size='small'
+                    labelId='demo-simple-select-filled-label'
+                    sx={{
+                      fontSize: '18px',
+                      '& .MuiInputBase-inputSizeSmall': { padding: '0 2px 0 0 !important' },
+                      background: 'white',
+                      '& .MuiSelect-iconFilled': { display: 'none' },
+                    }}
+                  >
+                    {generateArrayFromRange(1, 31).map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <Typography variant='body1' fontSize='18px' fontWeight={300} lineHeight={1}>
+                  th of the month
+                </Typography>
+              </Stack>
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <DemoContainer components={['DatePicker']}>
+              <DatePicker
+                sx={{ width: '100%' }}
+                value={dayjs(paymentsState.entranceDate)}
+                onChange={(date) => handleDatePickerChange(dayjs(date))}
+                minDate={dayjs(new Date())}
+              />
+            </DemoContainer>
+          </Grid>
+          <Grid item xs={12} mt={3}>
+            <Typography variant='h4' fontWeight={400}>
+              Total Payment
+            </Typography>
+            <Box display='flex' flexDirection='row' alignItems='flex-end'>
+              <Typography
+                variant='h5'
+                fontWeight={400}
+              >{`${paymentsState.totalPrice}₪`}</Typography>
+              <Typography
+                variant='body1'
+                fontSize='15px'
+                fontWeight={100}
+                margin='0 0 1px 1px'
+                lineHeight={1.7}
+              >
+                /month
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </>
     );
 }
  

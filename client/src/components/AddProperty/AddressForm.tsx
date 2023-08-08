@@ -1,4 +1,4 @@
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography,Grid, Divider } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { ApartmentAddress, StepperApartment } from "./types";
 import { DEFAULT_ADDRESS } from "./constants";
@@ -32,40 +32,53 @@ const AddressForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Steppe
     }
 
     return (
-        <Box width="50%" display="flex" flexDirection="column" padding="0 24px">
-            <Box display="flex" flexDirection="column">
-                <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">City</Typography>
-                    <TextField
-                        id="city"
-                        required
-                        focused
-                        value={addressState.city}
-                        onChange={handleChange} 
-                />
-            </Box>
-            <Box display="flex" flexDirection="column">
-                <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Street</Typography>
-                                <TextField
-                                    id="street"
-                                    required
-                                    value={addressState.street}
-                                    onChange={handleChange} 
-                                    />
-
-            </Box>
-            <Box display="flex" flexDirection="column">
-                <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">House Number</Typography>
-                    <TextField
-                        id="houseNumber"
-                        value={addressState.houseNumber}
-                        onChange={handleChange} 
-                        required
-                        type="number"
-                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                  
-                        sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
-                    />
-            </Box>
-        </Box>
+      <>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant={'h6'} color={'black'} fontWeight={'bold'}>
+              Property Address
+            </Typography>
+            <Typography variant='subtitle2' color={'GrayText'} mb={1}>
+              Enter the details of the apartment address, including the city, street, and house
+              number
+            </Typography>
+            <Divider />
+          </Grid>
+          <Grid item xs={7}>
+            <TextField
+              id='city'
+              label='City'
+              fullWidth
+              required
+              focused
+              value={addressState.city}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={7}>
+            <TextField
+              id='street'
+              label={'Street'}
+              fullWidth
+              required
+              value={addressState.street}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={7}>
+            <TextField
+              id='houseNumber'
+              label={'House number'}
+              fullWidth
+              value={addressState.houseNumber}
+              onChange={handleChange}
+              required
+              type='number'
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+            />
+          </Grid>
+        </Grid>
+      </>
     );
 }
  
