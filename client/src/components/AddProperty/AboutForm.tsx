@@ -80,6 +80,7 @@ const AboutForm = ({
           </Typography>
           <TextField
             name='propertyCondition'
+            id='propertyCondition'
             value={aboutState.propertyCondition}
             onChange={handleChange}
             select

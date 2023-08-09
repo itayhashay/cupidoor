@@ -12,6 +12,8 @@ import { DEFAULT_NEW_APARTMENT_DATA, STEPS } from './constants';
 import useAPI from '../../hooks/useAPI';
 import { getUserId } from '../../utils/localStorage';
 import { Apartment } from '../../types/apartment';
+import { stepperInputFiedls, stepperSchemas } from './stepsInputs';
+import { useFormik } from 'formik';
 
 const AddPropertyStepper = ({
   handleClose,
@@ -28,6 +30,8 @@ const AddPropertyStepper = ({
     DEFAULT_NEW_APARTMENT_DATA,
   );
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+  const [validationErrors, setValidationErrors] = useState({});
+  const [isValidStep, setIsValidStep] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const { addApartment, editApartment } = useAPI();
@@ -43,36 +47,68 @@ const AddPropertyStepper = ({
     });
   };
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  let formik = useFormik({
+    initialValues: { ...newApartmentData },
+    validationSchema: stepperSchemas[activeStep],
+    onSubmit: () => {
+      return;
+    },
+  });
+
+  const handleNext = async () => {
+    formik.handleSubmit();
+    const isValid = await ValidateCurrentStep();
+    if (isValid) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
-    console.log(uploadedImages);
-    newApartmentData.user = getUserId();
-    newApartmentData.newImages = uploadedImages.map((image: UploadedImage) => image.base64);
-
-    console.log(newApartmentData);
+  const ValidateCurrentStep = async () => {
     try {
-      if (isEdit) {
-        const response: AxiosResponse = await editApartment(newApartmentData);
-        response.status === 201 && navigate(`/apartment/${response.data._id}`);
-      } else {
-        console.log('NOT EDIT');
-        const response: AxiosResponse = await addApartment(newApartmentData);
-        response.status === 201 && navigate(`/apartment/${response.data._id}`);
-      }
-      return { success: true };
+      let valuesToCheck = [...stepperInputFiedls[activeStep]];
+      console.log('Hey!');
+      console.log('I am checking the values...... ', valuesToCheck);
+      // await stepperSchemas[activeStep].validate(valuesToCheck, { abortEarly: false });
+      await stepperSchemas[activeStep].validate(valuesToCheck);
+      console.log('The schema looking for her values of: ', stepperSchemas[activeStep]);
+      return {};
     } catch (error) {
-      return { success: false, error };
-    } finally {
-      setIsLoading(false);
-      handleClose(true);
+      // const errors = {};
+      // error?.inner?.forEach((err) => {
+      //   errors[err.path] = err.message;
+      // });
+      // return errors;
+      return;
+    }
+    return true;
+  };
+
+  const handleSubmit = async () => {
+    const isValid = await ValidateCurrentStep();
+    setIsLoading(true);
+    if (isValid) {
+      newApartmentData.user = getUserId();
+      newApartmentData.newImages = uploadedImages.map((image: UploadedImage) => image.base64);
+      try {
+        if (isEdit) {
+          const response: AxiosResponse = await editApartment(newApartmentData);
+          response.status === 201 && navigate(`/apartment/${response.data._id}`);
+        } else {
+          console.log('NOT EDIT');
+          const response: AxiosResponse = await addApartment(newApartmentData);
+          response.status === 201 && navigate(`/apartment/${response.data._id}`);
+        }
+        return { success: true };
+      } catch (error) {
+        return { success: false, error };
+      } finally {
+        setIsLoading(false);
+        handleClose(true);
+      }
     }
   };
 
@@ -134,6 +170,7 @@ const AddPropertyStepper = ({
         </Button>
         <Button
           variant='contained'
+          // disabled={isValidStep}
           onClick={activeStep === STEPS.length - 1 ? handleSubmit : handleNext}
           sx={{ mt: 1, mr: 1 }}
         >

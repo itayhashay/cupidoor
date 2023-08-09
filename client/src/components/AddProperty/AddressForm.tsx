@@ -42,7 +42,7 @@ const AddressForm = ({
         <Typography variant='body1' fontWeight={700} marginTop='8px' marginBottom='5px'>
           City
         </Typography>
-        <TextField id='city' required focused value={addressState.city} onChange={handleChange} />
+        <TextField id='city' required value={addressState.city} onChange={handleChange} />
       </Box>
       <Box display='flex' flexDirection='column'>
         <Typography variant='body1' fontWeight={700} marginTop='8px' marginBottom='5px'>
