@@ -56,11 +56,11 @@ const AddPropertyStepper = ({
   });
 
   const handleNext = async () => {
-    formik.handleSubmit();
+    // formik.handleSubmit();
     const isValid = await ValidateCurrentStep();
-    if (isValid) {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    }
+    // if (isValid) {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    // }
   };
 
   const handleBack = () => {
@@ -131,17 +131,25 @@ const AddPropertyStepper = ({
                 <AddressForm
                   apartmentData={newApartmentData}
                   saveChangesOnNext={saveChangesOnNext}
+                  handleNext={handleNext}
                 />
               );
             case 1:
               return (
-                <AboutForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext} />
+                <AboutForm
+                  apartmentData={newApartmentData}
+                  saveChangesOnNext={saveChangesOnNext}
+                  handleNext={handleNext}
+                  handleBack={handleBack}
+                />
               );
             case 2:
               return (
                 <PaymentsForm
                   apartmentData={newApartmentData}
                   saveChangesOnNext={saveChangesOnNext}
+                  handleNext={handleNext}
+                  handleBack={handleBack}
                 />
               );
             case 3:
@@ -150,6 +158,8 @@ const AddPropertyStepper = ({
                   apartmentData={newApartmentData}
                   saveImages={(files: UploadedImage[]) => setUploadedImages(files)}
                   uploadedImages={uploadedImages}
+                  handleBack={handleBack}
+                  handleSubmit={handleSubmit}
                 />
               );
             default:
@@ -157,6 +167,7 @@ const AddPropertyStepper = ({
                 <AddressForm
                   apartmentData={newApartmentData}
                   saveChangesOnNext={saveChangesOnNext}
+                  handleNext={handleNext}
                 />
               );
           }
@@ -165,7 +176,7 @@ const AddPropertyStepper = ({
       <Box
         sx={{ width: 'auto', position: 'absolute', bottom: 0, right: 0, margin: '0 1rem 1rem 0' }}
       >
-        <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
+        {/* <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
           Back
         </Button>
         <Button
@@ -175,7 +186,7 @@ const AddPropertyStepper = ({
           sx={{ mt: 1, mr: 1 }}
         >
           {activeStep === STEPS.length - 1 ? 'Finish' : 'Continue'}
-        </Button>
+        </Button> */}
       </Box>
     </Box>
   );

@@ -5,7 +5,7 @@ import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orien
 import FilePondPluginFileEncode from 'filepond-plugin-file-encode';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { FilePondErrorDescription, FilePondFile } from 'filepond';
 import { StepperApartment, UploadedImage } from './types';
 import { Apartment, ServerApartmentImages } from '../../types/apartment';
@@ -22,10 +22,14 @@ const UploadsForm = ({
   apartmentData,
   saveImages,
   uploadedImages,
+  handleBack,
+  handleSubmit,
 }: {
   apartmentData: StepperApartment;
   saveImages: (files: UploadedImage[]) => void;
   uploadedImages: UploadedImage[];
+  handleBack: () => void;
+  handleSubmit: () => void;
 }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [newfiles, setNewFiles] = useState<File[]>([]);
@@ -97,19 +101,33 @@ const UploadsForm = ({
         </div>`;
 
   return (
-    <Box maxHeight={'55vh'} overflow={'auto'} width={'90%'} margin={'auto'}>
-      <FilePond
-        allowFileEncode={true}
-        files={files}
-        imagePreviewHeight={200}
-        allowReorder={true}
-        allowMultiple={true}
-        maxFiles={5}
-        onaddfile={handleProcessFile}
-        onremovefile={handleFileRemove}
-        labelIdle={renderLabelIdle('To upload photos, click here or drag the photo files', 5)}
-      />
-    </Box>
+    <>
+      <Box maxHeight={'55vh'} overflow={'auto'} width={'90%'} margin={'auto'}>
+        <FilePond
+          allowFileEncode={true}
+          files={files}
+          imagePreviewHeight={200}
+          allowReorder={true}
+          allowMultiple={true}
+          maxFiles={5}
+          onaddfile={handleProcessFile}
+          onremovefile={handleFileRemove}
+          labelIdle={renderLabelIdle('To upload photos, click here or drag the photo files', 5)}
+        />
+      </Box>
+
+      <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
+        Back
+      </Button>
+      <Button
+        variant='contained'
+        // disabled={isValidStep}
+        onClick={handleSubmit}
+        sx={{ mt: 1, mr: 1 }}
+      >
+        {'Finish'}
+      </Button>
+    </>
   );
 };
 
