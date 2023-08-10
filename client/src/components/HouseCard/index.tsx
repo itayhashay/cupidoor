@@ -26,7 +26,7 @@ import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import StairsIcon from '@mui/icons-material/Stairs';
 
 import useAPI from '../../hooks/useAPI';
-import AddProperty from '../AddProperty';
+import AddProperty from '../AddPropertyTest';
 import { useConfirmationModal } from '../../context/ConfirmationModalContext';
 
 const HouseCard = ({

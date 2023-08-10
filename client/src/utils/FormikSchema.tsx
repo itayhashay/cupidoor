@@ -75,7 +75,7 @@ export const AddressFormSchema = Yup.object().shape({
     .max(90, 'Street cannot contain over 90 letters'),
   houseNumber: Yup.number()
     .required('House number is required field')
-    .max(10, 'House number cannot reach over 10 numbers'),
+    .max(1000000000, 'House number cannot reach over 10 numbers'),
 });
 
 export const AboutFormSchema = Yup.object().shape({
@@ -102,3 +102,9 @@ export const PaymentsFormSchema = Yup.object().shape({
 export const UploadsFormSchema = Yup.object().shape({
   // files: [],
 });
+
+export const ApartmentSchema = Yup.object()
+  .shape(AddressFormSchema.fields)
+  .shape(AboutFormSchema.fields)
+  .shape(PaymentsFormSchema.fields)
+  .shape(UploadsFormSchema.fields);

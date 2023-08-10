@@ -19,13 +19,11 @@ registerPlugin(
 );
 
 const UploadsForm = ({
-  apartmentData,
   saveImages,
   uploadedImages,
   handleBack,
   handleSubmit,
 }: {
-  apartmentData: StepperApartment;
   saveImages: (files: UploadedImage[]) => void;
   uploadedImages: UploadedImage[];
   handleBack: () => void;
@@ -45,11 +43,11 @@ const UploadsForm = ({
     setImagesWithBase64(uploadedImages);
   }, []);
 
-  // const fetchApartmentImages = async (id: string): Promise<ServerApartmentImages[]> => {
-  //   const apartment: Apartment = await getApartmentById(id);
-  //   console.log(apartment);
-  //   return apartment.images;
-  // };
+  const fetchApartmentImages = async (id: string): Promise<ServerApartmentImages[]> => {
+    const apartment: Apartment = await getApartmentById(id);
+    console.log(apartment);
+    return apartment.images;
+  };
 
   useEffect(() => {
     console.log('UPDATED');

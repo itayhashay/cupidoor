@@ -24,7 +24,7 @@ import { useSnackbar } from '../../context/SnackbarContext';
 import { useConfirmationModal } from '../../context/ConfirmationModalContext';
 import BackButton from '../BackButton';
 import EditIcon from '@mui/icons-material/Edit';
-import AddProperty from '../AddProperty';
+import AddProperty from '../AddPropertyTest';
 
 const ApartmentDetails = () => {
   const [apartmentInfo, setApartmentInfo] = useState<Apartment | null>(null);
@@ -254,11 +254,11 @@ const ApartmentDetails = () => {
           )}
         </Grid>
         <AddProperty
+          isEdit
           isOpen={isEditOpen}
           onClose={() => setIsEditOpen(false)}
           handleSave={handleSave}
           houseData={apartmentInfo}
-          isEdit={true}
         />
       </Container>
     </>
