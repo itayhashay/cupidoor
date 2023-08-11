@@ -114,17 +114,27 @@ const UploadsForm = ({
         />
       </Box>
 
-      <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
-        Back
-      </Button>
-      <Button
-        variant='contained'
-        // disabled={isValidStep}
-        onClick={handleSubmit}
-        sx={{ mt: 1, mr: 1 }}
+      <Box
+        sx={{
+          width: 'auto',
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+          margin: '0 1rem 1rem 0',
+        }}
       >
-        {'Finish'}
-      </Button>
+        <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
+          Back
+        </Button>
+        <Button
+          variant='contained'
+          // disabled={isValidStep}
+          onClick={handleSubmit}
+          sx={{ mt: 1, mr: 1 }}
+        >
+          {'Finish'}
+        </Button>
+      </Box>
     </>
   );
 };

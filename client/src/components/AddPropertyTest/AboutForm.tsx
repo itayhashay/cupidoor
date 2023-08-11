@@ -1,18 +1,13 @@
-import {
-  Button,
-  Grid,
-  TextField,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from '@mui/material';
-import { Box, Checkbox, Divider, FormControlLabel, InputAdornment, MenuItem } from '@mui/material';
+import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Box, Checkbox, Divider, FormControlLabel, InputAdornment } from '@mui/material';
+import { MenuItem, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { PROPERTY_CONDITIONS } from '../../utils/properyConditions';
 import { generateArrayFromRange } from '../../utils/logic';
 import { StepperApartment } from './types';
 import { CHECKBOXES_DEFAULT } from './constants';
 import { useFormikContext } from 'formik';
+import { CustomHelperText } from '../Landing/AuthHelpers';
 
 const AboutForm = ({
   handleBack,
@@ -84,6 +79,9 @@ const AboutForm = ({
                 </MenuItem>
               ))}
             </TextField>
+            {errors?.propertyCondition && (
+              <CustomHelperText>{errors.propertyCondition}</CustomHelperText>
+            )}
             <Typography variant='body1' fontWeight={700} marginTop='16px'>
               House area (in square meters)
             </Typography>
@@ -97,6 +95,7 @@ const AboutForm = ({
                 endAdornment: <InputAdornment position='end'>m²</InputAdornment>,
               }}
             />
+            {errors?.houseArea && <CustomHelperText>{errors.houseArea}</CustomHelperText>}
           </Box>
           <Box display='flex' flexDirection='column' width='48%'>
             <Typography variant='body1' fontWeight={700} marginBottom='5px'>
@@ -119,6 +118,7 @@ const AboutForm = ({
               }}
               placeholder='Describe your property, the condition of the furnishings, the frequency of maintenance, etc.'
             />
+            {errors?.description && <CustomHelperText>{errors.description}</CustomHelperText>}
           </Box>
         </Box>
         <Box
@@ -249,17 +249,28 @@ const AboutForm = ({
           </Box>
         </Box>
       </Box>
-      <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
-        Back
-      </Button>
-      <Button
-        variant='contained'
-        // disabled={isValidStep}
-        onClick={handleNextWithValidation}
-        sx={{ mt: 1, mr: 1 }}
+
+      <Box
+        sx={{
+          width: 'auto',
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+          margin: '0 1rem 1rem 0',
+        }}
       >
-        {'Continue'}
-      </Button>
+        <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
+          Back
+        </Button>
+        <Button
+          variant='contained'
+          // disabled={isValidStep}
+          onClick={handleNextWithValidation}
+          sx={{ mt: 1, mr: 1 }}
+        >
+          {'Continue'}
+        </Button>
+      </Box>
     </>
   );
 };

@@ -7,6 +7,7 @@ import { TextField, Typography } from '@mui/material';
 import { generateArrayFromRange } from '../../utils/logic';
 import { StepperApartment } from './types';
 import { useFormikContext } from 'formik';
+import { CustomHelperText } from '../Landing/AuthHelpers';
 
 const PaymentsForm = ({
   handleNext,
@@ -17,6 +18,8 @@ const PaymentsForm = ({
 }) => {
   const {
     values: { price, tax, committee, numOfPayments, entranceDate, paymentDay, totalPrice },
+    values,
+    errors,
     handleChange,
     setFieldValue,
     validateForm,
@@ -70,6 +73,7 @@ const PaymentsForm = ({
                 endAdornment: <InputAdornment position='end'>₪</InputAdornment>,
               }}
             />
+            {errors?.price && <CustomHelperText>{errors.price}</CustomHelperText>}
           </Box>
           <Box display='flex' flexDirection='column'>
             <Typography variant='body1' fontWeight={700} marginTop='8px' marginBottom='5px'>
@@ -86,6 +90,7 @@ const PaymentsForm = ({
                 endAdornment: <InputAdornment position='end'>₪</InputAdornment>,
               }}
             />
+            {errors?.tax && <CustomHelperText>{errors.tax}</CustomHelperText>}
           </Box>
           <Box display='flex' flexDirection='column'>
             <Typography variant='body1' fontWeight={700} marginTop='8px' marginBottom='5px'>
@@ -102,6 +107,7 @@ const PaymentsForm = ({
                 endAdornment: <InputAdornment position='end'>₪</InputAdornment>,
               }}
             />
+            {errors?.committee && <CustomHelperText>{errors.committee}</CustomHelperText>}
           </Box>
         </Box>
         <Box width='30%' display='flex' flexDirection='column' alignItems='center'>
@@ -111,6 +117,7 @@ const PaymentsForm = ({
             </Typography>
             <TextField
               name='numOfPayments'
+              id='numOfPayments'
               value={numOfPayments}
               onChange={handleChange}
               select
@@ -123,6 +130,7 @@ const PaymentsForm = ({
                 </MenuItem>
               ))}
             </TextField>
+            {errors?.numOfPayments && <CustomHelperText>{errors.numOfPayments}</CustomHelperText>}
           </Box>
           <Box display='flex' flexDirection='column'>
             <Typography variant='body1' fontWeight={700} marginTop='8px' marginBottom='5px'>
@@ -175,6 +183,7 @@ const PaymentsForm = ({
               <Typography variant='body1' fontSize='18px' fontWeight={300} lineHeight={1}>
                 th of the month
               </Typography>
+              {errors?.paymentDay && <CustomHelperText>{errors.paymentDay}</CustomHelperText>}
             </Box>
           </Box>
         </Box>
@@ -203,12 +212,22 @@ const PaymentsForm = ({
         </Box>
       </Box>
 
-      <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
-        Back
-      </Button>
-      <Button variant='contained' onClick={handleNextWithValidation} sx={{ mt: 1, mr: 1 }}>
-        {'Continue'}
-      </Button>
+      <Box
+        sx={{
+          width: 'auto',
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+          margin: '0 1rem 1rem 0',
+        }}
+      >
+        <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
+          Back
+        </Button>
+        <Button variant='contained' onClick={handleNextWithValidation} sx={{ mt: 1, mr: 1 }}>
+          {'Continue'}
+        </Button>
+      </Box>
     </>
   );
 };
