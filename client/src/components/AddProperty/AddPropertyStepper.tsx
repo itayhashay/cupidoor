@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Box, Stepper, Step, StepLabel, Grid, Stack, Divider } from '@mui/material';
+import { Button, Box, Stepper, Step, StepLabel, Grid, Stack, Divider, Typography,Dialog, DialogContent, AppBar, Toolbar, IconButton } from '@mui/material';
 import AddressForm from "./AddressForm";
 import AboutForm from './AboutForm';
 import PaymentsForm from './PaymentsForm';
@@ -13,6 +13,10 @@ import { convertFilePondImagesToBase64 } from '../../utils/base64';
 import { getUserId } from '../../utils/localStorage';
 import { useNavigate } from "react-router-dom";
 import { Apartment } from '../../types/apartment';
+import QuestionsStepper from '../QuestionsStepper';
+import { QUESTIONS_STATE } from '../QuestionsStepper/constant';
+import { QuestionAnswer } from '../../types/questionAnswer';
+import CloseIcon from '@mui/icons-material/Close';
 
 const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (flag?:boolean) => void, houseData?: Apartment, isEdit: boolean}) => {
   const [activeStep, setActiveStep] = useState(0);
@@ -21,7 +25,7 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]) 
 
   const navigate = useNavigate();
-  const {addApartment, editApartment} = useAPI();
+  const {addApartment, editApartment,setApartmentAnswers} = useAPI();
 
   useEffect(() => {
     houseData && setNewApartmentData({...houseData , newImages: [], removedImages: []} as StepperApartment);
@@ -41,7 +45,7 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (questionAnswers:QuestionAnswer[]) => {
     setIsLoading(true);
     console.log(uploadedImages)
     newApartmentData.user = getUserId();
@@ -55,6 +59,9 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
       } else {
         console.log("NOT EDIT")
         const response: AxiosResponse = await addApartment(newApartmentData);
+        if(response.status === 201){
+          const answerResponse = await setApartmentAnswers(response.data._id,questionAnswers);
+        }
         response.status === 201 && navigate(`/apartment/${response.data._id}`);
       }
       return { success: true };
@@ -66,10 +73,14 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
     }
   }
 
+  const handleSaveQuestions = (answers:QuestionAnswer[])=>{
+    handleSubmit(answers);
+  }
+
   return (
     <Stack height={'100%'}>
       <Grid container>
-        <Grid item xs={12}>
+      {activeStep !== STEPS.length -1 &&  <Grid item xs={12}>
           <Stepper activeStep={activeStep} alternativeLabel sx={{ marginBottom: '1.5rem' }}>
             {STEPS.map((label, index) => (
               <Step key={index}>
@@ -78,7 +89,8 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
             ))}
           </Stepper>
           <Divider></Divider>
-        </Grid>
+        </Grid>}
+       
         <Grid item xs={12} mt={3}>
           {isLoading ? (
             <CupidoorSpinner />
@@ -114,6 +126,47 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
                       uploadedImages={uploadedImages}
                     />
                   );
+                case 4:
+                  return (
+                    <Dialog open={true} onClose={handleBack} maxWidth={'lg'} fullWidth>
+                      <AppBar sx={{ position: 'relative' }} elevation={0}>
+                        <Toolbar sx={{ bgcolor: 'primary.light' }}>
+                          <Box display={'flex'} justifyContent={'space-between'}>
+                            <Box
+                              display={'flex'}
+                              justifyContent={'center'}
+                              alignItems={'center'}
+                              textAlign={'center'}
+                            >
+                              <Typography
+                                variant='body1'
+                                color={'white'}
+                                textAlign={'center'}
+                                fontSize={'1.5rem'}
+                              >
+                                Property Preferences
+                              </Typography>
+                            </Box>
+
+                            <IconButton onClick={handleBack} sx={{ color: 'white' }}>
+                              <CloseIcon />
+                            </IconButton>
+                          </Box>
+                        </Toolbar>
+                      </AppBar>
+                      <DialogContent>
+                        <Grid container>
+                          <Grid item xs={12} overflow={'auto'} >
+                          <QuestionsStepper
+                        displayHouses={() => {}}
+                        state={QUESTIONS_STATE.LANDLORD}
+                        handleSaveQuestions={handleSaveQuestions}
+                      />
+                          </Grid>
+                        </Grid>
+                      </DialogContent>
+                    </Dialog>
+                  );
                 default:
                   return (
                     <AddressForm
@@ -130,13 +183,11 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
         <Button disabled={activeStep === 0} onClick={handleBack}>
           Back
         </Button>
-        <Button
-          variant='contained'
-          sx={{ ml: 2 }}
-          onClick={activeStep === STEPS.length - 1 ? handleSubmit : handleNext}
-        >
-          {activeStep === STEPS.length - 1 ? 'Finish' : 'Continue'}
-        </Button>
+        {activeStep !== STEPS.length - 1 && (
+          <Button variant='contained' sx={{ ml: 2 }} onClick={handleNext}>
+            {activeStep === STEPS.length - 1 ? 'Finish' : 'Continue'}
+          </Button>
+        )}
       </Box>
     </Stack>
   );
