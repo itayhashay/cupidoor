@@ -25,6 +25,8 @@ const useAPI = () => {
     return response;
   };
 
+
+
   const addApartment = async (newApartment: StepperApartment) => {
     try {
       const response: AxiosResponse = await axiosPrivate.post(
@@ -35,6 +37,18 @@ const useAPI = () => {
     } catch (ex: AxiosError | any) {
       return ex;
     }
+  };
+
+  const setApartmentAnswers = async (apartmentId:string,answers: QuestionAnswer[]) => {
+    try{
+      const response = await axiosPrivate.post(config.api.routes.apartmentAnswer, {
+        apartmentId,answers
+      });
+      return response;
+    }catch(ex){
+      return ex;
+    }
+    
   };
 
   const editApartment = async (editedApartment: StepperApartment) => {
@@ -227,7 +241,8 @@ const useAPI = () => {
     getAdminApartments,
     adminUpdateUser,
     updatePassword,
-    adminUpdatePassword
+    adminUpdatePassword,
+    setApartmentAnswers
   };
 };
 

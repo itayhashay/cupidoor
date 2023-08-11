@@ -1,7 +1,10 @@
 const UserAnswer = require('../model/userAnswer.model');
 const UserModel= require("../model/user.model");
 const mongoose = require("mongoose");
+const ApartmentAnswer = require('../model/apartmentAnswer.model');
 const ObjectId = mongoose.Types.ObjectId;
+
+
 const createUserAnswer = async (userAnswerData,user) => {
   const session = await mongoose.startSession();
   try {
@@ -28,6 +31,38 @@ const createUserAnswer = async (userAnswerData,user) => {
   } catch (err) {
     await session.abortTransaction();
     throw new Error('Error creating user answer: ' + err.message);
+  }finally{
+    await session.endSession();
+  }
+}
+
+
+const createApartmentAnswer = async (apartmentAnswerData,user) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    const {answers,apartmentId} = apartmentAnswerData;
+    for(let questionData of answers){
+      const {value : answer,priority,questionId} = questionData;
+      const answerObject = await ApartmentAnswer.findOne({apartment:apartmentId,question:questionData._id}).exec();
+      if(answerObject){
+        await ApartmentAnswer.findByIdAndUpdate(answerObject._id,{answer,priority});
+      }else{
+        const apartmentAnswer = new ApartmentAnswer({
+          apartment:apartmentId,
+          question:new ObjectId(questionId),
+          answer,
+          priority
+        });
+        await apartmentAnswer.save();
+      }
+      
+    }
+    await session.commitTransaction();
+    return true;
+  } catch (err) {
+    await session.abortTransaction();
+    throw new Error('Error creating apartment answer: ' + err.message);
   }finally{
     await session.endSession();
   }
@@ -77,6 +112,7 @@ const deleteUserAnswer = async (id) => {
 
 module.exports = {
   createUserAnswer,
+  createApartmentAnswer,
   getUserAnswers,
   getUserAnswer,
   updateUserAnswer,
