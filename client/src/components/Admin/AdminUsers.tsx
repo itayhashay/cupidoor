@@ -130,29 +130,7 @@ const AdminUsers = () => {
         headerName: 'Actions',
         width: 100,
         getActions: ({ id, row }: { id: string; row: any }) => {
-          const deleteAction = row.disabled ? (
-            <GridActionsCellItem
-              icon={
-                <Tooltip title={'Enable'}>
-                  <UndoIcon color='info' />
-                </Tooltip>
-              }
-              label='Enable'
-              onClick={() => handleRestoreClick(id)}
-              color='inherit'
-            />
-          ) : (
-            <GridActionsCellItem
-              icon={
-                <Tooltip title={'Disable'}>
-                  <DeleteIcon color='error' />
-                </Tooltip>
-              }
-              label='Disable'
-              onClick={() => handleDeleteClick(id)}
-              color='inherit'
-            />
-          );
+       
           const editAction = (
             <GridActionsCellItem
               icon={
@@ -168,7 +146,7 @@ const AdminUsers = () => {
               color='inherit'
             />
           );
-          return [editAction, deleteAction];
+          return [editAction];
         },
       },
     ],

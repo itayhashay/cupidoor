@@ -118,7 +118,7 @@ const AdminController = {
       const newMonthlyMatchesPromise =
         UsersRelationsService.getMonthlyNewMatchesCount();
 
-      const [newMatches, totalMatches] = await Promise.all([
+      const [totalMatches,newMatches] = await Promise.all([
         matchesCountPromise,
         newMonthlyMatchesPromise,
       ]);
