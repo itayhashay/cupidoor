@@ -23,17 +23,37 @@ const UploadsForm = ({
   uploadedImages,
   handleBack,
   handleSubmit,
+  handleNext,
 }: {
   saveImages: (files: UploadedImage[]) => void;
   uploadedImages: UploadedImage[];
-  handleBack: () => void;
-  handleSubmit: () => void;
+  handleBack: VoidFunction;
+  handleSubmit: VoidFunction;
+  handleNext: VoidFunction;
 }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [newfiles, setNewFiles] = useState<File[]>([]);
   const [imagesWithBase64, setImagesWithBase64] = useState<UploadedImage[]>([]);
   const [removedImages, setRemovedImages] = useState<string[]>([]);
   const { getApartmentById } = useAPI();
+
+  // const {
+  //   values: { files },
+  //   errors,
+  //   handleChange,
+  //   setFieldValue,
+  //   validateForm,
+  // } = useFormikContext<StepperApartment>();
+
+  const handleNextWithValidation = async () => {
+    // const requiredFields: ReadonlyArray<keyof StepperApartment> = ['fles'] as const;
+
+    // const errs = await validateForm();
+
+    // if (requiredFields.every((field) => !errs[field])) {
+    handleNext();
+    // }
+  };
 
   useEffect(() => {
     if (uploadedImages.length === imagesWithBase64.length) return;
@@ -125,8 +145,8 @@ const UploadsForm = ({
         <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
           Back
         </Button>
-        <Button variant='contained' onClick={handleSubmit} sx={{ mt: 1, mr: 1 }}>
-          {'Finish'}
+        <Button variant='contained' onClick={handleNextWithValidation} sx={{ mt: 1, mr: 1 }}>
+          {'Continue'}
         </Button>
       </Box>
     </>

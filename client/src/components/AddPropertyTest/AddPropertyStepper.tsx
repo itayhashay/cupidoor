@@ -120,49 +120,53 @@ const AddPropertyStepper = ({
                       saveImages={handleSaveImages}
                       uploadedImages={uploadedImages}
                       handleBack={handleBack}
+                      handleNext={handleNext}
                       handleSubmit={handleSubmit}
                     />
                   );
                 case 4:
                   return (
-                    <Dialog open={true} onClose={handleBack} maxWidth={'lg'} fullWidth>
-                      <AppBar sx={{ position: 'relative' }} elevation={0}>
-                        <Toolbar sx={{ bgcolor: 'primary.light' }}>
-                          <Box display={'flex'} justifyContent={'space-between'}>
-                            <Box
-                              display={'flex'}
-                              justifyContent={'center'}
-                              alignItems={'center'}
-                              textAlign={'center'}
-                            >
-                              <Typography
-                                variant='body1'
-                                color={'white'}
+                    <>
+                      <Dialog open={true} onClose={handleBack} maxWidth={'lg'} fullWidth>
+                        <AppBar sx={{ position: 'relative' }} elevation={0}>
+                          <Toolbar sx={{ bgcolor: 'primary.light' }}>
+                            <Box display={'flex'} justifyContent={'space-between'}>
+                              <Box
+                                display={'flex'}
+                                justifyContent={'center'}
+                                alignItems={'center'}
                                 textAlign={'center'}
-                                fontSize={'1.5rem'}
                               >
-                                Property Preferences
-                              </Typography>
-                            </Box>
+                                <Typography
+                                  variant='body1'
+                                  color={'white'}
+                                  textAlign={'center'}
+                                  fontSize={'1.5rem'}
+                                >
+                                  Property Preferences
+                                </Typography>
+                              </Box>
 
-                            <IconButton onClick={handleBack} sx={{ color: 'white' }}>
-                              <CloseIcon />
-                            </IconButton>
-                          </Box>
-                        </Toolbar>
-                      </AppBar>
-                      <DialogContent>
-                        <Grid container>
-                          <Grid item xs={12} overflow={'auto'}>
-                            <QuestionsStepper
-                              displayHouses={() => {}}
-                              state={QUESTIONS_STATE.LANDLORD}
-                              handleSaveQuestions={handleSaveQuestions}
-                            />
+                              <IconButton onClick={handleBack} sx={{ color: 'white' }}>
+                                <CloseIcon />
+                              </IconButton>
+                            </Box>
+                          </Toolbar>
+                        </AppBar>
+                        <DialogContent>
+                          <Grid container>
+                            <Grid item xs={12} overflow={'auto'}>
+                              <QuestionsStepper
+                                displayHouses={() => {}}
+                                state={QUESTIONS_STATE.LANDLORD}
+                                handleSaveQuestions={handleSaveQuestions}
+                                submitFormik={handleSubmit}
+                              />
+                            </Grid>
                           </Grid>
-                        </Grid>
-                      </DialogContent>
-                    </Dialog>
+                        </DialogContent>
+                      </Dialog>
+                    </>
                   );
                 default:
                   return <AddressForm handleNext={handleNext} />;

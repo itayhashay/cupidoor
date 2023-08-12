@@ -1,6 +1,21 @@
 import { useEffect, useState } from 'react';
-import { Button, Box, Stepper, Step, StepLabel, Grid, Stack, Divider, Typography,Dialog, DialogContent, AppBar, Toolbar, IconButton } from '@mui/material';
-import AddressForm from "./AddressForm";
+import {
+  Button,
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  Grid,
+  Stack,
+  Divider,
+  Typography,
+  Dialog,
+  DialogContent,
+  AppBar,
+  Toolbar,
+  IconButton,
+} from '@mui/material';
+import AddressForm from './AddressForm';
 import AboutForm from './AboutForm';
 import PaymentsForm from './PaymentsForm';
 import UploadsForm from './UploadsForm';
@@ -11,32 +26,43 @@ import useAPI from '../../hooks/useAPI';
 import { AxiosResponse } from 'axios';
 import { convertFilePondImagesToBase64 } from '../../utils/base64';
 import { getUserId } from '../../utils/localStorage';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { Apartment } from '../../types/apartment';
 import QuestionsStepper from '../QuestionsStepper';
 import { QUESTIONS_STATE } from '../QuestionsStepper/constant';
 import { QuestionAnswer } from '../../types/questionAnswer';
 import CloseIcon from '@mui/icons-material/Close';
 
-const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (flag?:boolean) => void, houseData?: Apartment, isEdit: boolean}) => {
+const AddPropertyStepper = ({
+  handleClose,
+  houseData,
+  isEdit,
+}: {
+  handleClose: (flag?: boolean) => void;
+  houseData?: Apartment;
+  isEdit: boolean;
+}) => {
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [newApartmentData, setNewApartmentData] = useState<StepperApartment>(DEFAULT_NEW_APARTMENT_DATA);
-  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]) 
+  const [newApartmentData, setNewApartmentData] = useState<StepperApartment>(
+    DEFAULT_NEW_APARTMENT_DATA,
+  );
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
   const navigate = useNavigate();
-  const {addApartment, editApartment,setApartmentAnswers} = useAPI();
+  const { addApartment, editApartment, setApartmentAnswers } = useAPI();
 
   useEffect(() => {
-    houseData && setNewApartmentData({...houseData , newImages: [], removedImages: []} as StepperApartment);
+    houseData &&
+      setNewApartmentData({ ...houseData, newImages: [], removedImages: [] } as StepperApartment);
   }, [houseData]);
 
   const saveChangesOnNext = (values: any) => {
-    setNewApartmentData((prev: StepperApartment) => { 
-      return {...prev, ...values} 
-    })
-  }
-  
+    setNewApartmentData((prev: StepperApartment) => {
+      return { ...prev, ...values };
+    });
+  };
+
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -45,22 +71,22 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSubmit = async (questionAnswers:QuestionAnswer[]) => {
+  const handleSubmit = async (questionAnswers: QuestionAnswer[]) => {
     setIsLoading(true);
-    console.log(uploadedImages)
+    console.log(uploadedImages);
     newApartmentData.user = getUserId();
     newApartmentData.newImages = uploadedImages.map((image: UploadedImage) => image.base64);
 
     console.log(newApartmentData);
     try {
-      if(isEdit) {
+      if (isEdit) {
         const response: AxiosResponse = await editApartment(newApartmentData);
         response.status === 201 && navigate(`/apartment/${response.data._id}`);
       } else {
-        console.log("NOT EDIT")
+        console.log('NOT EDIT');
         const response: AxiosResponse = await addApartment(newApartmentData);
-        if(response.status === 201){
-          const answerResponse = await setApartmentAnswers(response.data._id,questionAnswers);
+        if (response.status === 201) {
+          const answerResponse = await setApartmentAnswers(response.data._id, questionAnswers);
         }
         response.status === 201 && navigate(`/apartment/${response.data._id}`);
       }
@@ -71,26 +97,28 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
       setIsLoading(false);
       handleClose(true);
     }
-  }
+  };
 
-  const handleSaveQuestions = (answers:QuestionAnswer[])=>{
+  const handleSaveQuestions = (answers: QuestionAnswer[]) => {
     handleSubmit(answers);
-  }
+  };
 
   return (
     <Stack height={'100%'}>
       <Grid container>
-      {activeStep !== STEPS.length -1 &&  <Grid item xs={12}>
-          <Stepper activeStep={activeStep} alternativeLabel sx={{ marginBottom: '1.5rem' }}>
-            {STEPS.map((label, index) => (
-              <Step key={index}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <Divider></Divider>
-        </Grid>}
-       
+        {activeStep !== STEPS.length - 1 && (
+          <Grid item xs={12}>
+            <Stepper activeStep={activeStep} alternativeLabel sx={{ marginBottom: '1.5rem' }}>
+              {STEPS.map((label, index) => (
+                <Step key={index}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            <Divider></Divider>
+          </Grid>
+        )}
+
         <Grid item xs={12} mt={3}>
           {isLoading ? (
             <CupidoorSpinner />
@@ -156,12 +184,12 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
                       </AppBar>
                       <DialogContent>
                         <Grid container>
-                          <Grid item xs={12} overflow={'auto'} >
-                          <QuestionsStepper
-                        displayHouses={() => {}}
-                        state={QUESTIONS_STATE.LANDLORD}
-                        handleSaveQuestions={handleSaveQuestions}
-                      />
+                          <Grid item xs={12} overflow={'auto'}>
+                            <QuestionsStepper
+                              displayHouses={() => {}}
+                              state={QUESTIONS_STATE.LANDLORD}
+                              handleSaveQuestions={handleSaveQuestions}
+                            />
                           </Grid>
                         </Grid>
                       </DialogContent>
