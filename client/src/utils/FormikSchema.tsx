@@ -66,29 +66,34 @@ export const userPasswordSchema = Yup.object().shape({
 
 export const AddressFormSchema = Yup.object().shape({
   city: Yup.string()
-    .required('City is required field')
-    .min(2, 'City must have at least 2 letters')
-    .max(90, 'City cannot contain over 90 letters'),
+    .required('City is required')
+    .min(2, 'Please enter a valid city name')
+    .max(90, 'Please enter a valid city name'),
   street: Yup.string()
-    .required('Street is required field')
-    .min(2, 'Street must have at least 2 letters')
-    .max(90, 'Street cannot contain over 90 letters'),
+    .required('Street is required')
+    .min(2, 'Please enter a valid streey name')
+    .max(90, 'Please enter a valid street name'),
   houseNumber: Yup.number()
-    .required('House number is required field')
-    .max(1000000000, 'House number cannot reach over 10 numbers'),
+    .required('House number is required')
+    .min(1,"Please enter a valid house number")
+    .max(1000000000, 'Please enter a valid house number'),
 });
 
 export const AboutFormSchema = Yup.object().shape({
-  propertyCondition: Yup.string().required('Condition is required'),
-  houseArea: Yup.number().required('House area is required').min(1, 'Should be at least 1 m'),
+  propertyCondition: Yup.string().required('Property condition is required'),
+  houseArea: Yup.number().required('House area is required').min(1, 'Please enter a valid house area'),
   description: Yup.string()
-    .required('Minimal description required')
-    .min(2, 'Minimum 2 words please'),
+    .required('Description is required')
+    .min(2, 'Description should contain at least 2 words'),
+    rooms: Yup.number().required('Rooms is required').min(1, 'Please enter a valid number of rooms'),
+    floor: Yup.number().required('Floor is required').min(-1, 'Please enter a valid floor number'),
+    balconies: Yup.number().required('Balconies is required').min(0, 'Please enter a valid number of balconies'),
+    parkings: Yup.number().required('Parkings is required').min(0, 'Please enter a valid number of parkings'),
 });
 
 export const PaymentsFormSchema = Yup.object().shape({
-  price: Yup.number().required('Price is required').min(1, 'At least 1Nis'),
-  tax: Yup.number().required('Property tax is required').min(1, 'At least 1Nis'),
+  price: Yup.number().required('Price is required').min(1, 'Please enter a valid price'),
+  tax: Yup.number().required('Tax is required').min(1, 'Please enter a valid tax value'),
   numOfPayments: Yup.number()
     .required('Number of payments is required')
     .min(1, 'At least 1 payment')

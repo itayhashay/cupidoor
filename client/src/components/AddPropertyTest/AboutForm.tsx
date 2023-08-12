@@ -119,7 +119,7 @@ const AboutForm = ({
             defaultValue={rooms}
             onChange={handleChange}
           />
-          {errors?.houseArea && <CustomHelperText>{errors.houseArea}</CustomHelperText>}
+          {errors?.rooms && <CustomHelperText>{errors.rooms}</CustomHelperText>}
         </Grid>
         <Grid item xs={3}>
           <TextField
@@ -130,6 +130,7 @@ const AboutForm = ({
             defaultValue={floor}
             onChange={handleChange}
           />
+          {errors?.floor && <CustomHelperText>{errors.floor}</CustomHelperText>}
         </Grid>
         <Grid item xs={3}>
           <TextField
@@ -140,6 +141,7 @@ const AboutForm = ({
             defaultValue={balconies}
             onChange={handleChange}
           />
+          {errors?.balconies && <CustomHelperText>{errors.balconies}</CustomHelperText>}
         </Grid>
         <Grid item xs={3}>
           <TextField
@@ -150,6 +152,7 @@ const AboutForm = ({
             defaultValue={parkings}
             onChange={handleChange}
           />
+          {errors?.parkings && <CustomHelperText>{errors.parkings}</CustomHelperText>}
         </Grid>
         <Grid item xs={12}>
           <Typography variant='h6' color={'black'}>
