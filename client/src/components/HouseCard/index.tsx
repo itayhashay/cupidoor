@@ -13,7 +13,6 @@ import {
 import Skeleton from '@mui/material/Skeleton';
 import { Apartment } from '../../types/apartment';
 import { Link } from 'react-router-dom';
-
 import { Box, CircularProgress, Divider, Fab, Grid, Icon, Tooltip } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
@@ -24,9 +23,9 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import StairsIcon from '@mui/icons-material/Stairs';
-
 import useAPI from '../../hooks/useAPI';
-import AddProperty from '../AddProperty';
+// import AddProperty from '../AddProperty';
+import AddProperty from '../AddPropertyTest';
 import { useConfirmationModal } from '../../context/ConfirmationModalContext';
 
 const HouseCard = ({
@@ -81,9 +80,9 @@ const HouseCard = ({
     setEditOpen(true);
   };
 
-  const handleApartmentSave = ()=>{
-   window.location.reload(); 
-  }
+  const handleApartmentSave = () => {
+    window.location.reload();
+  };
 
   return (
     <>
