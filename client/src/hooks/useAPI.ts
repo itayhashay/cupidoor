@@ -85,9 +85,13 @@ const useAPI = () => {
   };
 
   const getApartmentById = async (apartmentId: string): Promise<Apartment> => {
-    const response = await axiosPrivate.get(`${config.api.routes.getApartment}/${apartmentId}`);
-
-    return response.data;
+    try{
+      const response = await axiosPrivate.get(`${config.api.routes.getApartment}/${apartmentId}`);
+      return response.data;
+    }catch(ex){
+      throw ex;
+    }
+    
   };
 
   const getApartments = async (): Promise<Apartment[]> => {
