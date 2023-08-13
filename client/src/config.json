@@ -10,6 +10,7 @@
       "signUp": "/signUp",
       "updatePassword": "/password",
       "addApartment": "/apartment",
+      "deleteApartment": "/apartment",
       "getApartment": "/apartment",
       "getLandloard": "/apartment/landlord",
       "getLikedApartments": "/users-relations/tenant/likes",
