@@ -30,24 +30,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useFormikContext } from 'formik';
 
 const AddPropertyStepper = ({
-  // handleClose,
-  // houseData,
-  // isEdit,
+  isEdit,
   uploadedImages,
   setUploadedImages,
 }: {
-  // handleClose: (flag?: boolean) => void;
-  // houseData?: Apartment;
-  // isEdit: boolean;
+  isEdit: boolean;
   uploadedImages: UploadedImage[];
   setUploadedImages: React.Dispatch<React.SetStateAction<UploadedImage[]>>;
 }) => {
   const [activeStep, setActiveStep] = useState(0);
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [newApartmentData, setNewApartmentData] = useState<StepperApartment>(
-  //   DEFAULT_NEW_APARTMENT_DATA,
-  // );
-  // const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
   const {
     values: {},
@@ -56,6 +47,10 @@ const AddPropertyStepper = ({
   } = useFormikContext<StepperApartment>();
 
   const handleNext = () => {
+    if(activeStep + 1 === STEPS.length -1 && isEdit){
+      handleSubmit();
+      return;
+    }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -64,20 +59,6 @@ const AddPropertyStepper = ({
   };
 
   const handleSaveImages = (files: UploadedImage[]) => setUploadedImages(files);
-
-  // const navigate = useNavigate();
-  const { setApartmentAnswers } = useAPI();
-
-  // useEffect(() => {
-  //   houseData &&
-  //     setNewApartmentData({ ...houseData, newImages: [], removedImages: [] } as StepperApartment);
-  // }, [houseData]);
-
-  // const saveChangesOnNext = (values: any) => {
-  //   setNewApartmentData((prev: StepperApartment) => {
-  //     return { ...prev, ...values };
-  //   });
-  // };
 
   // #############################################################
   // ------>>> New part Afik added <<< ------ //

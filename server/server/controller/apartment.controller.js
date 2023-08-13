@@ -324,11 +324,12 @@ router.put("/:id", async (req, res, next) => {
     if(!req.isAdmin ){
       const error = new Error("UnAuthorized!");
       error.status = 401;
-      if(typeof req.body.user == "string" && req.body.user != req.user._id.toString()){
-        throw error;
-      }else if(typeof req.body.user != "string" && req.body.user._id != req.user._id.toString()){
-        throw error;
-      }
+      const apartmentResponse = await apartmentService.getApartment(req.params.id,req.user);
+      if(apartmentResponse){
+        if(apartmentResponse.user._id != req.user._id.toString()){
+          throw error;
+        }
+      } 
       
       
     }

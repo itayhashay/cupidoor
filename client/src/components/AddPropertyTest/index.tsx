@@ -111,7 +111,7 @@ const AddProperty = ({
                 setUploadedImages={setUploadedImages}
                 // handleClose={handleStepperClose}
                 // houseData={houseData}
-                // isEdit={isEdit}
+                isEdit={isEdit}
               />
             </Formik>
           </Grid>
