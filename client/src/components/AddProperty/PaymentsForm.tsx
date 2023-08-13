@@ -1,38 +1,25 @@
 import { Box, Divider, FormControl, Grid, InputAdornment, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { generateArrayFromRange } from "../../utils/logic";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from "dayjs";
 import { ApartmentPayments, StepperApartment } from "./types";
 import { DEFAULT_PAYMENTS } from "./constants";
+import { CustomHelperText } from "../../utils/FormikSchema";
 
-const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void}) => {
+const PaymentsForm = ({apartmentData, saveChangesOnNext, errors} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void, errors: any}) => {
     const [paymentsState, setPaymentsState] = useState<ApartmentPayments>(DEFAULT_PAYMENTS) 
-    const paymentsStateRef = useRef(paymentsState); // Create a mutable ref
 
     useEffect(() => {
         setPaymentsState(apartmentData);
-    }, [apartmentData]);
-
-    useEffect(() => {
-        paymentsStateRef.current = (paymentsState)
-    }, [paymentsState]);
-
-    useEffect(() => {
-        return () => {
-          saveChangesOnNext(paymentsStateRef.current);
-        };
-      }, []);
-      
+    }, [apartmentData]);      
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setPaymentsState((prev) => {
-            return {
-                ...prev,
-                [e.target.id || e.target.name]: e.target.value
-            }
-        })
+      saveChangesOnNext({
+          ...paymentsState,
+        [e.target.id || e.target.name]: e.target.value
+      });
     }
     
     const handleChangePaymentsDay = (event: SelectChangeEvent<number>) => {
@@ -45,12 +32,10 @@ const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Stepp
     }
 
     const handleDatePickerChange = (value: Dayjs | null) => {
-        setPaymentsState((prev) => {
-            return {
-                ...prev,
-                entranceDate: value
-            }
-        })
+        saveChangesOnNext({
+          ...paymentsState,
+          entranceDate: value
+        });
     }
 
     useEffect(() => {
@@ -86,6 +71,8 @@ const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Stepp
               InputProps={{
                 endAdornment: <InputAdornment position='end'>₪</InputAdornment>,
               }}
+              error={errors.price}
+              helperText={errors.price && errors.price}    
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -126,6 +113,8 @@ const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Stepp
               onChange={handleChange}
               select
               required
+              error={errors.numOfPayments}
+              helperText={errors.numOfPayments && errors.numOfPayments}
             >
               {generateArrayFromRange(1, 12).map((option, index) => (
                 <MenuItem key={index} value={option}>
@@ -193,6 +182,7 @@ const PaymentsForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Stepp
                 minDate={dayjs(new Date())}
               />
             </DemoContainer>
+            {errors.entranceDate && <CustomHelperText>{errors.entranceDate}</CustomHelperText>}
           </Grid>
           <Grid item xs={12} mt={3}>
             <Typography variant='h4' fontWeight={400}>
