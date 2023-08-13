@@ -1,34 +1,21 @@
-import { Box, TextField, Typography,Grid, Divider } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { TextField, Typography,Grid, Divider } from "@mui/material";
+import { useEffect, useState } from "react";
 import { ApartmentAddress, StepperApartment } from "./types";
 import { DEFAULT_ADDRESS } from "./constants";
 
-const AddressForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void}) => {
+const AddressForm = ({apartmentData, saveChangesOnNext, errors} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void, errors: any}) => {
     const [addressState, setAddressState] = useState<ApartmentAddress>(DEFAULT_ADDRESS) 
-    const addressStateRef = useRef(addressState); // Create a mutable ref
 
     useEffect(() => {
         setAddressState(apartmentData);
     }, [apartmentData]);
-
-    useEffect(() => {
-        addressStateRef.current = (addressState)
-    }, [addressState]);
-
-    useEffect(() => {
-        return () => {
-          saveChangesOnNext(addressStateRef.current);
-        };
-      }, []);
       
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setAddressState((prev) => {
-            return {
-                ...prev,
-                [e.target.id]: e.target.value
-            }
-        })
+        saveChangesOnNext({
+            ...addressState,
+          [e.target.id]: e.target.value
+        });
     }
 
     return (
@@ -53,6 +40,8 @@ const AddressForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Steppe
               focused
               value={addressState.city}
               onChange={handleChange}
+              error={errors.city}
+              helperText={errors.city && errors.city}
             />
           </Grid>
           <Grid item xs={7}>
@@ -63,6 +52,8 @@ const AddressForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Steppe
               required
               value={addressState.street}
               onChange={handleChange}
+              error={errors.street}
+              helperText={errors.street && errors.street}
             />
           </Grid>
           <Grid item xs={7}>
@@ -75,6 +66,8 @@ const AddressForm = ({apartmentData, saveChangesOnNext} : {apartmentData: Steppe
               required
               type='number'
               inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              error={errors.houseNumber}
+              helperText={errors.houseNumber && errors.houseNumber}
             />
           </Grid>
         </Grid>

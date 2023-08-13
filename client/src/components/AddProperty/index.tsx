@@ -51,8 +51,8 @@ const AddProperty = ({ isOpen, onClose,handleSave, houseData, isEdit = false} : 
         </Toolbar>
       </AppBar>
       <DialogContent>
-        <Grid container>
-          <Grid item xs={12} overflow={'auto'} height={850}>
+        <Grid container height={'76vh'}>
+          <Grid item xs={12} overflow={'auto'} height={'auto'}>
             <AddPropertyStepper
               handleClose={handleStepperClose}
               houseData={houseData}
@@ -61,8 +61,6 @@ const AddProperty = ({ isOpen, onClose,handleSave, houseData, isEdit = false} : 
           </Grid>
         </Grid>
       </DialogContent>
-
-      <DialogActions></DialogActions>
     </Dialog>
   );
 }

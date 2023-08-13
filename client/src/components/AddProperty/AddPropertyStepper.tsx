@@ -9,7 +9,6 @@ import { StepperApartment, UploadedImage } from './types';
 import { DEFAULT_NEW_APARTMENT_DATA, STEPS } from './constants';
 import useAPI from '../../hooks/useAPI';
 import { AxiosResponse } from 'axios';
-import { convertFilePondImagesToBase64 } from '../../utils/base64';
 import { getUserId } from '../../utils/localStorage';
 import { useNavigate } from "react-router-dom";
 import { Apartment } from '../../types/apartment';
@@ -17,28 +16,45 @@ import QuestionsStepper from '../QuestionsStepper';
 import { QUESTIONS_STATE } from '../QuestionsStepper/constant';
 import { QuestionAnswer } from '../../types/questionAnswer';
 import CloseIcon from '@mui/icons-material/Close';
+import usePropertyValidator from '../../hooks/usePropertyValidator';
 
 const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (flag?:boolean) => void, houseData?: Apartment, isEdit: boolean}) => {
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newApartmentData, setNewApartmentData] = useState<StepperApartment>(DEFAULT_NEW_APARTMENT_DATA);
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]) 
+  const [errors, setErrors] = useState<any>({});
 
   const navigate = useNavigate();
   const {addApartment, editApartment,setApartmentAnswers} = useAPI();
+
+  const { validateStep } = usePropertyValidator();
+  
+  useEffect(() => {
+    if(activeStep === -1) setActiveStep(0);
+  }, [activeStep]);
 
   useEffect(() => {
     houseData && setNewApartmentData({...houseData , newImages: [], removedImages: []} as StepperApartment);
   }, [houseData]);
 
   const saveChangesOnNext = (values: any) => {
+    const validatorRes = validateStep(activeStep, newApartmentData);
+
+    setErrors(validatorRes);
+
     setNewApartmentData((prev: StepperApartment) => { 
       return {...prev, ...values} 
     })
   }
   
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    const validatorRes = validateStep(activeStep, newApartmentData);
+    const isStepValid = Object.values(validatorRes).every(value => value === false);
+
+    setErrors(validatorRes);
+
+    isStepValid && setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
@@ -102,6 +118,7 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
                     <AddressForm
                       apartmentData={newApartmentData}
                       saveChangesOnNext={saveChangesOnNext}
+                      errors={errors}
                     />
                   );
                 case 1:
@@ -109,6 +126,7 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
                     <AboutForm
                       apartmentData={newApartmentData}
                       saveChangesOnNext={saveChangesOnNext}
+                      errors={errors}
                     />
                   );
                 case 2:
@@ -116,6 +134,7 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
                     <PaymentsForm
                       apartmentData={newApartmentData}
                       saveChangesOnNext={saveChangesOnNext}
+                      errors={errors}
                     />
                   );
                 case 3:
@@ -172,6 +191,7 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
                     <AddressForm
                       apartmentData={newApartmentData}
                       saveChangesOnNext={saveChangesOnNext}
+                      errors={errors}
                     />
                   );
               }
@@ -179,7 +199,7 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
           )}
         </Grid>
       </Grid>
-      <Box display={'flex'} justifyContent={'flex-end'} mt={'auto'}>
+      <Box display={'flex'} justifyContent={'flex-end'} mt={'auto'} padding={'1rem 0 1.5rem 0'}>
         <Button disabled={activeStep === 0} onClick={handleBack}>
           Back
         </Button>
