@@ -177,7 +177,7 @@ export const UserMenuItems = [
     urlName: USER_ROUTES.ALL_APARTMENTS,
     icon: <img alt='' src={AllIcon} />,
     selectedIcon: <img alt='' src={AllSelecedIcon} />,
-    roles: ['tenant', 'landlord', 'both', 'admin'],
+    roles: ['tenant', 'both', 'admin'],
   },
 ];
 
