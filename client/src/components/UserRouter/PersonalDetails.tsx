@@ -254,7 +254,7 @@ const PersonalDetails = ({
               <FormControl
                 fullWidth
                 error={
-                  formik.touched.description &&
+
                   Boolean(formik.errors.description)
                 }
               >
@@ -265,7 +265,7 @@ const PersonalDetails = ({
                   rows={5}
                   value={formik.values.description}
                   error={
-                    formik.touched.description &&
+      
                     Boolean(formik.errors.description)
                   }
                   onChange={(event: React.ChangeEvent<any>) => {
@@ -277,7 +277,7 @@ const PersonalDetails = ({
                 ></TextField>
                 <Box display={"flex"} justifyContent={"space-between"}>
                   <FormHelperText color={"error"}>
-                    {formik.touched.description && formik.errors.description}
+                    { formik.errors.description}
                   </FormHelperText>
                   <FormHelperText>
                     {formik.values.description?.trim().split(/\s+/).length}/

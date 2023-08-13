@@ -44,7 +44,7 @@ export const userDetailsScheme = Yup.object().shape({
     .max(120, 'Please enter a valid age!'),
   email: Yup.string().required('Email is a required field').email('Invalid email format'),
   phone: Yup.string().required('Phone number is a required field'),
-  description: Yup.string().test(
+  description: Yup.string().required("Please write something about yourself").test(
     'description-max-word-count',
     'Description must be a maximum of 120 words',
     wordCountValidator,
