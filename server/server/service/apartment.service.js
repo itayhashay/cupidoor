@@ -5,6 +5,7 @@ const UserAnswer = require("../model/userAnswer.model");
 const Score = require("../model/score.model");
 const ScoreService = require("./score.service");
 const ApartmentAnswer = require("../model/apartmentAnswer.model");
+const UsersRelations = require("../model/usersRelations.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 const createApartment = async (apartmentData, user) => {
   try {
@@ -335,7 +336,7 @@ const getApartment = async (id, user) => {
       scorePromise,
     ]);
     // apartment.images = await Storage.addBase64Value(apartment.images);
-
+    if(!apartment[0]) return null;
     return { ...apartment[0], match: score.score };
   } catch (err) {
     throw new Error("Error getting apartment: " + err.message);
@@ -441,6 +442,8 @@ const updateApartment = async (id, apartmentData) => {
 
 const deleteApartment = async (id) => {
   try {
+    await Score.findOneAndRemove({apartment:id});
+    await UsersRelations.findOneAndRemove({apartment:id});
     return await Apartment.findByIdAndRemove(id);
   } catch (err) {
     throw new Error("Error deleting apartment: " + err.message);

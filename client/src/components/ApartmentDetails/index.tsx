@@ -1,6 +1,6 @@
 import { Box, Button, Container, Grid, Paper, Typography,Avatar,IconButton } from '@mui/material';
 import { useEffect, useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Apartment } from '../../types/apartment';
 import DryDetails from './DryDetails';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -43,6 +43,7 @@ const ApartmentDetails = () => {
   const { user } = useAuth();
   const params = useParams();
   const { showConfirmationModal } = useConfirmationModal();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchApartmentLikes = async (id: string) => {
@@ -52,16 +53,21 @@ const ApartmentDetails = () => {
     };
 
     const fetchApartmentData = async (id: string) => {
-      const apartment: Apartment = await getApartmentById(id);
-      setApartmentInfo(apartment);
-      setInitiateUpdate(false);
-      if (apartment.user._id === user?._id) {
-        setIsLikesLoading(true);
-        setIsMyApartment(true);
-        fetchApartmentLikes(id);
+      try{
+        const apartment: Apartment = await getApartmentById(id);
+        setApartmentInfo(apartment);
+        setInitiateUpdate(false);
+        if (apartment.user._id === user?._id) {
+          setIsLikesLoading(true);
+          setIsMyApartment(true);
+          fetchApartmentLikes(id);
+        }
+        setIsFavorite(apartment?.liked as boolean);
+        setIsMatched(apartment?.matched as boolean);
+      }catch(ex){
+        navigate("/404")
       }
-      setIsFavorite(apartment?.liked as boolean);
-      setIsMatched(apartment?.matched as boolean);
+     
     };
 
     const apartmentId: string = params.id || '';

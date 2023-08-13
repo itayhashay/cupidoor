@@ -38,6 +38,16 @@ const useAPI = () => {
       return ex;
     }
   };
+  const deleteApartment = async (apartmentId:string) => {
+    try {
+      const response: AxiosResponse = await axiosPrivate.delete(
+        config.api.routes.deleteApartment + '/' + apartmentId,
+      );
+      return response;
+    } catch (ex: AxiosError | any) {
+      return ex;
+    }
+  };
 
   const setApartmentAnswers = async (apartmentId:string,answers: QuestionAnswer[]) => {
     try{
@@ -85,9 +95,13 @@ const useAPI = () => {
   };
 
   const getApartmentById = async (apartmentId: string): Promise<Apartment> => {
-    const response = await axiosPrivate.get(`${config.api.routes.getApartment}/${apartmentId}`);
-
-    return response.data;
+    try{
+      const response = await axiosPrivate.get(`${config.api.routes.getApartment}/${apartmentId}`);
+      return response.data;
+    }catch(ex){
+      throw ex;
+    }
+    
   };
 
   const getApartments = async (): Promise<Apartment[]> => {
@@ -222,6 +236,7 @@ const useAPI = () => {
     updateUser,
     fetchUser,
     addApartment,
+    deleteApartment,
     editApartment,
     getApartmentLikes,
     approveTenant,

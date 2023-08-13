@@ -26,6 +26,9 @@ const ChatService = {
     const response = [];
 
     for (let match of matches) {
+      if(!match.apartment){
+        continue;
+      }
       const promises = [];
       let conversation = await conversationModel
         .findOne({
@@ -63,7 +66,7 @@ const ChatService = {
       response.push({
         _id: match.apartment._id,
         name: `${match.apartment.city},${match.apartment.street} ${match.apartment.houseNumber}`,
-        avatar: match.apartment.images[0].url,
+        avatar: match.apartment.images[0]?.url,
         conversationId: conversation._id,
         lastMessage: lastMessage ? lastMessage.text : "",
         notifications,
