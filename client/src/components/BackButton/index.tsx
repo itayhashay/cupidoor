@@ -12,13 +12,19 @@ const handleClick= ()=>{
     navigate(-1);
 }
 
-    return (
-      <IconButton onClick={handleClick} sx={{ bgcolor:bgcolor ? bgcolor : 'primary.dark',"&.MuiIconButton-root:hover":{
-        bgcolor:"primary.light"
-      } }}>
-        <ArrowBackIcon sx={{ color: 'white' }} />
-      </IconButton>
-    );
-}
+  return (
+    <IconButton
+      onClick={handleClick}
+      sx={{
+        bgcolor: bgcolor ? bgcolor : 'primary.dark',
+        '&.MuiIconButton-root:hover': {
+          bgcolor: 'primary.light',
+        },
+      }}
+    >
+      <ArrowBackIcon sx={{ color: 'white' }} />
+    </IconButton>
+  );
+};
 
 export default BackButton;

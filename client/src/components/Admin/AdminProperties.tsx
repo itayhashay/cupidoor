@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import useAPI from '../../hooks/useAPI';
-import { Box, Grid, Typography, Stack, Paper, Avatar, Tooltip } from '@mui/material';
+import { Box, Paper, Tooltip } from '@mui/material';
 import CupidoorSpinner from '../CupidoorSpinner';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import UndoIcon from '@mui/icons-material/Undo';
@@ -20,20 +20,19 @@ const AdminProperties = () => {
 
   const handleRestoreClick = (id: string) => {};
   const handleDeleteClick = (id: string) => {
-    
-    if(apartments){
-      const apartment = apartments?.filter(apartment=>apartment._id === id);
-      if(apartment[0]){
+    if (apartments) {
+      const apartment = apartments?.filter((apartment) => apartment._id === id);
+      if (apartment[0]) {
         setDeleteApartmentData(apartment[0]);
       }
     }
     setIsDeleteDialogOpen(true);
-    
   };
-  const handleDeleteDialogClose = ()=>{
+  const handleDeleteDialogClose = () => {
     setIsDeleteDialogOpen(false);
     setDeleteApartmentData(null);
-  }
+    window.location.reload();
+  };
   const handleEditClick = (id: string) => {
     setEditApartmentId(id);
     setIsEditDialogOpen(true);
@@ -43,9 +42,9 @@ const AdminProperties = () => {
     setEditApartmentId(null);
   };
 
-  const handleDialogSave = ()=>{
+  const handleDialogSave = () => {
     setApartments(null);
-  }
+  };
 
   const cols = useMemo(
     () => [
@@ -130,7 +129,7 @@ const AdminProperties = () => {
           ) : (
             <GridActionsCellItem
               icon={
-                <Tooltip title={'Disable'}>
+                <Tooltip title={'Delete apartment'}>
                   <DeleteIcon color='error' />
                 </Tooltip>
               }
@@ -142,7 +141,7 @@ const AdminProperties = () => {
           const editAction = (
             <GridActionsCellItem
               icon={
-                <Tooltip title='Edit product'>
+                <Tooltip title='Edit apartment'>
                   <EditIcon />
                 </Tooltip>
               }
@@ -173,11 +172,27 @@ const AdminProperties = () => {
       }
       setApartments(apartments);
     };
-    if(apartments == null){
+    if (apartments == null) {
       fetchApartments();
     }
-    
   }, [apartments]);
+
+  const reFetchApartments: VoidFunction = () => {
+    const fetchApartments = async () => {
+      const data = await getAdminApartments();
+      const tempApartments = [];
+      for (let apartment of data.apartments) {
+        tempApartments.push({
+          ...apartment,
+          user: `${apartment.user.firstName} ${apartment.user.lastName}`,
+        });
+      }
+      setApartments(tempApartments);
+    };
+    if (apartments == null) {
+      fetchApartments();
+    }
+  };
 
   return apartments && Object.keys(apartments).length > 0 ? (
     <>
@@ -195,7 +210,13 @@ const AdminProperties = () => {
           pageSizeOptions={[5, 10, 20, 50]}
         />
       </Box>
-      {isDeleteDialogOpen && <DeleteApartmentDialog apartmentDetails={deleteApartmentData as Apartment} handleClose={handleDeleteDialogClose}/>}
+      {isDeleteDialogOpen && (
+        <DeleteApartmentDialog
+          apartmentDetails={deleteApartmentData as Apartment}
+          handleClose={handleDeleteDialogClose}
+          fetchApartments={reFetchApartments}
+        />
+      )}
       {isEditDialogOpen && editApartmentId && (
         <AdminEditApartmentDialog
           open={isEditDialogOpen}
@@ -206,7 +227,7 @@ const AdminProperties = () => {
       )}
     </>
   ) : (
-    <CupidoorSpinner></CupidoorSpinner>
+    <CupidoorSpinner />
   );
 };
 

@@ -1,14 +1,16 @@
-import { Box, Container, Grid, Paper, Typography, Avatar, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Apartment } from '../../types/apartment';
-import DryDetails from './DryDetails';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Box, Container, Grid, Paper, Typography, Avatar, IconButton, Fab } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { ImageContainer } from './styles';
-import ImagesGallery from './ImagesGallery';
 import { FavoriteBorder } from '@mui/icons-material';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import LoadingButton from '@mui/lab/LoadingButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DryDetails from './DryDetails';
+import { Apartment } from '../../types/apartment';
+import { ImageContainer } from './styles';
+import ImagesGallery from './ImagesGallery';
 import ApartmentFeatures from './ApartmentFeatures';
 import { precentToColor } from '../../utils/colors';
 import useAPI from '../../hooks/useAPI';
@@ -23,9 +25,9 @@ import LikesSection from './LikesSection';
 import { useSnackbar } from '../../context/SnackbarContext';
 import { useConfirmationModal } from '../../context/ConfirmationModalContext';
 import BackButton from '../BackButton';
-import EditIcon from '@mui/icons-material/Edit';
 // import AddProperty from '../AddProperty';
 import AddProperty from '../AddPropertyTest';
+import DeleteApartmentDialog from '../DeleteApartmentDialog';
 
 const ApartmentDetails = () => {
   const [apartmentInfo, setApartmentInfo] = useState<Apartment | null>(null);
@@ -38,12 +40,14 @@ const ApartmentDetails = () => {
   const [apartmentLikes, setApartmentLikes] = useState<User[]>([] as User[]);
   const [isLikesLoading, setIsLikesLoading] = useState<boolean>(false);
   const [isLikeActionLoading, setIsLikeActionLoading] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const { setSnackBarState } = useSnackbar();
   const { user } = useAuth();
   const params = useParams();
   const { showConfirmationModal } = useConfirmationModal();
   const { getApartmentById, toggleTenantLike, getApartmentLikes, approveTenant, declineTenant } =
     useAPI();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchApartmentLikes = async (id: string) => {
@@ -114,6 +118,7 @@ const ApartmentDetails = () => {
       }
     }
   };
+
   const handleDeclineClick = (tenantId: string) => {
     if (apartmentInfo) {
       try {
@@ -140,12 +145,27 @@ const ApartmentDetails = () => {
     setIsEditOpen(false);
   };
 
+  const handleDeleteClick = async (event: any) => {
+    event.preventDefault();
+    setDeleteOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteOpen(false);
+  };
+
+  const reloadFunction: VoidFunction = () => {
+    // window.location.href = '/home/my-properties';
+    navigate('/home/my-properties');
+  };
+
   if (!apartmentInfo) return <CupidoorSpinner></CupidoorSpinner>;
+
   return (
     // TODO: Change last updated mock.
     <>
       <Box padding={2}>
-        <BackButton></BackButton>
+        <BackButton />
       </Box>
 
       <Container maxWidth='xl' sx={{ paddingY: 3 }}>
@@ -159,23 +179,40 @@ const ApartmentDetails = () => {
               justifyContent={'space-between'}
             >
               <Box display={'flex'} color={'white'} alignItems={'center'}>
-                <LocationOnIcon></LocationOnIcon>
+                <LocationOnIcon />
                 <Typography variant='h5' fontWeight={'bold'} ml={1}>
                   {`${apartmentInfo.city}, ${apartmentInfo.street} ${apartmentInfo.houseNumber}`}
                 </Typography>
               </Box>
               {isMyApartment && (
-                <IconButton
-                  onClick={handleEditClick}
-                  sx={{
-                    bgcolor: 'primary.dark',
-                    '&.MuiIconButton-root:hover': {
-                      bgcolor: 'secondary.main',
-                    },
-                  }}
-                >
-                  <EditIcon sx={{ color: 'white' }}></EditIcon>
-                </IconButton>
+                <>
+                  <IconButton
+                    onClick={handleEditClick}
+                    sx={{
+                      bgcolor: 'primary.dark',
+                      '&.MuiIconButton-root:hover': {
+                        bgcolor: 'secondary.main',
+                      },
+                    }}
+                  >
+                    <EditIcon sx={{ color: 'white' }}></EditIcon>
+                  </IconButton>
+                  <Fab
+                    sx={{
+                      height: '40px',
+                      width: '40px',
+                      marginLeft: '7px',
+                      bgcolor: 'primary.dark',
+                      '&.MuiIconButton-root:hover': {
+                        bgcolor: 'secondary.main',
+                      },
+                    }}
+                    onClick={handleDeleteClick}
+                    id='delete-button'
+                  >
+                    {<DeleteIcon sx={{ color: 'white' }} />}
+                  </Fab>
+                </>
               )}
             </Box>
           </Grid>
@@ -253,6 +290,13 @@ const ApartmentDetails = () => {
             </Grid>
           )}
         </Grid>
+        {deleteOpen && (
+          <DeleteApartmentDialog
+            apartmentDetails={apartmentInfo}
+            handleClose={closeDeleteDialog}
+            fetchApartments={reloadFunction}
+          />
+        )}
         <AddProperty
           isOpen={isEditOpen}
           onClose={() => setIsEditOpen(false)}
