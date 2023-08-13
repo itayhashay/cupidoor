@@ -81,19 +81,19 @@ export const AddressFormSchema = Yup.object().shape({
 
 export const AboutFormSchema = Yup.object().shape({
   propertyCondition: Yup.string().required('Property condition is required'),
-  houseArea: Yup.number().required('House area is required').min(1, 'Please enter a valid house area'),
+  houseArea: Yup.number().typeError("Please enter a valid house area").required('House area is required').min(1, 'Please enter a valid house area'),
   description: Yup.string()
     .required('Description is required')
     .min(2, 'Description should contain at least 2 words'),
-    rooms: Yup.number().required('Rooms is required').min(1, 'Please enter a valid number of rooms'),
-    floor: Yup.number().required('Floor is required').min(-1, 'Please enter a valid floor number'),
-    balconies: Yup.number().required('Balconies is required').min(0, 'Please enter a valid number of balconies'),
-    parkings: Yup.number().required('Parkings is required').min(0, 'Please enter a valid number of parkings'),
+    rooms: Yup.number().typeError("Please enter a valid number of rooms").required('Rooms is required').min(1, 'Please enter a valid number of rooms'),
+    floor: Yup.number().typeError("Please enter a valid floor number").required('Floor is required').min(-1, 'Please enter a valid floor number'),
+    balconies: Yup.number().typeError("Please enter a valid number of balconies").required('Balconies is required').min(0, 'Please enter a valid number of balconies'),
+    parkings: Yup.number().typeError("Please enter a valid number of parkings").required('Parkings is required').min(0, 'Please enter a valid number of parkings'),
 });
 
 export const PaymentsFormSchema = Yup.object().shape({
-  price: Yup.number().required('Price is required').min(1, 'Please enter a valid price'),
-  tax: Yup.number().required('Tax is required').min(1, 'Please enter a valid tax value'),
+  price: Yup.number().typeError("Please enter a valid price").required('Price is required').min(1, 'Please enter a valid price'),
+  tax: Yup.number().typeError("Please enter a valid tax").required('Tax is required').min(1, 'Please enter a valid tax value'),
   numOfPayments: Yup.number()
     .required('Number of payments is required')
     .min(1, 'At least 1 payment')
