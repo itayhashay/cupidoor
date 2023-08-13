@@ -24,7 +24,8 @@ import { useSnackbar } from '../../context/SnackbarContext';
 import { useConfirmationModal } from '../../context/ConfirmationModalContext';
 import BackButton from '../BackButton';
 import EditIcon from '@mui/icons-material/Edit';
-import AddProperty from '../AddProperty';
+// import AddProperty from '../AddProperty';
+import AddProperty from '../AddPropertyTest';
 
 const ApartmentDetails = () => {
   const [apartmentInfo, setApartmentInfo] = useState<Apartment | null>(null);
@@ -33,13 +34,11 @@ const ApartmentDetails = () => {
   const [isMatched, setIsMatched] = useState<boolean>(false);
   const [isMyApartment, setIsMyApartment] = useState<boolean>(false);
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
-  const [initiateUpdate,setInitiateUpdate] = useState<boolean>(true);
+  const [initiateUpdate, setInitiateUpdate] = useState<boolean>(true);
   const [apartmentLikes, setApartmentLikes] = useState<User[]>([] as User[]);
   const [isLikesLoading, setIsLikesLoading] = useState<boolean>(false);
   const [isLikeActionLoading, setIsLikeActionLoading] = useState<boolean>(false);
   const { setSnackBarState } = useSnackbar();
-  const { getApartmentById, toggleTenantLike, getApartmentLikes, approveTenant, declineTenant } =
-    useAPI();
   const { user } = useAuth();
   const params = useParams();
   const { showConfirmationModal } = useConfirmationModal();
@@ -75,7 +74,7 @@ const ApartmentDetails = () => {
     if (apartmentId && initiateUpdate) {
       fetchApartmentData(apartmentId);
     }
-  }, [params.id,initiateUpdate]);
+  }, [params.id, initiateUpdate]);
 
   useEffect(() => {
     const color: string = precentToColor(apartmentInfo?.match || 0);
@@ -136,15 +135,14 @@ const ApartmentDetails = () => {
     }
   };
 
-  const handleEditClick = ()=>{
+  const handleEditClick = () => {
     setIsEditOpen(true);
-  }
+  };
 
-  const handleSave= ()=>{
+  const handleSave = () => {
     setInitiateUpdate(true);
     setIsEditOpen(false);
-    
-  }
+  };
 
   if (!apartmentInfo) return <CupidoorSpinner></CupidoorSpinner>;
   return (
