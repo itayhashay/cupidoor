@@ -30,7 +30,7 @@ const AddProperty = ({
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
   const navigate = useNavigate();
-  const { addApartment, editApartment } = useAPI();
+  const { addApartment, editApartment,setApartmentAnswers } = useAPI();
 
   const handleClose = () => {
     setOpen(false);
@@ -66,6 +66,9 @@ const AddProperty = ({
       } else {
         console.log('NOT EDIT');
         const response: AxiosResponse = await addApartment(houseDataToSave);
+        if(response.status === 201 && houseData.answers){
+          const answerResponse = await setApartmentAnswers(response.data._id,houseData.answers);
+        }
         response.status === 201 && navigate(`/apartment/${response.data._id}`);
       }
       return { success: true };

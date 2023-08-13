@@ -114,9 +114,6 @@ export default function QuestionsStepper({
 
   const handleSubmit = async () => {
     setIsLoading(true);
-
-    submitFormik && submitFormik();
-
     // TODO: CHANGE TO SET APARTMENT ANSWERS
     if (state === QUESTIONS_STATE.LANDLORD) {
       handleSaveQuestions && handleSaveQuestions(answers);

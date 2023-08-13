@@ -1,6 +1,7 @@
 import { Dayjs } from "dayjs";
 import { User } from "../../types/user";
 import { ServerApartmentImages } from "../../types/apartment";
+import { QuestionAnswer } from "../../types/questionAnswer";
 
 export type StepperApartment = {
     [key:string]:any;
@@ -35,6 +36,7 @@ export type StepperApartment = {
     images: ServerApartmentImages[];
     newImages: string[],
     removedImages: string[],
+    answers?:QuestionAnswer[]
   }
 
   // About //

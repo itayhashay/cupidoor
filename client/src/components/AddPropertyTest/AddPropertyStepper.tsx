@@ -44,6 +44,7 @@ const AddPropertyStepper = ({
     values: {},
     handleSubmit,
     isSubmitting,
+    setFieldValue
   } = useFormikContext<StepperApartment>();
 
   const handleNext = () => {
@@ -63,6 +64,8 @@ const AddPropertyStepper = ({
   // #############################################################
   // ------>>> New part Afik added <<< ------ //
   const handleSaveQuestions = (answers: QuestionAnswer[]) => {
+    setFieldValue('answers', answers);
+    handleSubmit();
     // handleSubmit(answers);
   };
   // #############################################################
