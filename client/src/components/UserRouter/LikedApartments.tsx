@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react';
 import { Apartment } from '../../types/apartment';
 import useAPI from '../../hooks/useAPI';
 import CupidoorSpinner from '../CupidoorSpinner';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const LikedApartments = () => {
   const [likedApartments, setLikedApartments] = useState<Apartment[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { getUserLikedApartments } = useAPI();
-
+  const {user} = useAuth();
   useEffect(() => {
     const fetchLikedApartments = async () => {
       setIsLoading(true);
@@ -21,6 +23,10 @@ const LikedApartments = () => {
 
     fetchLikedApartments();
   }, []);
+
+  if(user?.role === "landlord"){
+    return <Navigate to={"/home/my-properties"}></Navigate>
+  }
 
   return isLoading ? (
     <CupidoorSpinner></CupidoorSpinner>

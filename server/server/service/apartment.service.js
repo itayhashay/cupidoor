@@ -501,6 +501,7 @@ const _scoreMissingApartmentsOld = async (user) => {
 };
 
 const _scoreMissingApartments = async (user) => {
+  if(user.role == "landlord") return;
   const missingScoreApartments = await Apartment.aggregate([
     {
       $lookup: {

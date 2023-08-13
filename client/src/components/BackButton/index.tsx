@@ -1,15 +1,15 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button, IconButton } from "@mui/material";
 import {useNavigate,useLocation} from "react-router-dom"
-const BackButton =({bgcolor,color}:{bgcolor?:string,color?:string})=>{
+const BackButton =({bgcolor,color,toHomePage}:{bgcolor?:string,color?:string,toHomePage?:boolean})=>{
 const navigate = useNavigate();
 const location = useLocation();
 const handleClick= ()=>{
-    if(location.key === "default"){
+    if(location.key === "default" || toHomePage){
         navigate('/home/all-apartments');
         return;
     }
-    navigate("/home/all-apartments");
+    navigate(-1);
 }
 
     return (
