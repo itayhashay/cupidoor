@@ -9,7 +9,7 @@ const handleClick= ()=>{
         navigate('/home/all-apartments');
         return;
     }
-    navigate(-1);
+    navigate("/home/all-apartments");
 }
 
     return (

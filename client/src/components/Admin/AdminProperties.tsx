@@ -7,15 +7,33 @@ import UndoIcon from '@mui/icons-material/Undo';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AdminEditApartmentDialog from './AdminEditApartmentDialog';
+import { Apartment } from '../../types/apartment';
+import DeleteApartmentDialog from '../DeleteApartmentDialog';
 
 const AdminProperties = () => {
   const [apartments, setApartments] = useState<any[] | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [editApartmentId, setEditApartmentId] = useState<string | null>(null);
+  const [deleteApartmentData, setDeleteApartmentData] = useState<Apartment | null>(null);
   const { getAdminApartments } = useAPI();
 
   const handleRestoreClick = (id: string) => {};
-  const handleDeleteClick = (id: string) => {};
+  const handleDeleteClick = (id: string) => {
+    
+    if(apartments){
+      const apartment = apartments?.filter(apartment=>apartment._id === id);
+      if(apartment[0]){
+        setDeleteApartmentData(apartment[0]);
+      }
+    }
+    setIsDeleteDialogOpen(true);
+    
+  };
+  const handleDeleteDialogClose = ()=>{
+    setIsDeleteDialogOpen(false);
+    setDeleteApartmentData(null);
+  }
   const handleEditClick = (id: string) => {
     setEditApartmentId(id);
     setIsEditDialogOpen(true);
@@ -177,6 +195,7 @@ const AdminProperties = () => {
           pageSizeOptions={[5, 10, 20, 50]}
         />
       </Box>
+      {isDeleteDialogOpen && <DeleteApartmentDialog apartmentDetails={deleteApartmentData as Apartment} handleClose={handleDeleteDialogClose}/>}
       {isEditDialogOpen && editApartmentId && (
         <AdminEditApartmentDialog
           open={isEditDialogOpen}

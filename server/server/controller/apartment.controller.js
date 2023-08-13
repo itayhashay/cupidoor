@@ -373,6 +373,17 @@ router.put("/:id", async (req, res, next) => {
 // Delete apartment
 router.delete("/:id", async (req, res, next) => {
   try {
+    if(!req.isAdmin ){
+      const error = new Error("UnAuthorized!");
+      error.status = 401;
+      if(typeof req.body.user == "string" && req.body.user != req.user._id.toString()){
+        throw error;
+      }else if(typeof req.body.user != "string" && req.body.user._id != req.user._id.toString()){
+        throw error;
+      }
+      
+      
+    }
     const apartment = await apartmentService.deleteApartment(req.params.id);
     if (!apartment) {
       res.status(NOT_FOUND).send();

@@ -13,7 +13,10 @@ export const QUESTIONS: string[] = [
   "To what extent do you agree with the statement 'I have a stable income and no money issues?'",
   "Is the relationship between landlord and tenant important to you?",
 ];
-
+export enum QUESTIONS_STATE {
+  LANDLORD,
+  TENANT,
+}
 export const ANSWERS_MAP: Record<string, number> = {
   yes: 1,
   no: 0,

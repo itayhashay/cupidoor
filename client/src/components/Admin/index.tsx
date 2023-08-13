@@ -1,12 +1,5 @@
-import { Routes, Route } from 'react-router-dom';
-// import AdminUsers from "./Admin.Users";
-// import MyProperties from './MyProperties';
-// import LikedApartments from "./LikedApartments"
-import GenericHousesList from '../GenericHousesList';
-import { ROUTES } from './routes';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { User } from '../../types/user';
-import { Apartment } from '../../types/apartment';
 import { Navigate } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -31,47 +24,51 @@ import AdminAnalytics from './AdminAnalytics';
 import AdminUsers from './AdminUsers';
 import AdminProperties from './AdminProperties';
 import BackButton from '../BackButton';
+import DescriptionIcon from '@mui/icons-material/Description';
+import AdminSwagger from './AdminSwagger';
 
 const drawerWidth = 240;
 
 const AdminRouter = () => {
   const { user } = useAuth();
-  const [selectedSectionIndex, setSelectedSectionIndex] = useState<number>(0);
   const [selectedPage, setSelectedPage] = useState(<AdminAnalytics></AdminAnalytics>);
+  const {hash} = useLocation();
+  const navigate= useNavigate();
   const sections = useMemo(
     () => [
-      { title: 'Dashboard', icon: <AnalyticsIcon /> },
-      { title: 'Users', icon: <PersonIcon /> },
-      { title: 'Properties', icon: <HouseIcon /> },
+      { title: 'Dashboard', icon: <AnalyticsIcon />,href:"dashboard" },
+      { title: 'Users', icon: <PersonIcon /> ,href:"users"},
+      { title: 'Properties', icon: <HouseIcon /> ,href:"properties"},
+      { title: 'Swagger', icon: <DescriptionIcon /> ,href:"swagger"},
     ],
     [false],
   );
 
   useEffect(() => {
-    switch (selectedSectionIndex) {
-      case 0:
+    console.log(hash);
+    switch (hash) {
+      case "#dashboard":
         setSelectedPage(<AdminAnalytics />);
         break;
-      case 1:
+      case "#users":
         setSelectedPage(<AdminUsers />);
         break;
-      case 2:
+      case "#properties":
         setSelectedPage(<AdminProperties />);
         break;
+      case "#swagger":
+        setSelectedPage(<AdminSwagger />);
+        break;
     }
-  }, [selectedSectionIndex]);
+  }, [hash]);
 
   const handleSectionClick = (index: number) => {
-    setSelectedSectionIndex((oldIndex) => {
-      if (oldIndex !== index) {
-        return index;
-      }
-      return index;
-    });
+
+navigate(`#${sections[index].href}`);
   };
 
   if (!user?.isAdmin) {
-    return <Navigate to={'/403'} />;
+    return <Navigate to={'/401'} />;
   }
 
   return (
@@ -104,7 +101,7 @@ const AdminRouter = () => {
             {sections.map((section, index) => (
               <ListItem key={section.title}>
                 <ListItemButton
-                  selected={selectedSectionIndex === index}
+                  selected={hash === `#${section.href}`}
                   onClick={() => handleSectionClick(index)}
                   sx={{
                     color: 'white',
@@ -146,12 +143,6 @@ const AdminRouter = () => {
         {selectedPage}
       </Box>
     </Box>
-
-    // <Routes>
-    //         <Route path={`/${ROUTES.USERS}`} element={<AdminUsers/>}></Route>
-    //         <Route path={`/${ROUTES.APARTMENTS}`} element={<GenericHousesList apartments={{} as Apartment[]}/>}></Route>
-    //         <Route path={`/${ROUTES.ANALYTICS}`} element={<MyProperties />}></Route>
-    //     </Routes>
   );
 };
 

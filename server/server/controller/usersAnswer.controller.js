@@ -173,6 +173,43 @@ router.post('/', async (req, res,next) => {
     next(err);
   }
 });
+/**
+ * @swagger
+ * /user-answer:
+ *   post:
+ *     summary: Create a new apartment answers
+ *     tags: [ApartmentAnswer]
+ *     security:
+ *       - bearerAuth: []
+  *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               $ref: '#/components/schemas/CreateApartmentAnswer'
+ *     responses:
+ *       201:
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ApartmentAnswer'
+ *       500:
+ *         description: Internal Server Error
+ */
+router.post('/apartment', async (req, res,next) => {
+  try {
+    const apartmentAnswer = await userAnswerService.createApartmentAnswer(req.body,req.user);
+    res.status(CREATED).json(apartmentAnswer);
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 
 /**

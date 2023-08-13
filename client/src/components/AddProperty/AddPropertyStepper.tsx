@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Box, Stepper, Step, StepLabel } from '@mui/material';
+import { Button, Box, Stepper, Step, StepLabel, Grid, Stack, Divider, Typography,Dialog, DialogContent, AppBar, Toolbar, IconButton } from '@mui/material';
 import AddressForm from "./AddressForm";
 import AboutForm from './AboutForm';
 import PaymentsForm from './PaymentsForm';
@@ -9,39 +9,59 @@ import { StepperApartment, UploadedImage } from './types';
 import { DEFAULT_NEW_APARTMENT_DATA, STEPS } from './constants';
 import useAPI from '../../hooks/useAPI';
 import { AxiosResponse } from 'axios';
-import { convertFilePondImagesToBase64 } from '../../utils/base64';
 import { getUserId } from '../../utils/localStorage';
 import { useNavigate } from "react-router-dom";
 import { Apartment } from '../../types/apartment';
+import QuestionsStepper from '../QuestionsStepper';
+import { QUESTIONS_STATE } from '../QuestionsStepper/constant';
+import { QuestionAnswer } from '../../types/questionAnswer';
+import CloseIcon from '@mui/icons-material/Close';
+import usePropertyValidator from '../../hooks/usePropertyValidator';
 
 const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (flag?:boolean) => void, houseData?: Apartment, isEdit: boolean}) => {
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newApartmentData, setNewApartmentData] = useState<StepperApartment>(DEFAULT_NEW_APARTMENT_DATA);
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]) 
+  const [errors, setErrors] = useState<any>({});
 
   const navigate = useNavigate();
-  const {addApartment, editApartment} = useAPI();
+  const {addApartment, editApartment,setApartmentAnswers} = useAPI();
+
+  const { validateStep } = usePropertyValidator();
+  
+  useEffect(() => {
+    if(activeStep === -1) setActiveStep(0);
+  }, [activeStep]);
 
   useEffect(() => {
     houseData && setNewApartmentData({...houseData , newImages: [], removedImages: []} as StepperApartment);
   }, [houseData]);
 
   const saveChangesOnNext = (values: any) => {
+    const validatorRes = validateStep(activeStep, newApartmentData);
+
+    setErrors(validatorRes);
+
     setNewApartmentData((prev: StepperApartment) => { 
       return {...prev, ...values} 
     })
   }
   
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    const validatorRes = validateStep(activeStep, newApartmentData);
+    const isStepValid = Object.values(validatorRes).every(value => value === false);
+
+    setErrors(validatorRes);
+
+    isStepValid && setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (questionAnswers:QuestionAnswer[]) => {
     setIsLoading(true);
     console.log(uploadedImages)
     newApartmentData.user = getUserId();
@@ -55,6 +75,9 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
       } else {
         console.log("NOT EDIT")
         const response: AxiosResponse = await addApartment(newApartmentData);
+        if(response.status === 201){
+          const answerResponse = await setApartmentAnswers(response.data._id,questionAnswers);
+        }
         response.status === 201 && navigate(`/apartment/${response.data._id}`);
       }
       return { success: true };
@@ -66,50 +89,127 @@ const AddPropertyStepper = ({handleClose, houseData, isEdit} : {handleClose: (fl
     }
   }
 
+  const handleSaveQuestions = (answers:QuestionAnswer[])=>{
+    handleSubmit(answers);
+  }
+
   return (
-    <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={activeStep}  alternativeLabel sx={{ marginBottom: "1.5rem" }}>
-        {STEPS.map((label, index) => (
-          <Step key={index}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      {isLoading? <CupidoorSpinner /> : (() => {
-        switch (activeStep) {
-          case 0:
-            return <AddressForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
-          case 1:
-            return <AboutForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
-          case 2:
-            return <PaymentsForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
-          case 3:
-            return <UploadsForm apartmentData={newApartmentData} saveImages={(files: UploadedImage[]) => setUploadedImages(files)} uploadedImages={uploadedImages}/>;      
-          default:
-            return <AddressForm apartmentData={newApartmentData} saveChangesOnNext={saveChangesOnNext}/>;
-          }
-      })()}
-      <Box sx={{ width: "auto",
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                margin: "0 1rem 1rem 0" }}>
-                  <Button
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={activeStep === STEPS.length - 1 ? handleSubmit : handleNext}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    {activeStep === STEPS.length - 1 ? 'Finish' : 'Continue'}
-                  </Button>
-              </Box>
-    </Box>
+    <Stack height={'100%'}>
+      <Grid container>
+      {activeStep !== STEPS.length -1 &&  <Grid item xs={12}>
+          <Stepper activeStep={activeStep} alternativeLabel sx={{ marginBottom: '1.5rem' }}>
+            {STEPS.map((label, index) => (
+              <Step key={index}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <Divider></Divider>
+        </Grid>}
+       
+        <Grid item xs={12} mt={3}>
+          {isLoading ? (
+            <CupidoorSpinner />
+          ) : (
+            (() => {
+              switch (activeStep) {
+                case 0:
+                  return (
+                    <AddressForm
+                      apartmentData={newApartmentData}
+                      saveChangesOnNext={saveChangesOnNext}
+                      errors={errors}
+                    />
+                  );
+                case 1:
+                  return (
+                    <AboutForm
+                      apartmentData={newApartmentData}
+                      saveChangesOnNext={saveChangesOnNext}
+                      errors={errors}
+                    />
+                  );
+                case 2:
+                  return (
+                    <PaymentsForm
+                      apartmentData={newApartmentData}
+                      saveChangesOnNext={saveChangesOnNext}
+                      errors={errors}
+                    />
+                  );
+                case 3:
+                  return (
+                    <UploadsForm
+                      apartmentData={newApartmentData}
+                      saveImages={(files: UploadedImage[]) => setUploadedImages(files)}
+                      uploadedImages={uploadedImages}
+                    />
+                  );
+                case 4:
+                  return (
+                    <Dialog open={true} onClose={handleBack} maxWidth={'lg'} fullWidth>
+                      <AppBar sx={{ position: 'relative' }} elevation={0}>
+                        <Toolbar sx={{ bgcolor: 'primary.light' }}>
+                          <Box display={'flex'} justifyContent={'space-between'}>
+                            <Box
+                              display={'flex'}
+                              justifyContent={'center'}
+                              alignItems={'center'}
+                              textAlign={'center'}
+                            >
+                              <Typography
+                                variant='body1'
+                                color={'white'}
+                                textAlign={'center'}
+                                fontSize={'1.5rem'}
+                              >
+                                Property Preferences
+                              </Typography>
+                            </Box>
+
+                            <IconButton onClick={handleBack} sx={{ color: 'white' }}>
+                              <CloseIcon />
+                            </IconButton>
+                          </Box>
+                        </Toolbar>
+                      </AppBar>
+                      <DialogContent>
+                        <Grid container>
+                          <Grid item xs={12} overflow={'auto'} >
+                          <QuestionsStepper
+                        displayHouses={() => {}}
+                        state={QUESTIONS_STATE.LANDLORD}
+                        handleSaveQuestions={handleSaveQuestions}
+                      />
+                          </Grid>
+                        </Grid>
+                      </DialogContent>
+                    </Dialog>
+                  );
+                default:
+                  return (
+                    <AddressForm
+                      apartmentData={newApartmentData}
+                      saveChangesOnNext={saveChangesOnNext}
+                      errors={errors}
+                    />
+                  );
+              }
+            })()
+          )}
+        </Grid>
+      </Grid>
+      <Box display={'flex'} justifyContent={'flex-end'} mt={'auto'} padding={'1rem 0 1.5rem 0'}>
+        <Button disabled={activeStep === 0} onClick={handleBack}>
+          Back
+        </Button>
+        {activeStep !== STEPS.length - 1 && (
+          <Button variant='contained' sx={{ ml: 2 }} onClick={handleNext}>
+            {activeStep === STEPS.length - 1 ? 'Finish' : 'Continue'}
+          </Button>
+        )}
+      </Box>
+    </Stack>
   );
 };
 

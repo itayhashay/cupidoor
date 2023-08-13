@@ -20,6 +20,7 @@ export const STEPS: string[] = [
     "About The Property",
     "Payments",
     "Photos and Videos",
+    "Preferences"
   ];
 
 

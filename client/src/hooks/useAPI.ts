@@ -25,6 +25,8 @@ const useAPI = () => {
     return response;
   };
 
+
+
   const addApartment = async (newApartment: StepperApartment) => {
     try {
       const response: AxiosResponse = await axiosPrivate.post(
@@ -35,6 +37,28 @@ const useAPI = () => {
     } catch (ex: AxiosError | any) {
       return ex;
     }
+  };
+  const deleteApartment = async (apartmentId:string) => {
+    try {
+      const response: AxiosResponse = await axiosPrivate.delete(
+        config.api.routes.deleteApartment + '/' + apartmentId,
+      );
+      return response;
+    } catch (ex: AxiosError | any) {
+      return ex;
+    }
+  };
+
+  const setApartmentAnswers = async (apartmentId:string,answers: QuestionAnswer[]) => {
+    try{
+      const response = await axiosPrivate.post(config.api.routes.apartmentAnswer, {
+        apartmentId,answers
+      });
+      return response;
+    }catch(ex){
+      return ex;
+    }
+    
   };
 
   const editApartment = async (editedApartment: StepperApartment) => {
@@ -71,9 +95,13 @@ const useAPI = () => {
   };
 
   const getApartmentById = async (apartmentId: string): Promise<Apartment> => {
-    const response = await axiosPrivate.get(`${config.api.routes.getApartment}/${apartmentId}`);
-
-    return response.data;
+    try{
+      const response = await axiosPrivate.get(`${config.api.routes.getApartment}/${apartmentId}`);
+      return response.data;
+    }catch(ex){
+      throw ex;
+    }
+    
   };
 
   const getApartments = async (): Promise<Apartment[]> => {
@@ -208,6 +236,7 @@ const useAPI = () => {
     updateUser,
     fetchUser,
     addApartment,
+    deleteApartment,
     editApartment,
     getApartmentLikes,
     approveTenant,
@@ -227,7 +256,8 @@ const useAPI = () => {
     getAdminApartments,
     adminUpdateUser,
     updatePassword,
-    adminUpdatePassword
+    adminUpdatePassword,
+    setApartmentAnswers
   };
 };
 

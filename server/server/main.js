@@ -9,35 +9,29 @@ const swaggerJsDoc = require("swagger-jsdoc");
 
 const {initializeChat} = require("./middlewares/chat");
 const errorHandler = require("./middlewares/errorHandler");
+const { env } = require("process");
+const swaggerDocument = require("./swagger.json");
 require("dotenv").config();
 
-const PORT = process.env.PORT || 2308;
+const PORT = process.env.PORT || 3000;
 const app = express();
+const allowedOrigins = ["http://193.106.55.150:3000","http://cupidoor.cs.colman.ac.il","http://localhost:3000","http://localhost:2308"]
+const swaggerSpec = swaggerJsDoc(swaggerDocument);
 
-const options = {
-	definition: {
-		openapi: "3.0.0",
-		info: {
-			title: "Cupidoor Swagger",
-			version: "1.0.0",
-			description: "Swagger For The Best Tenant-Apartments Matching Website!",
-		},
-		servers: [
-			{
-				url: "http://localhost:2308",
-			},
-		],
-	},
-	apis: ["./routes/*.js", "./controller/*.js"],
-};
 
-const specs = swaggerJsDoc(options);
 
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+
+
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: (origin,callback)=>{
+      if(!origin || allowedOrigins.indexOf(origin) > -1){
+        callback(null,true);
+      }else{
+        callback(new Error("CORS Error: Access denied for origin:" + origin));
+      }
+    },
     credentials: true,
   })
 );
@@ -45,9 +39,11 @@ app.use(express.json({limit:"50mb"}));
 app.use(cookieParaser());
 
 app.use(mongoSanitize());
-
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 app.use("/", require("./router"));
 app.use(errorHandler);
+
+
 
 const startServer = async () => {
   try {
@@ -60,7 +56,7 @@ const startServer = async () => {
     console.log(chalk.red(ex.stack));
   }
 
-  const server = app.listen(2308, () => {
+  const server = app.listen(process.env.PORT, () => {
     console.log(chalk.green(`\nServer listening on port: ${PORT}\n`));
   });
   initializeChat(server);

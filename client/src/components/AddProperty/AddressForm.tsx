@@ -1,71 +1,77 @@
-import { Box, TextField, Typography } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { TextField, Typography,Grid, Divider } from "@mui/material";
+import { useEffect, useState } from "react";
 import { ApartmentAddress, StepperApartment } from "./types";
 import { DEFAULT_ADDRESS } from "./constants";
 
-const AddressForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void}) => {
+const AddressForm = ({apartmentData, saveChangesOnNext, errors} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void, errors: any}) => {
     const [addressState, setAddressState] = useState<ApartmentAddress>(DEFAULT_ADDRESS) 
-    const addressStateRef = useRef(addressState); // Create a mutable ref
 
     useEffect(() => {
         setAddressState(apartmentData);
     }, [apartmentData]);
-
-    useEffect(() => {
-        addressStateRef.current = (addressState)
-    }, [addressState]);
-
-    useEffect(() => {
-        return () => {
-          saveChangesOnNext(addressStateRef.current);
-        };
-      }, []);
       
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setAddressState((prev) => {
-            return {
-                ...prev,
-                [e.target.id]: e.target.value
-            }
-        })
+        saveChangesOnNext({
+            ...addressState,
+          [e.target.id]: e.target.value
+        });
     }
 
     return (
-        <Box width="50%" display="flex" flexDirection="column" padding="0 24px">
-            <Box display="flex" flexDirection="column">
-                <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">City</Typography>
-                    <TextField
-                        id="city"
-                        required
-                        focused
-                        value={addressState.city}
-                        onChange={handleChange} 
-                />
-            </Box>
-            <Box display="flex" flexDirection="column">
-                <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">Street</Typography>
-                                <TextField
-                                    id="street"
-                                    required
-                                    value={addressState.street}
-                                    onChange={handleChange} 
-                                    />
-
-            </Box>
-            <Box display="flex" flexDirection="column">
-                <Typography variant="body1" fontWeight={700} marginTop="8px" marginBottom="5px">House Number</Typography>
-                    <TextField
-                        id="houseNumber"
-                        value={addressState.houseNumber}
-                        onChange={handleChange} 
-                        required
-                        type="number"
-                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}                  
-                        sx={{ width: '-webkit-fill-available', marginBottom: "8px" }}
-                    />
-            </Box>
-        </Box>
+      <>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant={'h6'} color={'black'} fontWeight={'bold'}>
+              Property Address
+            </Typography>
+            <Typography variant='subtitle2' color={'GrayText'} mb={1}>
+              Enter the details of the apartment address, including the city, street, and house
+              number
+            </Typography>
+            <Divider />
+          </Grid>
+          <Grid item xs={7}>
+            <TextField
+              id='city'
+              label='City'
+              fullWidth
+              required
+              focused
+              value={addressState.city}
+              onChange={handleChange}
+              error={errors.city}
+              helperText={errors.city && errors.city}
+            />
+          </Grid>
+          <Grid item xs={7}>
+            <TextField
+              id='street'
+              label={'Street'}
+              fullWidth
+              required
+              value={addressState.street}
+              onChange={handleChange}
+              error={errors.street}
+              helperText={errors.street && errors.street}
+            />
+          </Grid>
+          <Grid item xs={7}>
+            <TextField
+              id='houseNumber'
+              label={'House number'}
+              fullWidth
+              value={addressState.houseNumber}
+              onChange={handleChange}
+              required
+              type='number'
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              error={errors.houseNumber}
+              helperText={errors.houseNumber && errors.houseNumber}
+            />
+          </Grid>
+        </Grid>
+      </>
     );
 }
  

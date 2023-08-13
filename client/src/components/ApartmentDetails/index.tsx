@@ -1,6 +1,6 @@
 import { Box, Button, Container, Grid, Paper, Typography,Avatar,IconButton } from '@mui/material';
 import { useEffect, useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Apartment } from '../../types/apartment';
 import DryDetails from './DryDetails';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -43,6 +43,7 @@ const ApartmentDetails = () => {
   const { user } = useAuth();
   const params = useParams();
   const { showConfirmationModal } = useConfirmationModal();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchApartmentLikes = async (id: string) => {
@@ -52,16 +53,21 @@ const ApartmentDetails = () => {
     };
 
     const fetchApartmentData = async (id: string) => {
-      const apartment: Apartment = await getApartmentById(id);
-      setApartmentInfo(apartment);
-      setInitiateUpdate(false);
-      if (apartment.user._id === user?._id) {
-        setIsLikesLoading(true);
-        setIsMyApartment(true);
-        fetchApartmentLikes(id);
+      try{
+        const apartment: Apartment = await getApartmentById(id);
+        setApartmentInfo(apartment);
+        setInitiateUpdate(false);
+        if (apartment.user._id === user?._id) {
+          setIsLikesLoading(true);
+          setIsMyApartment(true);
+          fetchApartmentLikes(id);
+        }
+        setIsFavorite(apartment?.liked as boolean);
+        setIsMatched(apartment?.matched as boolean);
+      }catch(ex){
+        navigate("/404")
       }
-      setIsFavorite(apartment?.liked as boolean);
-      setIsMatched(apartment?.matched as boolean);
+     
     };
 
     const apartmentId: string = params.id || '';
@@ -150,7 +156,7 @@ const ApartmentDetails = () => {
 
       <Container maxWidth='xl' sx={{ paddingY: 3 }}>
         <Grid container component={Paper} elevation={3}>
-          <Grid item xs={12} height={60} padding={2} width={'100%'} bgcolor={'primary.dark'}>
+          <Grid item xs={12} height={60} padding={2} width={'100%'} bgcolor={'primary.light'}>
             <Box
               display={'flex'}
               color={'white'}
@@ -168,9 +174,9 @@ const ApartmentDetails = () => {
                 <IconButton
                   onClick={handleEditClick}
                   sx={{
-                    bgcolor: 'secondary.light',
+                    bgcolor: 'primary.dark',
                     '&.MuiIconButton-root:hover': {
-                      bgcolor: 'primary.light',
+                      bgcolor: 'secondary.main',
                     },
                   }}
                 >

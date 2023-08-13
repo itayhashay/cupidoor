@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useEffect, useState } from 'react';
 import AddPropertyStepper from './AddPropertyStepper';
-import { IconButton } from '@mui/material';
+import { AppBar, Dialog, DialogActions, DialogContent, Grid, IconButton, Paper, Toolbar, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { DIALOG_STYLES } from './constants';
 import { Apartment } from '../../types/apartment';
@@ -29,16 +29,39 @@ const AddProperty = ({ isOpen, onClose,handleSave, houseData, isEdit = false} : 
   }, [isOpen])
 
   return (
-      <Modal
-        open={open}
-        onClose={handleClose}>
-        <Box sx={DIALOG_STYLES}>
-          <IconButton sx={{position: "absolute", top: "1rem", left: "1rem", zIndex: 1}} onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-          <AddPropertyStepper handleClose={handleStepperClose} houseData={houseData} isEdit={isEdit}/>
-        </Box>
-      </Modal>
+    <Dialog open={open} onClose={handleClose} maxWidth={'lg'} fullWidth>
+      <AppBar sx={{ position: 'relative' }} elevation={0}>
+        <Toolbar sx={{ bgcolor: 'primary.light' }}>
+          <Box display={'flex'} justifyContent={'space-between'}>
+            <Box
+              display={'flex'}
+              justifyContent={'center'}
+              alignItems={'center'}
+              textAlign={'center'}
+            >
+              <Typography variant='body1' color={'white'} textAlign={'center'} fontSize={'1.5rem'}>
+                Property Form
+              </Typography>
+            </Box>
+
+            <IconButton onClick={handleClose} sx={{ color: 'white' }}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <DialogContent>
+        <Grid container height={'76vh'}>
+          <Grid item xs={12} overflow={'auto'} height={'auto'}>
+            <AddPropertyStepper
+              handleClose={handleStepperClose}
+              houseData={houseData}
+              isEdit={isEdit}
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+    </Dialog>
   );
 }
 

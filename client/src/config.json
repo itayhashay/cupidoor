@@ -1,14 +1,16 @@
 {
   "api": {
-    "baseUrl": "http://localhost:2308",
+    "baseUrl": "http://193.106.55.149:3000",
     "chatPort": "2309",
     "routes": {
       "userAnswer": "/user-answer",
       "match": "/match",
+      "apartmentAnswer":"/user-answer/apartment",
       "signIn": "/signIn",
       "signUp": "/signUp",
       "updatePassword": "/password",
       "addApartment": "/apartment",
+      "deleteApartment": "/apartment",
       "getApartment": "/apartment",
       "getLandloard": "/apartment/landlord",
       "getLikedApartments": "/users-relations/tenant/likes",

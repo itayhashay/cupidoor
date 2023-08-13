@@ -27,7 +27,7 @@ const MyProperties = () => {
     }, []);
 
     return (
-    <Box sx={{ overflowY: "auto", position: "relative" }}>
+    <Box sx={{ overflowY: "auto", position: "relative", height: '100%', background: 'white' }}>
 
         {isLoading ? <CupidoorSpinner /> : 
         <>

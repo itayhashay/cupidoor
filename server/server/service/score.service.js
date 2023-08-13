@@ -78,7 +78,15 @@ const getApartmentsScores = async (userId, apartments) => {
       match: apartmentToScore[apartmentId],
     });
   }
-
+  apartmentsMatches.sort((a,b)=>{
+    if(a.match > b.match){
+      return -1;
+    }else{
+      return 1
+    }
+    
+    
+  })
   return apartmentsMatches;
 };
 

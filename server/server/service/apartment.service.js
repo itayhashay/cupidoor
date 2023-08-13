@@ -4,6 +4,8 @@ const match = require("../model/match");
 const UserAnswer = require("../model/userAnswer.model");
 const Score = require("../model/score.model");
 const ScoreService = require("./score.service");
+const ApartmentAnswer = require("../model/apartmentAnswer.model");
+const UsersRelations = require("../model/usersRelations.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 const createApartment = async (apartmentData, user) => {
   try {
@@ -334,7 +336,7 @@ const getApartment = async (id, user) => {
       scorePromise,
     ]);
     // apartment.images = await Storage.addBase64Value(apartment.images);
-
+    if(!apartment[0]) return null;
     return { ...apartment[0], match: score.score };
   } catch (err) {
     throw new Error("Error getting apartment: " + err.message);
@@ -440,13 +442,15 @@ const updateApartment = async (id, apartmentData) => {
 
 const deleteApartment = async (id) => {
   try {
+    await Score.findOneAndRemove({apartment:id});
+    await UsersRelations.findOneAndRemove({apartment:id});
     return await Apartment.findByIdAndRemove(id);
   } catch (err) {
     throw new Error("Error deleting apartment: " + err.message);
   }
 };
 
-const _scoreMissingApartments = async (user) => {
+const _scoreMissingApartmentsOld = async (user) => {
   const missingScoreApartments = await Apartment.aggregate([
     {
       $lookup: {
@@ -480,6 +484,56 @@ const _scoreMissingApartments = async (user) => {
           .exec()
           .then((landLordAnswers) => {
             const matchData = match(userAnswers, landLordAnswers);
+            const scoreData = Score.create({
+              apartment: apartment._id,
+              tenant: user._id,
+              landlord: apartment.user,
+              score: matchData,
+              updatedAt: Date.now(),
+            }).then(() => {
+              resolve();
+            });
+          });
+      })
+    );
+  }
+  return Promise.all(promises);
+};
+
+const _scoreMissingApartments = async (user) => {
+  const missingScoreApartments = await Apartment.aggregate([
+    {
+      $lookup: {
+        from: "scores",
+        localField: "_id",
+        foreignField: "apartment",
+        as: "Match",
+      },
+    },
+    // { $match: { Match: { $eq: [] } } },
+    {
+      $match: { "Match.tenant": { $ne: user._id } },
+    },
+  ]);
+
+  if (missingScoreApartments.length === 0) return;
+
+  const userAnswers = await UserAnswer.find({ user: user._id })
+    .populate("question")
+    .lean()
+    .exec();
+
+  const promises = [];
+  for (let apartment of missingScoreApartments) {
+    promises.push(
+      new Promise((resolve) => {
+        ApartmentAnswer.find({
+          apartment: apartment._id,
+        })
+          .populate("question")
+          .exec()
+          .then((apartmentAnswers) => {
+            const matchData = match(userAnswers, apartmentAnswers);
             const scoreData = Score.create({
               apartment: apartment._id,
               tenant: user._id,

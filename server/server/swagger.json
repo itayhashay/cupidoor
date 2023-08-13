@@ -1,0 +1,12 @@
+{
+	"definition": {
+		"openapi": "3.0.0",
+		"info": {
+      "title": "Cupidoor Swagger",
+      "version": "1.0.0",
+      "description": "Swagger For The Best Tenant-Apartments Matching Website!"
+    },
+		"servers": [{"url": "http://193.106.55.149:3000"},{"url": "http://localhost:3000"},{"url": "http://localhost:2308"}]
+	},
+	"apis": ["./routes/*.js", "./controller/*.js"]
+}
