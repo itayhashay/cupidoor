@@ -31,6 +31,7 @@ const AdminProperties = () => {
   const handleDeleteDialogClose = () => {
     setIsDeleteDialogOpen(false);
     setDeleteApartmentData(null);
+    window.location.reload();
   };
   const handleEditClick = (id: string) => {
     setEditApartmentId(id);
@@ -128,7 +129,7 @@ const AdminProperties = () => {
           ) : (
             <GridActionsCellItem
               icon={
-                <Tooltip title={'Disable'}>
+                <Tooltip title={'Delete apartment'}>
                   <DeleteIcon color='error' />
                 </Tooltip>
               }
@@ -140,7 +141,7 @@ const AdminProperties = () => {
           const editAction = (
             <GridActionsCellItem
               icon={
-                <Tooltip title='Edit product'>
+                <Tooltip title='Edit apartment'>
                   <EditIcon />
                 </Tooltip>
               }
@@ -226,7 +227,7 @@ const AdminProperties = () => {
       )}
     </>
   ) : (
-    <CupidoorSpinner></CupidoorSpinner>
+    <CupidoorSpinner />
   );
 };
 
