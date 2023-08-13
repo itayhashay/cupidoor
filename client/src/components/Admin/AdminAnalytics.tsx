@@ -182,7 +182,7 @@ const AdminAnalytics = () => {
               </Box>
               <Box px={2}>
                 <Typography variant='subtitle1' fontWeight={'bold'} color={'GrayText'}>
-                  Meet this month new customers:
+                  Meet this month new users:
                 </Typography>
               </Box>
               <Box display={'flex'} justifyContent={'center'} alignItems={"center"} height={200}>
