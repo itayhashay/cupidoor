@@ -68,7 +68,7 @@ navigate(`#${sections[index].href}`);
   };
 
   if (!user?.isAdmin) {
-    return <Navigate to={'/403'} />;
+    return <Navigate to={'/401'} />;
   }
 
   return (

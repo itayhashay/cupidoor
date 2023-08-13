@@ -37,7 +37,7 @@ const navigate = useNavigate();
           
         }
         if(error?.response?.status === 401){
-          navigate("/403");
+          navigate("/401");
           return Promise.reject(error);  
         }
         return Promise.reject(error);
