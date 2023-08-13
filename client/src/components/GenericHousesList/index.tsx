@@ -16,7 +16,13 @@ import { Chip, Container, Grid, Stack } from '@mui/material';
 import { Filter } from '../../types/filters';
 import CupidoorSpinner from '../CupidoorSpinner';
 
-const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
+const GenericHousesList = ({
+  apartments,
+  fetchApartments,
+}: {
+  apartments: Apartment[];
+  fetchApartments?: VoidFunction;
+}) => {
   const [houses, setHousess] = useState<Apartment[]>(apartments);
   const [isLoading, setIsLoading] = useState(true);
   const [isPageHome, setIsHomePage] = useState(false);
@@ -142,12 +148,24 @@ const GenericHousesList = ({ apartments }: { apartments: Apartment[] }) => {
               {renderFilters()}
             </Box>
 
-            <Box overflow={"auto"}>
+            <Box overflow={'auto'}>
               <Grid container spacing={4} padding={2}>
                 {houses.map((house, index) => {
                   return (
                     <Grid item xs={6} sm={6} md={6} lg={4} xl={3} key={house._id}>
-                      <HouseCard houseData={house} isMyProperties={isMyProperties} />
+                      {isMyProperties ? (
+                        <HouseCard
+                          houseData={house}
+                          isMyProperties={isMyProperties}
+                          fetchApartments={fetchApartments as VoidFunction}
+                        />
+                      ) : (
+                        <HouseCard
+                          houseData={house}
+                          isMyProperties={isMyProperties}
+                          fetchApartments={() => {}}
+                        />
+                      )}
                     </Grid>
                   );
                 })}

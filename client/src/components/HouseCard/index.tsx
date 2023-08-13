@@ -1,8 +1,17 @@
 import { SyntheticEvent, useEffect, useState } from 'react';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
+import { Link } from 'react-router-dom';
+import { Card, CardMedia, Avatar, Typography, Skeleton } from '@mui/material';
+import { Box, CircularProgress, Divider, Fab, Grid, Icon, Tooltip } from '@mui/material';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import SquareFootIcon from '@mui/icons-material/SquareFoot';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import StairsIcon from '@mui/icons-material/Stairs';
+import LikedUsers from '../ApartmentDetails/LikedUsers';
+import { precentToColor } from '../../utils/colors';
 import {
   cardStyles,
   AvatarStyles,
@@ -10,21 +19,7 @@ import {
   addressStyles,
   likeButtonStyles,
 } from './styles';
-import Skeleton from '@mui/material/Skeleton';
 import { Apartment } from '../../types/apartment';
-import { Link } from 'react-router-dom';
-
-import { Box, CircularProgress, Divider, Fab, Grid, Icon, Tooltip,Dialog,DialogTitle,DialogContent,TextField,DialogContentText,DialogActions,Button } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { precentToColor } from '../../utils/colors';
-import LikedUsers from '../ApartmentDetails/LikedUsers';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import SquareFootIcon from '@mui/icons-material/SquareFoot';
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import StairsIcon from '@mui/icons-material/Stairs';
 import useAPI from '../../hooks/useAPI';
 // import AddProperty from '../AddProperty';
 import AddProperty from '../AddPropertyTest';
@@ -34,9 +29,11 @@ import DeleteApartmentDialog from '../DeleteApartmentDialog';
 const HouseCard = ({
   houseData,
   isMyProperties,
+  fetchApartments,
 }: {
   houseData: Apartment;
   isMyProperties: boolean;
+  fetchApartments?: VoidFunction;
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
@@ -88,15 +85,13 @@ const HouseCard = ({
 
     setDeleteOpen(true);
   };
-  const closeDeleteDialog = ()=>{
+  const closeDeleteDialog = () => {
     setDeleteOpen(false);
-  }
+  };
 
-  
-
-  const handleApartmentSave = ()=>{
-   window.location.reload(); 
-  }
+  const handleApartmentSave = () => {
+    window.location.reload();
+  };
 
   return (
     <>
@@ -138,14 +133,18 @@ const HouseCard = ({
             </Fab>
           ) : (
             <>
-            <Fab sx={likeButtonStyles} onClick={handleClickEdit} id='edit-button' style={{right:60}} >
-              {<EditIcon />}
-            </Fab>
-            <Fab sx={likeButtonStyles} onClick={handleDeleteClick} id='delete-button'>
-              {<DeleteIcon />}
-            </Fab>
+              <Fab
+                sx={likeButtonStyles}
+                onClick={handleClickEdit}
+                id='edit-button'
+                style={{ right: 60 }}
+              >
+                {<EditIcon />}
+              </Fab>
+              <Fab sx={likeButtonStyles} onClick={handleDeleteClick} id='delete-button'>
+                {<DeleteIcon />}
+              </Fab>
             </>
-            
           )}
           {!isMyProperties ? (
             <Typography sx={{ ...MatchLabelStyles, color: matchColor }}>{`${houseData.match}% ${
@@ -248,7 +247,13 @@ const HouseCard = ({
           </Box>
         </Card>
       </Link>
-     {deleteOpen && <DeleteApartmentDialog apartmentDetails={houseData} handleClose={closeDeleteDialog}/>}
+      {deleteOpen && (
+        <DeleteApartmentDialog
+          apartmentDetails={houseData}
+          handleClose={closeDeleteDialog}
+          fetchApartments={fetchApartments as VoidFunction}
+        />
+      )}
       <AddProperty
         isOpen={editOpen}
         onClose={() => setEditOpen(false)}
