@@ -71,7 +71,7 @@ export const AddressFormSchema = Yup.object().shape({
     .max(90, 'Please enter a valid city name'),
   street: Yup.string()
     .required('Street is required')
-    .min(2, 'Please enter a valid streey name')
+    .min(2, 'Please enter a valid street name')
     .max(90, 'Please enter a valid street name'),
   houseNumber: Yup.number()
     .required('House number is required')
