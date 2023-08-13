@@ -1,37 +1,22 @@
-import { Box, Checkbox, Divider, FormControlLabel, Grid, InputAdornment, MenuItem, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { Checkbox, Divider, FormControlLabel, Grid, InputAdornment, MenuItem, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { PROPERTY_CONDITIONS } from "../../utils/properyConditions";
-import { generateArrayFromRange } from "../../utils/logic";
-import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { ApartmentAbout, StepperApartment } from "./types";
 import { CHECKBOXES_DEFAULT, DEFAULT_ABOUT } from "./constants";
+import { CustomHelperText } from "../../utils/FormikSchema";
   
-const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void}) => {
+const AboutForm = ({apartmentData, saveChangesOnNext, errors} : {apartmentData: StepperApartment,  saveChangesOnNext: (values: any) => void, errors: any}) => {
     const [aboutState, setAboutState] = useState<ApartmentAbout>(DEFAULT_ABOUT) 
-    const aboutStateRef = useRef(aboutState); // Create a mutable ref
 
     useEffect(() => {
         setAboutState(apartmentData);
-    }, [apartmentData]);
-
-    useEffect(() => {
-        aboutStateRef.current = (aboutState)
-    }, [aboutState]);
-
-    useEffect(() => {
-        return () => {
-          saveChangesOnNext(aboutStateRef.current);
-        };
-      }, []);
-      
+    }, [apartmentData]);      
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setAboutState((prev) => {
-            return {
-                ...prev,
-                [e.target.id || e.target.name]: e.target.value
-            }
-        })
+      saveChangesOnNext({
+          ...aboutState,
+        [e.target.id || e.target.name]: e.target.value
+      });
     }
 
     const handleChangeToggleGroup = (event: React.MouseEvent<HTMLElement>, value: any) => {
@@ -79,14 +64,18 @@ const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperA
               value={aboutState.description}
               onChange={handleChange}
               minRows={7}
+              style={{resize: "none", fontSize: "14px", fontFamily:"'Roboto'", wordSpacing: 1.5, 
+              borderRadius: "4px", border: `1px solid ${errors.description ? 'rgb(211 48 47)':'#c4c4c4'}`}} 
               placeholder='Enter a detailed description of your property here. Highlight its unique features, amenities, and any other important information that potential renters should know.'
               inputProps={{
                 color:"black"
               }}
             />
+            {errors.description && <CustomHelperText>{errors.description}</CustomHelperText>}
           </Grid>
           <Grid item xs={6}>
             <TextField
+              id='propertyCondition'
               name='propertyCondition'
               label={'Property Condition'}
               fullWidth
@@ -94,6 +83,8 @@ const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperA
               onChange={handleChange}
               select
               required
+              error={errors.propertyCondition}
+              helperText={errors.propertyCondition && errors.propertyCondition}
             >
               {Object.values(PROPERTY_CONDITIONS).map((option, index) => (
                 <MenuItem key={index} value={option}>
@@ -109,6 +100,8 @@ const AboutForm = ({apartmentData, saveChangesOnNext} : {apartmentData: StepperA
               fullWidth
               value={aboutState.houseArea}
               onChange={handleChange}
+              error={errors.houseArea}
+              helperText={errors.houseArea && errors.houseArea}
               InputProps={{
                 endAdornment: <InputAdornment position='end'>m²</InputAdornment>,
               }}

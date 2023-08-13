@@ -98,7 +98,9 @@ const SignUpPage = ({ onTogglePage }: SignUpPageProps) => {
         message: "Welcome To CupiDoor!",
         show: true,
       });
-      navigate(location.state ? location.state.redirect : "/questions");
+      userRole !== 'landlord' ? 
+        navigate(location.state ? location.state.redirect : "/questions") 
+        : navigate('/home/my-properties');
     } else {
       setSnackBarState({
         severity: "error",
