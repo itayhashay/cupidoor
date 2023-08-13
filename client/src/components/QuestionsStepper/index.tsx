@@ -56,6 +56,7 @@ export default function QuestionsStepper({
   const [questions, setQuestions] = useState<Question[]>([] as Question[]);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [answers, setAnswers] = useState<QuestionAnswer[]>([] as QuestionAnswer[]);
+  const [isValid,setIsValid] = useState(false);
   const axiosPrivate = useAxiosPrivate();
   const { setUserAnswers, getTenantMatches, fetchUser, setApartmentAnswers } = useAPI();
   const { setSnackBarState } = useSnackbar();
@@ -77,6 +78,14 @@ export default function QuestionsStepper({
     };
     fetchQuestions();
   }, []);
+
+  useEffect(()=>{
+    if(!answers[activeStep] || answers[activeStep].value == -1){
+      setIsValid(false);
+    }else{
+      setIsValid(true);
+    }
+  },[activeStep,answers])
 
   const setAnswer = (questionId: string, value: number) => {
     setAnswers((prevState) => {
@@ -101,6 +110,9 @@ export default function QuestionsStepper({
   };
 
   const handleNext = () => {
+    if(!isValid){
+      return;
+    }
     setActiveStep((prevActiveStep) => {
       return prevActiveStep === QUESTIONS.length - 1 ? prevActiveStep : prevActiveStep + 1;
     });
@@ -202,7 +214,12 @@ export default function QuestionsStepper({
                   {state === QUESTIONS_STATE.TENANT ? 'Find My Home!' : 'Publish my property!'}
                 </Button>
               ) : (
-                <Button variant='contained' onClick={handleNext} sx={{ mt: 1, mr: 1 }}>
+                <Button
+                  variant='contained'
+                  onClick={handleNext}
+                  sx={{ mt: 1, mr: 1 }}
+                  disabled={!isValid}
+                >
                   {'Next'}
                 </Button>
               )}
