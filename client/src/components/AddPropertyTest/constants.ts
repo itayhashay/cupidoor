@@ -7,6 +7,7 @@ import {
   PaymentsProps,
   StepperApartment,
 } from './types';
+import dayjs from 'dayjs';
 
 export const DIALOG_STYLES: SxProps<Theme> = {
   position: 'absolute' as 'absolute',
@@ -54,7 +55,7 @@ export const DEFAULT_NEW_APARTMENT_DATA: StepperApartment = {
   tax: 0,
   committee: 0,
   numOfPayments: 0,
-  entranceDate: null,
+  entranceDate: dayjs(),
   paymentDay: 10,
   totalPrice: 0,
   images: [],

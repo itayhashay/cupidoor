@@ -217,7 +217,7 @@ const PaymentsForm = ({
               sx={{ width: '100%' }}
               value={dayjs(entranceDate)}
               onChange={(date) => handleDatePickerChange(dayjs(date))}
-              minDate={dayjs(new Date())}
+              minDate={dayjs()}
             />
           </DemoContainer>
         </Grid>

@@ -94,6 +94,7 @@ export const AboutFormSchema = Yup.object().shape({
 export const PaymentsFormSchema = Yup.object().shape({
   price: Yup.number().typeError("Please enter a valid price").required('Price is required').min(1, 'Please enter a valid price'),
   tax: Yup.number().typeError("Please enter a valid tax").required('Tax is required').min(1, 'Please enter a valid tax value'),
+  committee: Yup.number().typeError("Please enter a valid committee").required('Committee is required').min(0, 'Please enter a valid committee value'),
   numOfPayments: Yup.number()
     .required('Number of payments is required')
     .min(1, 'At least 1 payment')
