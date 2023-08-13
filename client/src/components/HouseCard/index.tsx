@@ -80,11 +80,13 @@ const HouseCard = ({
 
     setEditOpen(true);
   };
+
   const handleDeleteClick = async (event: Event | SyntheticEvent<Element, Event>) => {
     event.preventDefault();
 
     setDeleteOpen(true);
   };
+
   const closeDeleteDialog = () => {
     setDeleteOpen(false);
   };
@@ -165,7 +167,7 @@ const HouseCard = ({
 
           <Box display={'flex'} paddingX={1}>
             <Box display={'flex'} alignItems={'center'}>
-              <LocationOnIcon></LocationOnIcon>
+              <LocationOnIcon />
               <Typography
                 variant='body1'
                 ml={1}
@@ -179,7 +181,7 @@ const HouseCard = ({
             </Box>
           </Box>
 
-          <Divider light sx={{ my: 1 }}></Divider>
+          <Divider light sx={{ my: 1 }} />
 
           <Grid container padding={1}>
             <Grid item xs>
