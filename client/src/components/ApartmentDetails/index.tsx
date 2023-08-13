@@ -1,6 +1,6 @@
-import { Box, Button, Container, Grid, Paper, Typography,Avatar,IconButton } from '@mui/material';
-import { useEffect, useState, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Box, Container, Grid, Paper, Typography, Avatar, IconButton } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Apartment } from '../../types/apartment';
 import DryDetails from './DryDetails';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -24,7 +24,8 @@ import { useSnackbar } from '../../context/SnackbarContext';
 import { useConfirmationModal } from '../../context/ConfirmationModalContext';
 import BackButton from '../BackButton';
 import EditIcon from '@mui/icons-material/Edit';
-import AddProperty from '../AddProperty';
+// import AddProperty from '../AddProperty';
+import AddProperty from '../AddPropertyTest';
 
 const ApartmentDetails = () => {
   const [apartmentInfo, setApartmentInfo] = useState<Apartment | null>(null);
@@ -33,17 +34,16 @@ const ApartmentDetails = () => {
   const [isMatched, setIsMatched] = useState<boolean>(false);
   const [isMyApartment, setIsMyApartment] = useState<boolean>(false);
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
-  const [initiateUpdate,setInitiateUpdate] = useState<boolean>(true);
+  const [initiateUpdate, setInitiateUpdate] = useState<boolean>(true);
   const [apartmentLikes, setApartmentLikes] = useState<User[]>([] as User[]);
   const [isLikesLoading, setIsLikesLoading] = useState<boolean>(false);
   const [isLikeActionLoading, setIsLikeActionLoading] = useState<boolean>(false);
   const { setSnackBarState } = useSnackbar();
-  const { getApartmentById, toggleTenantLike, getApartmentLikes, approveTenant, declineTenant } =
-    useAPI();
   const { user } = useAuth();
   const params = useParams();
   const { showConfirmationModal } = useConfirmationModal();
-  const navigate = useNavigate();
+  const { getApartmentById, toggleTenantLike, getApartmentLikes, approveTenant, declineTenant } =
+    useAPI();
 
   useEffect(() => {
     const fetchApartmentLikes = async (id: string) => {
@@ -53,21 +53,16 @@ const ApartmentDetails = () => {
     };
 
     const fetchApartmentData = async (id: string) => {
-      try{
-        const apartment: Apartment = await getApartmentById(id);
-        setApartmentInfo(apartment);
-        setInitiateUpdate(false);
-        if (apartment.user._id === user?._id) {
-          setIsLikesLoading(true);
-          setIsMyApartment(true);
-          fetchApartmentLikes(id);
-        }
-        setIsFavorite(apartment?.liked as boolean);
-        setIsMatched(apartment?.matched as boolean);
-      }catch(ex){
-        navigate("/404")
+      const apartment: Apartment = await getApartmentById(id);
+      setApartmentInfo(apartment);
+      setInitiateUpdate(false);
+      if (apartment.user._id === user?._id) {
+        setIsLikesLoading(true);
+        setIsMyApartment(true);
+        fetchApartmentLikes(id);
       }
-     
+      setIsFavorite(apartment?.liked as boolean);
+      setIsMatched(apartment?.matched as boolean);
     };
 
     const apartmentId: string = params.id || '';
@@ -75,7 +70,7 @@ const ApartmentDetails = () => {
     if (apartmentId && initiateUpdate) {
       fetchApartmentData(apartmentId);
     }
-  }, [params.id,initiateUpdate]);
+  }, [params.id, initiateUpdate]);
 
   useEffect(() => {
     const color: string = precentToColor(apartmentInfo?.match || 0);
@@ -136,15 +131,14 @@ const ApartmentDetails = () => {
     }
   };
 
-  const handleEditClick = ()=>{
+  const handleEditClick = () => {
     setIsEditOpen(true);
-  }
+  };
 
-  const handleSave= ()=>{
+  const handleSave = () => {
     setInitiateUpdate(true);
     setIsEditOpen(false);
-    
-  }
+  };
 
   if (!apartmentInfo) return <CupidoorSpinner></CupidoorSpinner>;
   return (

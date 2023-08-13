@@ -1,7 +1,7 @@
 import { Box, Button, Fab, Typography } from "@mui/material";
 import GenericHousesList from "../GenericHousesList";
 import AddHomeOutlinedIcon from '@mui/icons-material/AddHomeOutlined';
-import AddProperty from "../AddProperty";
+import AddProperty from "../AddPropertyTest";
 import { useEffect, useState } from "react";
 import useAPI from "../../hooks/useAPI";
 import { getUserId } from "../../utils/localStorage";

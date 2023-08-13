@@ -28,7 +28,7 @@ import { Close } from '@mui/icons-material';
 import useAPI from '../../hooks/useAPI';
 import { convertFileToBase64 } from '../../utils/base64';
 import { useSnackbar } from '../../context/SnackbarContext';
-import { StepperApartment } from '../AddProperty/types';
+import { StepperApartment } from '../AddPropertyTest/types';
 import { PropertyFeaturesFilters } from '../../utils/filters';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { PROPERTY_CONDITIONS } from '../../utils/properyConditions';

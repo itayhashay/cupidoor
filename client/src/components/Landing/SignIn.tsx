@@ -135,7 +135,7 @@ const SignInPage = ({ onTogglePage }: SignInPageProps) => {
 
                     <Grid item xs={12}>
                       <Box display={'flex'} justifyContent={'space-between'} paddingX={3}>
-                        <Link href='#' variant='body2'>
+                        <Link href='#' variant='body2' visibility={"hidden"}>
                           Forgot password?
                         </Link>
                         <Typography variant='body2'>
