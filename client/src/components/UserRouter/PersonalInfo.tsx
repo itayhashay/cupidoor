@@ -178,11 +178,11 @@ const PersonalInfo = ({ user }: { user: User }) => {
               <Tooltip title='Personal Details' placement='right'>
                 <Tab icon={<PersonIcon></PersonIcon>}></Tab>
               </Tooltip>
-              {user.role !== 'landlord' && (
-                <Tooltip title='Questions' placement='right'>
+             (
+                <Tooltip title='Questions' placement='right' sx={{display:user.role === 'landlord' ? "none" : "block" }}>
                   <Tab icon={<QuestionAnswerIcon></QuestionAnswerIcon>}></Tab>
                 </Tooltip>
-              )}
+              )
               <Tooltip title='Security' placement='right'>
                 <Tab icon={<SecurityIcon></SecurityIcon>}></Tab>
               </Tooltip>
