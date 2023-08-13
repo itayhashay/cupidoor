@@ -5,7 +5,7 @@ import { User } from '../types/user';
 import { Apartment } from '../types/apartment';
 import { QuestionAnswer, ServerQuestionAnswer } from '../types/questionAnswer';
 import useAxiosPrivate from './useAxiosPrivate';
-import { StepperApartment } from '../components/AddProperty/types';
+import { StepperApartment } from '../components/AddPropertyTest/types';
 import { useAuth } from '../context/AuthContext';
 import { CupidAxiosError } from '../types/cupidAxiosError';
 

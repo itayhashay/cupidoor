@@ -120,20 +120,20 @@ export default function QuestionsStepper({
     // TODO: CHANGE TO SET APARTMENT ANSWERS
     if (state === QUESTIONS_STATE.LANDLORD) {
       handleSaveQuestions && handleSaveQuestions(answers);
+    }else{
+      const submitResponse: AxiosResponse = await setUserAnswers(answers);
+      if (submitResponse.status === 201) {
+        await fetchUser();
+      } else {
+        setSnackBarState({
+          message: "Couldn't submit answers, please try again!",
+          severity: 'error',
+          show: true,
+        });
+      }
+      setIsLoading(false);
     }
-    const submitResponse: AxiosResponse = await setUserAnswers(answers);
-    if (submitResponse.status === 201) {
-      await fetchUser();
-      const res = await getTenantMatches(answers);
-      displayHouses(res);
-    } else {
-      setSnackBarState({
-        message: "Couldn't submit answers, please try again!",
-        severity: 'error',
-        show: true,
-      });
-    }
-    setIsLoading(false);
+
   };
 
   const handleReset = () => {

@@ -1,4 +1,4 @@
-import { AboutProps, ApartmentAddress, PaymentsProps } from '../components/AddProperty/types';
+import { AboutProps, ApartmentAddress, PaymentsProps } from '../components/AddPropertyTest/types';
 
 const usePropertyValidator = () => {
   
