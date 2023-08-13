@@ -29,6 +29,7 @@ const usersRelationsSchema = new mongoose.Schema({
   },
 });
 
+usersRelationsSchema.set("timestamps",true);
 const UsersRelations = mongoose.model("UsersRelations", usersRelationsSchema);
 
 module.exports = UsersRelations;
