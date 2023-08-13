@@ -1,3 +1,4 @@
+const Score = require("../model/score.model");
 const User = require("../model/user.model");
 const storage = require("../service/firebase-storage.service");
 const isBase64 = require("is-base64");
@@ -96,6 +97,9 @@ const updateUser = async (id, userData) => {
       user.password = userData.password;
     }
     if (userData.role != null) {
+      if(userData.role == "landlord" && userData.role !== user.role){
+        await Score.deleteMany({tenant:user._id});
+      }
       user.role = userData.role;
     }
     if (userData.phone != null) {

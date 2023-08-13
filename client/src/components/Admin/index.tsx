@@ -93,7 +93,7 @@ navigate(`#${sections[index].href}`);
           </Typography>
         </Box>
         <Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
-          <BackButton bgcolor={'secondary.light'}></BackButton>
+          <BackButton bgcolor={'secondary.light'} toHomePage={true}></BackButton>
         </Box>
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>

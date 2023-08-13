@@ -1,22 +1,16 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { IconButton } from '@mui/material';
-
-const BackButton = ({ bgcolor, color }: { bgcolor?: string; color?: string }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleClick = () => {
-    //   if (location.pathname.startsWith('/apartment/')) {
-    //     navigate('/home/my-properties');
-    //     return;
-    //   } else
-    if (location.key === 'default') {
-      navigate('/home/all-apartments');
-      return;
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Button, IconButton } from "@mui/material";
+import {useNavigate,useLocation} from "react-router-dom"
+const BackButton =({bgcolor,color,toHomePage}:{bgcolor?:string,color?:string,toHomePage?:boolean})=>{
+const navigate = useNavigate();
+const location = useLocation();
+const handleClick= ()=>{
+    if(location.key === "default" || toHomePage){
+        navigate('/home/all-apartments');
+        return;
     }
-    navigate('/home/all-apartments');
-  };
+    navigate(-1);
+}
 
   return (
     <IconButton
