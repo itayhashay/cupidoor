@@ -18,6 +18,7 @@ const app = express();
 const allowedOrigins = [
   "http://193.106.55.150:3000",
   "http://cupidoor.cs.colman.ac.il",
+  "http://cupidoor.cs.colman.ac.il:3000",
   "http://localhost:3000",
   "http://localhost:2308",
 ];
