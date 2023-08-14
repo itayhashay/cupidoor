@@ -196,7 +196,7 @@ const getMonthlyNewUsersAvatars = () => {
     const fromDate = new Date(today.getFullYear(), month, 1);
     return User.find({
       createdAt: { $gte: fromDate, $lte: today },
-    },{avatar:1,firstName:1,lastName:1})
+    },{avatar:1,firstName:1,lastName:1}).sort({createdAt:-1})
       .lean()
       .exec();
   } catch (err) {
